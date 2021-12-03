@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon src/app.ts | pino-pretty",
+    "dev": "nodemon src/app.ts",
+    "dev2": "nodemon src/app.ts | pino-pretty",
     "keypair": "ts-node src/auth/generateKeyPair.ts",
     "seed": "prisma db seed"
   },
@@ -20,7 +21,8 @@
     "passport-jwt": "^4.0.0",
     "pino": "^7.5.1",
     "pino-http": "^6.3.3",
-    "pino-pretty": "^7.2.0"
+    "pino-pretty": "^7.2.0",
+    "winston": "^3.3.3"
   },
   "devDependencies": {
     "@types/dotenv": "^8.2.0",

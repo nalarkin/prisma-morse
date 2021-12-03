@@ -1,4 +1,3 @@
-import { logger } from '../app';
 import crypto, { generateKeyPair } from 'crypto';
 import fs from 'fs';
 function genKeyPair() {

@@ -9,18 +9,22 @@ import pinohttp from 'pino-http';
 import pino from 'pino';
 import passport from 'passport';
 import configPassport from './config/passport';
+// import * as winston from 'winston';
+// import * as logging from './config/logger';
+import initializeLogger from './config/logging';
+
+/** Make sure environment variables are loaded */
 dotenv.config();
 
-/** Custom Logger */
-export const logger = pino({
-  transport: {
-    target: 'pino-pretty',
-  },
-});
+// export const logger = pino({
+//   transport: {
+//     target: 'pino-pretty',
+//   },
+// });
 
-// export const prisma = new PrismaClient();
+/** Initialize Global Custom Logger */
+initializeLogger();
 
-// export const prisma = new PrismaClient();
 /** Initialize JWT stategy  */
 configPassport(passport);
 
@@ -38,7 +42,7 @@ app.use('', protectedRoute);
 
 /** Start listening on port */
 const server = app.listen(8000, () =>
-  logger.info(`
+  log.info(`
     Server ready at: http://localhost:8000 
     Users: http://localhost:8000/users
     Serializables: http://localhost:8000/serializables

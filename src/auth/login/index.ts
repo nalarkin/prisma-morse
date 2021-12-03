@@ -2,7 +2,7 @@ import express from 'express';
 import { verifyPassword } from '../utils';
 import Ajv, { JSONSchemaType } from 'ajv';
 import { issueJWT } from '../utils';
-import prisma from '../../client';
+import prisma from '../../config/database';
 const ajv = new Ajv();
 
 interface LoginForm {
@@ -31,6 +31,7 @@ const validate = ajv.compile(schema);
 const router = express.Router();
 
 router.post('/auth/login', async function (req, res, next) {
+  log.info('Hello :D');
   if (!validate(req.body)) {
     res.status(401).json({ message: 'Missing username and/or password' });
   } else {

@@ -1,10 +1,10 @@
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 import fs from 'fs';
 import passport, { PassportStatic } from 'passport';
-import { logger } from '../app';
+// import { logger } from '../app';
 import path from 'path';
 import { Request } from 'express';
-import prisma from '../client';
+import prisma from './database';
 
 const pathToKey = path.join(
   __dirname,
@@ -25,23 +25,23 @@ const options = {
 
 export function customExtractor(request: Request) {
   let token = null;
-  logger.info('inside special function');
+  log.info('inside special function');
   const header = request.get('Authorization');
   if (header && header?.includes(' ')) {
     token = `${header.split(' ')[1]}`;
   }
   // return ExtractJwt.fromAuthHeaderAsBearerToken(request);
-  logger.info(token);
+  log.info(token);
   return token;
 }
 
 export default (passport: { use: (arg0: JwtStrategy) => void }) => {
-  logger.debug('configuring passport to use JWT');
+  log.debug('configuring passport to use JWT');
   // The JWT payload is passed into the verify callback
   passport.use(
     new JwtStrategy(options, function (jwt_payload, done) {
       // We will assign the `sub` property on the JWT to the database ID of user
-      logger.debug(jwt_payload);
+      log.debug(jwt_payload);
       prisma.user
         .findUnique({ where: { id: jwt_payload.sub } })
         .then((user) => {
@@ -55,5 +55,5 @@ export default (passport: { use: (arg0: JwtStrategy) => void }) => {
         });
     })
   );
-  logger.debug('configuration complete');
+  log.debug('configuration complete');
 };

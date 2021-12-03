@@ -1,7 +1,7 @@
 import express from 'express';
 import { hashPassword, verifyPassword } from '../utils';
 import Ajv, { JSONSchemaType } from 'ajv';
-import prisma from '../../client';
+import prisma from '../../config/database';
 const ajv = new Ajv();
 
 interface RegisterForm {

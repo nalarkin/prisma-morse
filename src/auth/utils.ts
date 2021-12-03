@@ -2,7 +2,6 @@ import argon2, { argon2id, Options } from 'argon2';
 import jsonwebtoken from 'jsonwebtoken';
 import path from 'path';
 import fs from 'fs';
-import crypto from 'crypto';
 import { User } from '@prisma/client';
 
 const pathToPrivateKey = path.join(__dirname, 'tokens', 'id_rsa_priv.pem');
