@@ -1,6 +1,6 @@
 import express from 'express';
-import { hashPassword, verifyPassword } from '..';
-import { logger, prisma } from '../../index';
+import { hashPassword, verifyPassword } from '../utils';
+import { logger, prisma } from '../../app';
 import Ajv, { JSONSchemaType } from 'ajv';
 const ajv = new Ajv();
 
@@ -11,7 +11,10 @@ interface RegisterForm {
   name: string;
 }
 
-/** @TODO add validation for confirmed passwords */
+/** @TODO add validation for confirmed passwords
+ * @TODO add email verification, see this https://www.npmjs.com/package/ajv-formats
+ *
+ */
 const schema: JSONSchemaType<RegisterForm> = {
   type: 'object',
   properties: {
@@ -35,7 +38,7 @@ const validate = ajv.compile(schema);
 const router = express.Router();
 // const prisma = new PrismaClient();
 
-router.post('/auth/register', async (req, res, next) => {
+router.post('/auth/register', async function (req, res, next) {
   if (!validate(req.body)) {
     res
       .status(401)
@@ -54,7 +57,8 @@ router.post('/auth/register', async (req, res, next) => {
       });
       res.json(user);
     } catch (e) {
-      console.error(e);
+      // console.error(e);
+      next(e);
     }
   }
 });

@@ -1,7 +1,8 @@
 import express from 'express';
-import { verifyPassword } from '..';
-import { logger, prisma } from '../../index';
+import { verifyPassword } from '../utils';
+import { logger, prisma } from '../../app';
 import Ajv, { JSONSchemaType } from 'ajv';
+import { issueJWT } from '../utils';
 const ajv = new Ajv();
 
 interface LoginForm {
@@ -29,11 +30,12 @@ const validate = ajv.compile(schema);
 
 const router = express.Router();
 
-router.post('/auth/login', async (req, res, next) => {
+router.post('/auth/login', async function (req, res, next) {
   // const consumables = await prisma.consumable.findMany();
   // const consumables = await prisma.consumable.findMany();
   // req.log.info('hello');
   if (!validate(req.body)) {
+    // res.status(401).json({ message: 'Missing username and/or password' });
     res.status(401).json({ message: 'Missing username and/or password' });
   } else {
     try {
@@ -56,9 +58,11 @@ router.post('/auth/login', async (req, res, next) => {
           .status(401)
           .json({ message: 'User does not exist with these credentials' });
       }
-      res.json(user);
+      // res.json(user);
+      res.json(issueJWT(user));
     } catch (e) {
-      console.error(e);
+      // console.error(e);
+      next(e);
     }
   }
 });

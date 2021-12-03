@@ -1,14 +1,14 @@
 import express from 'express';
-import { prisma } from '../index';
+import { prisma } from '../app';
 
 const router = express.Router();
 
-router.get('/consumables', async (req, res) => {
+router.get('/consumables', async function (req, res) {
   const consumables = await prisma.consumable.findMany();
   res.json(consumables);
 });
 
-router.delete('/consumable/:id', async (req, res) => {
+router.delete('/consumable/:id', async function (req, res) {
   const { id } = req.params;
   const consumable = await prisma.consumable.delete({
     where: {
@@ -18,7 +18,7 @@ router.delete('/consumable/:id', async (req, res) => {
   res.json(consumable);
 });
 
-router.get('/consumable/:id', async (req, res) => {
+router.get('/consumable/:id', async function (req, res) {
   const { id } = req.params;
   const consumable = await prisma.consumable.findUnique({
     where: {
@@ -27,7 +27,7 @@ router.get('/consumable/:id', async (req, res) => {
   });
   res.json(consumable);
 });
-router.put('/consumable/:id/take', async (req, res) => {
+router.put('/consumable/:id/take', async function (req, res) {
   const { id } = req.params;
   const consumable = await prisma.consumable.update({
     where: {

@@ -1,9 +1,9 @@
 import express from 'express';
-import { prisma } from '../index';
+import { prisma } from '../app';
 
 const router = express.Router();
 
-router.get('/serializables', async (req, res) => {
+router.get('/serializables', async function (req, res) {
   const serializables = await prisma.serializable.findMany();
   res.json(serializables);
 });

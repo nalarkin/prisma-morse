@@ -3,10 +3,9 @@
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon src/index.ts | pino-pretty",
-    "dev2": "nodemon src/index.ts",
-    "oldStartMethod": "ts-node src/index.ts",
-    "auth": "ts-node prisma/auth.ts"
+    "dev": "nodemon src/app.ts | pino-pretty",
+    "keypair": "ts-node src/auth/generateKeyPair.ts",
+    "seed": "prisma db seed"
   },
   "dependencies": {
     "@prisma/client": "^3.6.0",
@@ -15,7 +14,10 @@
     "dotenv": "^10.0.0",
     "express": "4.17.1",
     "faker": "^5.5.3",
+    "fs": "^0.0.1-security",
+    "jsonwebtoken": "^8.5.1",
     "passport": "^0.5.0",
+    "passport-jwt": "^4.0.0",
     "pino": "^7.5.1",
     "pino-http": "^6.3.3",
     "pino-pretty": "^7.2.0"
@@ -24,9 +26,11 @@
     "@types/dotenv": "^8.2.0",
     "@types/express": "4.17.13",
     "@types/faker": "^5.5.9",
+    "@types/jsonwebtoken": "^8.5.6",
     "@types/node": "16.11.11",
+    "@types/passport-jwt": "^3.0.6",
     "nodemon": "^2.0.15",
-    "prisma": "3.5.0",
+    "prisma": "^3.6.0",
     "ts-node": "10.4.0",
     "typescript": "4.5.2"
   },
