@@ -1,5 +1,4 @@
 import dotenv from 'dotenv';
-import { Prisma, PrismaClient } from '@prisma/client';
 import express from 'express';
 import users from './users/index';
 import serializables from './serializables/index';
@@ -19,7 +18,9 @@ export const logger = pino({
   },
 });
 
-export const prisma = new PrismaClient();
+// export const prisma = new PrismaClient();
+
+// export const prisma = new PrismaClient();
 /** Initialize JWT stategy  */
 configPassport(passport);
 

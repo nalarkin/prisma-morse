@@ -1,8 +1,8 @@
 import express from 'express';
 import { verifyPassword } from '../utils';
-import { logger, prisma } from '../../app';
 import Ajv, { JSONSchemaType } from 'ajv';
 import { issueJWT } from '../utils';
+import prisma from '../../client';
 const ajv = new Ajv();
 
 interface LoginForm {
@@ -31,11 +31,7 @@ const validate = ajv.compile(schema);
 const router = express.Router();
 
 router.post('/auth/login', async function (req, res, next) {
-  // const consumables = await prisma.consumable.findMany();
-  // const consumables = await prisma.consumable.findMany();
-  // req.log.info('hello');
   if (!validate(req.body)) {
-    // res.status(401).json({ message: 'Missing username and/or password' });
     res.status(401).json({ message: 'Missing username and/or password' });
   } else {
     try {

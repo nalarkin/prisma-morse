@@ -1,6 +1,5 @@
 import express from 'express';
 import { verifyPassword } from '../utils';
-import { logger, prisma } from '../../app';
 import passport from 'passport';
 
 const router = express.Router();

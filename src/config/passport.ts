@@ -1,9 +1,10 @@
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 import fs from 'fs';
 import passport, { PassportStatic } from 'passport';
-import { logger, prisma } from '../app';
+import { logger } from '../app';
 import path from 'path';
 import { Request } from 'express';
+import prisma from '../client';
 
 const pathToKey = path.join(
   __dirname,
