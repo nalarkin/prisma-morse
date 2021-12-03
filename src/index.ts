@@ -10,11 +10,12 @@ import pino from 'pino';
 
 dotenv.config();
 
-const prisma = new PrismaClient();
+export const prisma = new PrismaClient();
 const app = express();
 
 app.use(express.json());
-app.use(pinohttp());
+
+// app.use(pinohttp()); /** Uncomment if you want to see detailed http debug info*/
 
 app.use('', users);
 app.use('', serializables);
@@ -29,6 +30,6 @@ export const logger = pino({
 
 const server = app.listen(8000, () =>
   console.log(`
-🚀 Server ready at: http://localhost:8000
-⭐️ See sample requests: http://pris.ly/e/ts/rest-express#3-using-the-rest-api`)
+    Server ready at: http://localhost:8000
+    See sample requests: http://pris.ly/e/ts/rest-express#3-using-the-rest-api`)
 );

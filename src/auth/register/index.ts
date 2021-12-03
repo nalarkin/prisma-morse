@@ -1,7 +1,6 @@
 import express from 'express';
-import { PrismaClient } from '@prisma/client';
 import { hashPassword, verifyPassword } from '..';
-import { logger } from '../../index';
+import { logger, prisma } from '../../index';
 import Ajv, { JSONSchemaType } from 'ajv';
 const ajv = new Ajv();
 
@@ -34,12 +33,9 @@ const schema: JSONSchemaType<RegisterForm> = {
 const validate = ajv.compile(schema);
 
 const router = express.Router();
-const prisma = new PrismaClient();
+// const prisma = new PrismaClient();
 
 router.post('/auth/register', async (req, res, next) => {
-  // const consumables = await prisma.consumable.findMany();
-  // const consumables = await prisma.consumable.findMany();
-  // req.log.info('hello');
   if (!validate(req.body)) {
     res
       .status(401)
