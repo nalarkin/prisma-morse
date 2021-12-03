@@ -1,5 +1,6 @@
 import argon2, { argon2id, Options } from 'argon2';
 import * as faker from 'faker';
+import dotenv from 'dotenv';
 
 const fakePasswords = Array.from({ length: 100 }).map(() =>
   faker.internet.password()
@@ -21,11 +22,11 @@ const defaultOption = {
   type: argon2id,
 };
 
-export async function hashPassword(password: string) {
+export async function hashPassword2(password: string) {
   return await argon2.hash(password, hashOptions);
 }
 
-export async function verifyPassword(hashed: string, pw: string) {
+export async function verifyPassword2(hashed: string, pw: string) {
   return await argon2.verify(hashed, pw, {
     type: argon2id,
   });
@@ -51,7 +52,7 @@ async function main() {
   );
   const verified = await Promise.all(
     response.map(
-      async (pass, idx) => await verifyPassword(pass, `${fakePasswords[idx]}`)
+      async (pass, idx) => await verifyPassword2(pass, `${fakePasswords[idx]}`)
     )
   );
   console.log('Hashed Results ', response);

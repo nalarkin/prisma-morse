@@ -1,12 +1,12 @@
 import { PrismaClient, Prisma } from '@prisma/client';
 import * as faker from 'faker';
-import { hashPassword } from './auth';
+import { hashPassword2 } from './auth';
 
 async function makeUserData(): Promise<Prisma.UserCreateInput[]> {
   return await Promise.all(
     Array.from({ length: 5 }).map(async () => {
       const unsafePassword = faker.internet.password();
-      const password = await hashPassword(unsafePassword);
+      const password = await hashPassword2(unsafePassword);
       return {
         name: `${faker.name.firstName()} ${faker.name.lastName()}`,
         email: faker.internet.email(),
