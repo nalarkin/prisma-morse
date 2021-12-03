@@ -1,6 +1,10 @@
-# REST API Example
+# Morse Lab API Example
 
-This example shows how to implement a **REST API with TypeScript** using [Express](https://expressjs.com/) and [Prisma Client](https://www.prisma.io/docs/concepts/components/prisma-client). It is based on a SQLite database, you can find the database file with some dummy data at [`./prisma/dev.db`](./prisma/dev.db).
+Important things to note
+
+1. Must use MySQL server because the schema includes enums
+2. Create a `.env` file and store the following line `DATABASE_URL=mysql://<USERNAME>:<PASSWORD>@localhost:<PORT>/<DBNAME>`
+   1. fill in the angled brackets with the info of your machine
 
 ## Getting started
 
