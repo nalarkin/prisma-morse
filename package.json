@@ -4,10 +4,12 @@
   "license": "MIT",
   "scripts": {
     "dev": "nodemon src/index.ts",
-    "oldStartMethod": "ts-node src/index.ts"
+    "oldStartMethod": "ts-node src/index.ts",
+    "auth": "ts-node prisma/auth.ts"
   },
   "dependencies": {
     "@prisma/client": "^3.6.0",
+    "argon2": "^0.28.3",
     "express": "4.17.1",
     "faker": "^5.5.3"
   },

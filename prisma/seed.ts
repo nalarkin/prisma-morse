@@ -1,12 +1,22 @@
 import { PrismaClient, Prisma } from '@prisma/client';
 import * as faker from 'faker';
+import { hashPassword } from './auth';
 
-const userData: Prisma.UserCreateInput[] = Array.from({ length: 10 }).map(
-  () => ({
-    name: `${faker.name.firstName()} ${faker.name.lastName()}`,
-    email: faker.internet.email(),
-  })
-);
+async function makeUserData(): Promise<Prisma.UserCreateInput[]> {
+  return await Promise.all(
+    Array.from({ length: 5 }).map(async () => {
+      const unsafePassword = faker.internet.password();
+      const password = await hashPassword(unsafePassword);
+      return {
+        name: `${faker.name.firstName()} ${faker.name.lastName()}`,
+        email: faker.internet.email(),
+        password: password,
+        unsafePassword: unsafePassword,
+      };
+    })
+  );
+}
+
 const consumableData: Prisma.ConsumableCreateInput[] = Array.from({
   length: 10,
 }).map(() => ({
@@ -28,6 +38,7 @@ const prisma = new PrismaClient();
 
 async function main() {
   console.log(`Start seeding ...`);
+  // const userData: Prisma.UserCreateInput[] = await makeUserData();
   // await prisma.user.createMany({ data: userData });
   // await prisma.consumable.createMany({ data: consumableData });
   // await prisma.serializable.createMany({ data: serializableData });

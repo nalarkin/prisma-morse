@@ -13,13 +13,15 @@ datasource db {
 // }
 
 model User {
-  id           Int            @id @default(autoincrement())
-  createdAt    DateTime       @default(now())
-  email        String         @unique
-  name         String?
-  role         Role           @default(USER)
-  Consumable   Consumable[]
-  Serializable Serializable[]
+  id             Int            @id @default(autoincrement())
+  createdAt      DateTime       @default(now())
+  email          String         @unique
+  password       String
+  unsafePassword String
+  name           String?
+  role           Role           @default(USER)
+  Consumable     Consumable[]
+  Serializable   Serializable[]
 }
 
 model Consumable {
