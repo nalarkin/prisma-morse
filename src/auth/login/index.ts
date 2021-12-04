@@ -61,7 +61,6 @@ router.post('/auth/login', async function (req, res, next) {
             error: 'User does not exist with these credentials',
           })
         );
-        // throw new Error('User does not exist with these credentials');
       }
       const isAuthenticated = await verifyPassword(user.password, password);
       if (!isAuthenticated) {
@@ -71,12 +70,9 @@ router.post('/auth/login', async function (req, res, next) {
           })
         );
       }
-      // res.json(user);
       const response = createResponse({ data: issueJWT(user) });
       res.json(response);
     } catch (e) {
-      // console.error(e);
-      // next(e);
       log.error(e);
     }
   }

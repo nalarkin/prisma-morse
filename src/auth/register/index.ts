@@ -5,42 +5,10 @@ import prisma from '../../config/database';
 import { ajv } from '../../common/validation';
 import { RegisterForm } from '../../common/schema/schema_register';
 import { createResponse } from '../../common/response';
-// const ajv = new Ajv();
-
-// interface RegisterForm {
-//   email: string;
-//   password: string;
-//   confirmPassword: string;
-//   name: string;
-// }
-
-// /** @TODO add validation for confirmed passwords
-//  * @TODO add email verification, see this https://www.npmjs.com/package/ajv-formats
-//  *
-//  */
-// const schema: JSONSchemaType<RegisterForm> = {
-//   type: 'object',
-//   properties: {
-//     email: { type: 'string' },
-//     password: { type: 'string' },
-//     confirmPassword: { type: 'string' },
-//     name: { type: 'string' },
-//   },
-//   required: ['email', 'password', 'password', 'confirmPassword'],
-//   additionalProperties: true,
-// };
-
-/** Validates and type creates type guards. Makes it great to do all validation of
- * JSON data when you first receive it.
- * NPM package: https://www.npmjs.com/package/ajv
- * Docs: https://ajv.js.org/guide/why-ajv.html
- *
- * */
-// const validate = ajv.compile(schema);
 
 const router = express.Router();
-// const prisma = new PrismaClient();
 
+/** Register a new user */
 router.post('/auth/register', async function (req, res, next) {
   const validate = ajv.getSchema<RegisterForm>('register');
   if (validate !== undefined && !validate(req.body)) {

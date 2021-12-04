@@ -7,7 +7,8 @@
     "dev2": "nodemon src/app.ts | pino-pretty",
     "keypair": "ts-node src/auth/generateKeyPair.ts",
     "seed": "prisma db seed",
-    "studio": "prisma studio"
+    "studio": "prisma studio",
+    "lint": "eslint ."
   },
   "dependencies": {
     "@prisma/client": "^3.6.0",
@@ -32,6 +33,9 @@
     "@types/jsonwebtoken": "^8.5.6",
     "@types/node": "^16.11.11",
     "@types/passport-jwt": "^3.0.6",
+    "@typescript-eslint/eslint-plugin": "^5.5.0",
+    "@typescript-eslint/parser": "^5.5.0",
+    "eslint": "^8.4.0",
     "nodemon": "^2.0.15",
     "prisma": "^3.6.0",
     "ts-node": "10.4.0",

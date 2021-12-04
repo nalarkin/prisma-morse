@@ -5,6 +5,7 @@ import { createResponse } from '../../common/response';
 
 const router = express.Router();
 
+/** Route that all registered users can see */
 router.get(
   '/auth/protected',
   passport.authenticate('jwt', { session: false }),
@@ -25,7 +26,7 @@ router.get(
   '/auth/admin',
   passport.authenticate('jwt', { session: false }),
   (req, res, next) => {
-    // casting for autocomplete
+    // casting [req.user] for autocomplete
     const role = (req.user as User).role;
     if (role === 'USER') {
       // not authorized

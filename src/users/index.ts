@@ -1,11 +1,12 @@
 import express from 'express';
 import prisma from '../config/database';
+import { createResponse } from '../common/response';
 
 const router = express.Router();
 
 router.get('/users', async (req, res) => {
   const users = await prisma.user.findMany();
-  res.json(users);
+  res.json(createResponse({ data: users }));
 });
 
 router.delete('/user/:id', async (req, res) => {
@@ -15,7 +16,7 @@ router.delete('/user/:id', async (req, res) => {
       id: Number(id),
     },
   });
-  res.json(user);
+  res.json(createResponse({ data: user }));
 });
 
 router.get('/user/:id', async (req, res) => {
@@ -25,7 +26,12 @@ router.get('/user/:id', async (req, res) => {
       id: Number(id),
     },
   });
-  res.json(user);
+  if (user === null) {
+    return res
+      .status(404)
+      .json(createResponse({ error: 'This user does not exist' }));
+  }
+  res.json(createResponse({ data: user }));
 });
 
 export default router;

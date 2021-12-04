@@ -2,13 +2,14 @@ import express from 'express';
 import { NewConsumable } from '../common/schema/schema_consumable';
 import { ajv } from '../common/validation';
 import prisma from '../config/database';
+import { createResponse } from '../common/response';
 
 const router = express.Router();
 
 /** Get all consumables */
 router.get('/consumables', async function (req, res) {
   const consumables = await prisma.consumable.findMany();
-  res.json(consumables);
+  res.json(createResponse({ data: consumables }));
 });
 
 /** Create a consumable */
@@ -19,9 +20,9 @@ router.post('/consumables', async function (req, res, next) {
     if (validator !== undefined && validator(body)) {
       // we can be certain data is safe to use because we used ajv to verify
       const consumable = await prisma.consumable.create({ data: body });
-      return res.json(consumable);
+      return res.json(createResponse({ data: consumable }));
     }
-    res.json(ajv.errorsText(validator?.errors));
+    res.json(createResponse({ error: ajv.errorsText(validator?.errors) }));
   } catch (err) {
     log.error(err);
   }
@@ -36,13 +37,13 @@ router.delete('/consumable/:id', async function (req, res) {
         id: id,
       },
     });
-    res.json({ success: true, data: consumable, error: {} });
+    res.json(createResponse({ data: consumable }));
   } catch (err) {
-    res.status(400).json({
-      success: false,
-      data: {},
-      error: { message: 'Item does not exist' },
-    });
+    res.status(400).json(
+      createResponse({
+        error: 'Item does not exist',
+      })
+    );
     log.error(err);
   }
 });
@@ -55,7 +56,12 @@ router.get('/consumable/:id', async function (req, res) {
       id: id,
     },
   });
-  res.json(consumable);
+  if (consumable === null) {
+    return res
+      .status(404)
+      .json(createResponse({ error: 'Consumable does not exist' }));
+  }
+  res.json(createResponse({ data: consumable }));
 });
 
 /** Consume a given amount of a single consumable */
@@ -71,7 +77,7 @@ router.put('/consumable/:id/take', async function (req, res) {
       },
     },
   });
-  res.json(consumable);
+  res.json(createResponse({ data: consumable }));
 });
 
 export default router;
