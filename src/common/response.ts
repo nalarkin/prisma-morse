@@ -4,8 +4,8 @@ interface CustomError {
 
 interface CustomResponse {
   success: boolean;
-  data: object;
-  error: CustomError | {};
+  data: object | null;
+  error: CustomError | null;
 }
 
 // type ResponseArguments = { error: string } | { data: unknown };
@@ -20,10 +20,10 @@ export function createResponse({
   error,
 }: ResponseArguments): CustomResponse {
   if (error !== undefined) {
-    return { success: false, data: {}, error: { message: error } };
+    return { success: false, data: null, error: { message: error } };
   }
   if (data !== undefined) {
-    return { success: true, data: data, error: {} };
+    return { success: true, data: data, error: null };
   }
   throw new Error(
     'You did not supply a data either data or error to createResponse()'
