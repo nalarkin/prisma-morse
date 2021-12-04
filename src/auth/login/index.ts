@@ -5,6 +5,7 @@ import { issueJWT } from '../utils';
 import prisma from '../../config/database';
 import { ajv } from '../../common/validation';
 // import { LoginForm } from '../../common/schema/schema_login';
+import { createResponse } from '../../common/response';
 // const ajv = new Ajv();
 
 // interface LoginForm {
@@ -42,7 +43,9 @@ router.post('/auth/login', async function (req, res, next) {
 
   log.info('Hello :D');
   if (validate !== undefined && !validate(req.body)) {
-    res.status(401).json({ message: 'Missing username and/or password' });
+    res
+      .status(401)
+      .json(createResponse({ error: 'Missing username and/or password' }));
   } else {
     try {
       const { password, email } = req.body;
@@ -53,22 +56,28 @@ router.post('/auth/login', async function (req, res, next) {
       });
       // console.log(user);
       if (user === null) {
-        res
-          .status(401)
-          .json({ message: 'User does not exist with these credentials' });
-        throw new Error('User does not exist with these credentials');
+        return res.status(401).json(
+          createResponse({
+            error: 'User does not exist with these credentials',
+          })
+        );
+        // throw new Error('User does not exist with these credentials');
       }
       const isAuthenticated = await verifyPassword(user.password, password);
       if (!isAuthenticated) {
-        res
-          .status(401)
-          .json({ message: 'User does not exist with these credentials' });
+        return res.status(401).json(
+          createResponse({
+            error: 'User does not exist with these credentials',
+          })
+        );
       }
       // res.json(user);
-      res.json(issueJWT(user));
+      const response = createResponse({ data: issueJWT(user) });
+      res.json(response);
     } catch (e) {
       // console.error(e);
-      next(e);
+      // next(e);
+      log.error(e);
     }
   }
 });

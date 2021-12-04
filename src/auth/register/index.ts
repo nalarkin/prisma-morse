@@ -4,6 +4,7 @@ import { hashPassword, verifyPassword } from '../utils';
 import prisma from '../../config/database';
 import { ajv } from '../../common/validation';
 import { RegisterForm } from '../../common/schema/schema_register';
+import { createResponse } from '../../common/response';
 // const ajv = new Ajv();
 
 // interface RegisterForm {
@@ -43,9 +44,9 @@ const router = express.Router();
 router.post('/auth/register', async function (req, res, next) {
   const validate = ajv.getSchema<RegisterForm>('register');
   if (validate !== undefined && !validate(req.body)) {
-    res
+    return res
       .status(401)
-      .json({ message: 'Missing username a field or passwords do not match' });
+      .json(createResponse({ error: ajv.errorsText(validate.errors) }));
   } else {
     try {
       const { password, email, name, confirmPassword } = req.body;
@@ -58,10 +59,10 @@ router.post('/auth/register', async function (req, res, next) {
           password: hashedPassword,
         },
       });
-      res.json(user);
+      res.json(createResponse({ data: user }));
     } catch (e) {
-      // console.error(e);
-      next(e);
+      console.error(e);
+      // next(e);
     }
   }
 });

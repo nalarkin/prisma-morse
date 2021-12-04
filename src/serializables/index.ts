@@ -1,11 +1,12 @@
 import express from 'express';
+import { createResponse } from '../common/response';
 import prisma from '../config/database';
 
 const router = express.Router();
 
 router.get('/serializables', async function (req, res) {
   const serializables = await prisma.serializable.findMany();
-  res.json(serializables);
+  res.json(createResponse({ data: serializables }));
 });
 
 router.delete('/serializable/:id', async (req, res) => {
@@ -15,7 +16,7 @@ router.delete('/serializable/:id', async (req, res) => {
       id: id,
     },
   });
-  res.json(serializable);
+  res.json(createResponse({ data: serializable }));
 });
 
 router.get('/serializable/:id', async (req, res) => {
@@ -25,7 +26,12 @@ router.get('/serializable/:id', async (req, res) => {
       id: id,
     },
   });
-  res.json(serializable);
+  if (serializable === null) {
+    return res
+      .status(404)
+      .json(createResponse({ error: 'Serializable item does not exist' }));
+  }
+  res.json(createResponse({ data: serializable }));
 });
 
 router.put('/serializable/:id/checkout', async (req, res) => {
@@ -39,7 +45,7 @@ router.put('/serializable/:id/checkout', async (req, res) => {
       renterId: 4,
     },
   });
-  res.json(serializable);
+  res.json(createResponse({ data: serializable }));
 });
 router.put('/serializable/:id/return', async (req, res) => {
   const { id } = req.params;
@@ -52,7 +58,7 @@ router.put('/serializable/:id/return', async (req, res) => {
       renterId: null,
     },
   });
-  res.json(serializable);
+  res.json(createResponse({ data: serializable }));
 });
 
 export default router;
