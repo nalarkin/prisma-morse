@@ -1,24 +1,26 @@
 import express from 'express';
 import { verifyPassword } from '../utils';
-import Ajv, { JSONSchemaType } from 'ajv';
+// import Ajv, { JSONSchemaType } from 'ajv';
 import { issueJWT } from '../utils';
 import prisma from '../../config/database';
-const ajv = new Ajv();
+import { ajv } from '../../common/validation';
+// import { LoginForm } from '../../common/schema/schema_login';
+// const ajv = new Ajv();
 
-interface LoginForm {
-  email: string;
-  password: string;
-}
+// interface LoginForm {
+//   email: string;
+//   password: string;
+// }
 
-const schema: JSONSchemaType<LoginForm> = {
-  type: 'object',
-  properties: {
-    email: { type: 'string' },
-    password: { type: 'string' },
-  },
-  required: ['email', 'password'],
-  additionalProperties: true,
-};
+// const schema: JSONSchemaType<LoginForm> = {
+//   type: 'object',
+//   properties: {
+//     email: { type: 'string' },
+//     password: { type: 'string' },
+//   },
+//   required: ['email', 'password'],
+//   additionalProperties: true,
+// };
 
 /** Validates and type creates type guards. Makes it great to do all validation of
  * JSON data when you first receive it.
@@ -26,13 +28,20 @@ const schema: JSONSchemaType<LoginForm> = {
  * Docs: https://ajv.js.org/guide/why-ajv.html
  *
  * */
-const validate = ajv.compile(schema);
+// const validate = ajv.compile(schema);
 
 const router = express.Router();
 
+interface LoginForm {
+  email: string;
+  password: string;
+}
+
 router.post('/auth/login', async function (req, res, next) {
+  const validate = ajv.getSchema<LoginForm>('login');
+
   log.info('Hello :D');
-  if (!validate(req.body)) {
+  if (validate !== undefined && !validate(req.body)) {
     res.status(401).json({ message: 'Missing username and/or password' });
   } else {
     try {
