@@ -5,7 +5,7 @@ import { schema_consumable, schema_take_consumable } from './schema/schema_consu
 
 /** Validates and type creates type guards. Makes it great to do all
  * validation when first receiving json request */
-export const ajv = new Ajv({ $data: true });
+export const ajv = new Ajv({ $data: true, allErrors: true });
 
 ajv.addSchema(schema_login, 'login');
 ajv.addSchema(schema_register, 'register');

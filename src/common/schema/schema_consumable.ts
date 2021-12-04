@@ -1,17 +1,12 @@
 import { Consumable } from '@prisma/client';
 import { JSONSchemaType } from 'ajv';
 
-// export type Consumable = {
-//   id: string;
-//   createdAt: Date;
-//   updatedAt: Date;
+// export type NewConsumable = {
 //   name: string;
 //   count: number;
-//   type: ItemType;
-//   description: string | null;
-//   guide: string | null;
-//   photo: string | null;
-//   userId: number | null;
+//   description?: string;
+//   guide?: string;
+//   photo?: string;
 // };
 
 export type NewConsumable = Omit<Consumable, 'createdAt' | 'userId' | 'updatedAt' | 'id' | 'type'>;

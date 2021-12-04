@@ -1,15 +1,15 @@
-interface CustomError {
+export type CustomError = {
   message: string;
-}
+};
 
-interface CustomResponse {
+export type CustomResponse = {
   success: boolean;
   data: object | null;
   error: CustomError | null;
-}
+};
 
 // type ResponseArguments = { error: string } | { data: unknown };
-type ResponseArguments = {
+export type ResponseArguments = {
   error?: string;
   data?: object;
 };

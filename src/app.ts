@@ -10,8 +10,6 @@ import protectedRoute from './auth/protected/index';
 import pinohttp from 'pino-http';
 import passport from 'passport';
 import configPassport from './config/passport';
-// import * as winston from 'winston';
-// import * as logging from './config/logger';
 import initializeLogger from './config/logging';
 
 /** Make sure environment variables are loaded */

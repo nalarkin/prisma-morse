@@ -4,7 +4,7 @@ import { ajv } from '../common/validation';
 import prisma from '../config/database';
 import { createResponse } from '../common/response';
 import passport from 'passport';
-import { User } from '@prisma/client';
+import { User, Prisma, Transaction, Consumable } from '@prisma/client';
 
 const router = express.Router();
 
@@ -19,9 +19,17 @@ router.post('/consumables', async function (req, res) {
   try {
     const validator = ajv.getSchema<NewConsumable>('newConsumable');
     const body = req.body;
-    if (validator !== undefined && validator(body)) {
+    if (validator === undefined) {
+      return res.status(500).json(createResponse({ error: 'Unable to get json validator' }));
+    }
+    if (validator(body)) {
       // we can be certain data is safe to use because we used ajv to verify
-      const consumable = await prisma.consumable.create({ data: body });
+
+      // const consumable = await prisma.consumable.create({ data: body });
+      const { name, count, description, guide, photo } = body;
+      const consumable = await prisma.consumable.create({
+        data: createUserAndPost(name, count, description, guide, photo),
+      });
       return res.json(createResponse({ data: consumable }));
     }
     res.json(createResponse({ error: ajv.errorsText(validator?.errors) }));
@@ -108,13 +116,8 @@ router.put('/consumable/:id/take/track', passport.authenticate('jwt', { session:
         },
       },
     });
-    const addTransaction = prisma.transaction.create({
-      data: {
-        consumableId: id,
-        userId: userId,
-        type: 'CONSUME',
-      },
-    });
+    const addTransaction = createTransaction(id, userId, 'CONSUME');
+    // if one fails, both do not get completed.
     const [consumeResult, transactionResult] = await prisma.$transaction([takeConsumable, addTransaction]);
     res.json(createResponse({ data: { consumeResult, transactionResult } }));
   } catch (err) {
@@ -123,4 +126,37 @@ router.put('/consumable/:id/take/track', passport.authenticate('jwt', { session:
   }
 });
 
+/** Helper function to create a transaction */
+function createTransaction(consumableId: string, userId: number, type: Transaction['type']) {
+  return prisma.transaction.create({
+    data: {
+      consumableId,
+      userId,
+      type,
+    },
+  });
+}
+
+/**
+ * Function that ensures type safety and validation before adding to database
+ *
+ * Note on types. It says string | null but I think is actually string | undefined.
+ * It produces slightly different behavior in Prisma. To get a different type, the ajv
+ * type definition needs to change so instead of string | null it's string | undefined.
+ */
+const createUserAndPost = (
+  name: string,
+  count: number,
+  description: string | null,
+  guide: string | null,
+  photo: string | null,
+) => {
+  return Prisma.validator<Prisma.ConsumableCreateInput>()({
+    name,
+    count,
+    description,
+    guide,
+    photo,
+  });
+};
 export default router;
