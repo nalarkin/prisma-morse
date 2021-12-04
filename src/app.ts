@@ -3,6 +3,7 @@ import express from 'express';
 import users from './users/index';
 import serializables from './serializables/index';
 import consumables from './consumables/index';
+import transactions from './transactions/index';
 import login from './auth/login/index';
 import register from './auth/register/index';
 import protectedRoute from './auth/protected/index';
@@ -34,6 +35,7 @@ app.use('', consumables);
 app.use('', login);
 app.use('', register);
 app.use('', protectedRoute);
+app.use('', transactions);
 
 /** Start listening on port */
 const server = app.listen(8000, () =>

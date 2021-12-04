@@ -1,4 +1,6 @@
+import { User } from '@prisma/client';
 import express from 'express';
+import passport from 'passport';
 import { createResponse } from '../common/response';
 import prisma from '../config/database';
 
@@ -25,11 +27,38 @@ router.get('/serializable/:id', async (req, res) => {
     where: {
       id: id,
     },
+    include: {
+      User: true,
+    },
   });
   if (serializable === null) {
-    return res
-      .status(404)
-      .json(createResponse({ error: 'Serializable item does not exist' }));
+    return res.status(404).json(createResponse({ error: 'Serializable item does not exist' }));
+  }
+  res.json(createResponse({ data: serializable }));
+});
+router.get('/serializable/:id/checkout/auth', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  const { id } = req.params;
+  const userId = (req.user as User).id;
+  // find serializable and checkout
+  const serializable = await prisma.serializable.update({
+    where: {
+      id: id,
+    },
+    data: {
+      userId: userId,
+    },
+  });
+  // update user connection with item
+  await prisma.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      Serializable: { connect: { id: id } },
+    },
+  });
+  if (serializable === null) {
+    return res.status(404).json(createResponse({ error: 'Serializable item does not exist' }));
   }
   res.json(createResponse({ data: serializable }));
 });
@@ -42,7 +71,7 @@ router.put('/serializable/:id/checkout', async (req, res) => {
       id: id,
     },
     data: {
-      renterId: 4,
+      userId: 4,
     },
   });
   res.json(createResponse({ data: serializable }));
@@ -55,7 +84,7 @@ router.put('/serializable/:id/return', async (req, res) => {
       id: id,
     },
     data: {
-      renterId: null,
+      userId: null,
     },
   });
   res.json(createResponse({ data: serializable }));

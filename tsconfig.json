@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "target": "es2018",
+    "module": "commonjs",
     "sourceMap": true,
     "outDir": "dist",
     "strict": true,
@@ -8,5 +10,11 @@
     "typeRoots": [
       "./src/generated"
     ]
-  }
+  },
+    "include": [
+      "src/**/*.ts"
+    ],
+    "exclude": [
+      "node_modules"
+    ]
 }

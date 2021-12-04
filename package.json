@@ -8,7 +8,8 @@
     "keypair": "ts-node src/auth/generateKeyPair.ts",
     "seed": "prisma db seed",
     "studio": "prisma studio",
-    "lint": "eslint ."
+    "lint": "eslint src/**/*.ts",
+    "format": "eslint src/**/*.ts --fix"
   },
   "dependencies": {
     "@prisma/client": "^3.6.0",
@@ -37,6 +38,7 @@
     "@typescript-eslint/parser": "^5.5.0",
     "eslint": "^8.4.0",
     "nodemon": "^2.0.15",
+    "prettier": "^2.5.0",
     "prisma": "^3.6.0",
     "ts-node": "10.4.0",
     "typescript": "4.5.2"
