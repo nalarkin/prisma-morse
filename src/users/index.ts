@@ -27,9 +27,7 @@ router.get('/user/:id', async (req, res) => {
     },
   });
   if (user === null) {
-    return res
-      .status(404)
-      .json(createResponse({ error: 'This user does not exist' }));
+    return res.status(404).json(createResponse({ error: 'This user does not exist' }));
   }
   res.json(createResponse({ data: user }));
 });

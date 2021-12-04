@@ -1,4 +1,4 @@
-import crypto, { generateKeyPair } from 'crypto';
+import crypto from 'crypto';
 import fs from 'fs';
 function genKeyPair() {
   // Generates an object where the keys are stored in properties `privateKey` and `publicKey`

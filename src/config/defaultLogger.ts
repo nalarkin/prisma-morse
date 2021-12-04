@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-namespace */
 import * as winston from 'winston';
 
 declare global {
@@ -16,5 +17,4 @@ interface CustomNodeJsGlobalLogger extends NodeJS.Global {
 
 declare const global: CustomNodeJsGlobalLogger;
 
-export const setDefaultLogger = (logger: winston.Logger) =>
-  (global.log = logger);
+export const setDefaultLogger = (logger: winston.Logger) => (global.log = logger);

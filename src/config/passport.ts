@@ -1,18 +1,11 @@
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 import fs from 'fs';
-import passport, { PassportStatic } from 'passport';
 // import { logger } from '../app';
 import path from 'path';
 import { Request } from 'express';
 import prisma from './database';
 
-const pathToKey = path.join(
-  __dirname,
-  '..',
-  'auth',
-  'tokens',
-  'id_rsa_pub.pem'
-);
+const pathToKey = path.join(__dirname, '..', 'auth', 'tokens', 'id_rsa_pub.pem');
 
 const PUB_KEY = fs.readFileSync(pathToKey, 'utf8');
 // At a minimum, you must pass these options (see note after this code snippet for more)
@@ -53,7 +46,7 @@ export default (passport: { use: (arg0: JwtStrategy) => void }) => {
         .catch((err) => {
           return done(err, false);
         });
-    })
+    }),
   );
   log.debug('configuration complete');
 };

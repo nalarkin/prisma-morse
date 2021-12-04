@@ -13,7 +13,7 @@ router.get('/consumables', async function (req, res) {
 });
 
 /** Create a consumable */
-router.post('/consumables', async function (req, res, next) {
+router.post('/consumables', async function (req, res) {
   try {
     const validator = ajv.getSchema<NewConsumable>('newConsumable');
     const body = req.body;
@@ -42,7 +42,7 @@ router.delete('/consumable/:id', async function (req, res) {
     res.status(400).json(
       createResponse({
         error: 'Item does not exist',
-      })
+      }),
     );
     log.error(err);
   }
@@ -57,9 +57,7 @@ router.get('/consumable/:id', async function (req, res) {
     },
   });
   if (consumable === null) {
-    return res
-      .status(404)
-      .json(createResponse({ error: 'Consumable does not exist' }));
+    return res.status(404).json(createResponse({ error: 'Consumable does not exist' }));
   }
   res.json(createResponse({ data: consumable }));
 });
