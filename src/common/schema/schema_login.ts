@@ -13,5 +13,5 @@ export const schema_login: JSONSchemaType<LoginForm> = {
     password: { type: 'string' },
   },
   required: ['email', 'password'],
-  additionalProperties: true,
+  additionalProperties: false,
 };

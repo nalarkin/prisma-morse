@@ -14,19 +14,17 @@ router.post('/auth/register', async function (req, res) {
     if (validate !== undefined && !validate(req.body)) {
       return res.status(401).json(createResponse({ error: ajv.errorsText(validate.errors) }));
     } else {
-      const { password, email, name, confirmPassword } = req.body;
-      log.info('validated!!');
-      return res.json({ data: 'okay' });
-      // const hashedPassword = await hashPassword(password);
-      // const user = await prisma.user.create({
-      //   data: {
-      //     name: name,
-      //     email: email,
-      //     unsafePassword: password,
-      //     password: hashedPassword,
-      //   },
-      // });
-      // res.json(createResponse({ data: user }));
+      const { password, email, name } = req.body;
+      const hashedPassword = await hashPassword(password);
+      const user = await prisma.user.create({
+        data: {
+          name: name,
+          email: email,
+          unsafePassword: password,
+          password: hashedPassword,
+        },
+      });
+      res.json(createResponse({ data: user }));
     }
   } catch (e) {
     console.error(e);

@@ -38,7 +38,7 @@ app.use('', protectedRoute);
 app.use('', transactions);
 
 /** Start listening on port */
-const server = app.listen(8000, () =>
+app.listen(8000, () =>
   log.info(`
     Server ready at: http://localhost:8000 
     Users: http://localhost:8000/users

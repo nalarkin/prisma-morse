@@ -6,7 +6,7 @@ import { createResponse } from '../../common/response';
 const router = express.Router();
 
 /** Route that all registered users can see */
-router.get('/auth/protected', passport.authenticate('jwt', { session: false }), (req, res, next) => {
+router.get('/auth/protected', passport.authenticate('jwt', { session: false }), (req, res) => {
   res.status(200).json(
     createResponse({
       data: {
