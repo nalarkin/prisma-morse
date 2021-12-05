@@ -4,7 +4,7 @@ import { ajv } from '../common/validation';
 import prisma from '../config/database';
 import { createResponse } from '../common/response';
 import passport from 'passport';
-import { User, Prisma, Transaction } from '@prisma/client';
+import { User, Transaction } from '@prisma/client';
 
 const router = express.Router();
 
@@ -63,7 +63,7 @@ router.post('/consumables/', passport.authenticate('jwt', { session: false }), a
 router.delete('/consumable/:id/', passport.authenticate('jwt', { session: false }), async function (req, res) {
   try {
     const { id } = req.params;
-    const { id: userId, role } = req.user as User;
+    const { role } = req.user as User;
     if (role !== 'ADMIN') {
       return res.status(401).json(createResponse({ error: 'You do not have permission to delete items' }));
     }

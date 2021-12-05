@@ -7,6 +7,7 @@ import transactions from './transactions/index';
 import login from './auth/login/index';
 import register from './auth/register/index';
 import protectedRoute from './auth/protected/index';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import pinohttp from 'pino-http';
 import passport from 'passport';
 import configPassport from './config/passport';
