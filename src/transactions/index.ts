@@ -14,6 +14,8 @@ router.get('/transactions', async function (req, res) {
           name: true,
         },
       },
+      Consumable: true,
+      Serializable: true,
     },
   });
   res.json(createResponse({ data: transactions }));

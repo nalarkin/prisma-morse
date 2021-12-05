@@ -1,0 +1,98 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table User {
+  id Int [pk, increment]
+  createdAt DateTime [default: `now()`, not null]
+  email String [unique, not null]
+  password String [not null]
+  unsafePassword String [not null]
+  name String
+  role Role [not null, default: 'USER']
+  Consumable Consumable [not null]
+  Serializable Serializable [not null]
+  Transaction Transaction [not null]
+}
+
+Table Consumable {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  name String [not null]
+  count Int [not null]
+  type ItemType [not null, default: 'CONSUMABLE']
+  description String
+  guide String
+  photo String
+  User User
+  userId Int
+  Transaction Transaction [not null]
+}
+
+Table Serializable {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  name String [not null]
+  serial_number String [not null]
+  brand String
+  status ItemStatus [not null]
+  type ItemType [not null, default: 'DEVICE']
+  project String
+  description String
+  guide String
+  photo String
+  User User
+  userId Int
+  Transaction Transaction [not null]
+}
+
+Table Transaction {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  Consumable Consumable
+  consumableId String
+  Serializable Serializable
+  serializableId String
+  User User
+  userId Int
+  type TransactionType
+}
+
+Enum TransactionType {
+  CHECKOUT
+  RETURN
+  CONSUME
+  CREATE
+  DELETE
+  EDIT
+}
+
+Enum Role {
+  USER
+  ADMIN
+}
+
+Enum ItemType {
+  TOOL
+  DEVICE
+  CONSUMABLE
+}
+
+Enum ItemStatus {
+  BROKEN
+  USABLE
+  SCRAP
+  IN_REPAIR
+}
+
+Ref: Consumable.userId > User.id
+
+Ref: Serializable.userId > User.id
+
+Ref: Transaction.consumableId > Consumable.id
+
+Ref: Transaction.serializableId > Serializable.id
+
+Ref: Transaction.userId > User.id

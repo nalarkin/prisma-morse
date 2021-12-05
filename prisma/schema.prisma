@@ -2,6 +2,25 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// // generates the standardized DBML - Database Markup Language for our database
+// // https://github.com/notiz-dev/prisma-dbml-generator
+// generator dbml {
+//   provider = "prisma-dbml-generator"
+// }
+
+// // generates json schema that can be used for validation
+// // https://github.com/valentinpalkovic/prisma-json-schema-generator
+// generator jsonSchema {
+//   provider = "prisma-json-schema-generator"
+// }
+
+// // generates entity relationship diagram
+// // https://github.com/keonik/prisma-erd-generator
+// generator erd {
+//   provider = "prisma-erd-generator"
+// }
+
+// must use MySQL for ENUMS
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")

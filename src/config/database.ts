@@ -9,6 +9,18 @@ declare global {
   }
 }
 
+// declare global {
+//   const prisma: PrismaClient | undefined;
+// }
+
+// export const prisma =
+//   global.prisma ||
+//   new PrismaClient({
+//     log: ['query'],
+//   });
+
+// if (process.env.NODE_ENV !== 'production') global.prisma = prisma;
+
 interface CustomNodeJsGlobal extends NodeJS.Global {
   prisma: PrismaClient;
 }

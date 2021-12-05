@@ -9,7 +9,7 @@ router.get('/users', async (req, res) => {
   res.json(createResponse({ data: users }));
 });
 
-router.delete('/user/:id', async (req, res) => {
+router.delete('/user/:id/', async (req, res) => {
   const { id } = req.params;
   const user = await prisma.user.delete({
     where: {
@@ -20,7 +20,7 @@ router.delete('/user/:id', async (req, res) => {
 });
 
 /** Get the current user info, including the serializables they currently have checked out. */
-router.get('/user/:id', async (req, res) => {
+router.get('/user/:id/', async (req, res) => {
   const { id } = req.params;
   const user = await prisma.user.findUnique({
     where: {

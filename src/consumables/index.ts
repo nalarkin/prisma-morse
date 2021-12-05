@@ -4,31 +4,49 @@ import { ajv } from '../common/validation';
 import prisma from '../config/database';
 import { createResponse } from '../common/response';
 import passport from 'passport';
-import { User, Prisma, Transaction, Consumable } from '@prisma/client';
+import { User, Prisma, Transaction } from '@prisma/client';
 
 const router = express.Router();
 
 /** Get all consumables */
-router.get('/consumables', async function (req, res) {
+router.get('/consumables', passport.authenticate('jwt', { session: false }), async function (req, res) {
   const consumables = await prisma.consumable.findMany();
   res.json(createResponse({ data: consumables }));
 });
 
 /** Create a consumable */
-router.post('/consumables', async function (req, res) {
+router.post('/consumables/', passport.authenticate('jwt', { session: false }), async function (req, res) {
   try {
     const validator = ajv.getSchema<NewConsumable>('newConsumable');
     const body = req.body;
+    const { id: userId, role } = req.user as User;
+
     if (validator === undefined) {
       return res.status(500).json(createResponse({ error: 'Unable to get json validator' }));
+    }
+
+    if (role !== 'ADMIN') {
+      return res.status(401).json(createResponse({ error: 'You do not have permission to create consumables' }));
     }
     if (validator(body)) {
       // we can be certain data is safe to use because we used ajv to verify
 
-      // const consumable = await prisma.consumable.create({ data: body });
       const { name, count, description, guide, photo } = body;
+      // nested write creates a transaction only if we successfully created the item
       const consumable = await prisma.consumable.create({
-        data: createUserAndPost(name, count, description, guide, photo),
+        data: {
+          name,
+          count,
+          description,
+          guide,
+          photo,
+          Transaction: {
+            create: {
+              type: 'CREATE',
+              userId,
+            },
+          },
+        },
       });
       return res.json(createResponse({ data: consumable }));
     }
@@ -38,28 +56,38 @@ router.post('/consumables', async function (req, res) {
   }
 });
 
-/** Delete a consumable */
-router.delete('/consumable/:id', async function (req, res) {
+/**
+ * Delete a consumable. Need to decide on deletion tracking method. Cascade delete
+ * is necessary? Maybe move it into a new table?
+ * */
+router.delete('/consumable/:id/', passport.authenticate('jwt', { session: false }), async function (req, res) {
   try {
     const { id } = req.params;
-    const consumable = await prisma.consumable.delete({
+    const { id: userId, role } = req.user as User;
+    if (role !== 'ADMIN') {
+      return res.status(401).json(createResponse({ error: 'You do not have permission to delete items' }));
+    }
+    const deleteAction = prisma.consumable.delete({
       where: {
         id: id,
       },
     });
-    res.json(createResponse({ data: consumable }));
+    // const deleteTransaction = createTransaction(id, userId, 'DELETE');
+    // const [deleteResult, createdTransaction] = await prisma.$transaction([deleteAction, deleteTransaction]);
+    const [deleteResult] = await prisma.$transaction([deleteAction]);
+    res.json(createResponse({ data: { deleteResult } }));
   } catch (err) {
     res.status(400).json(
       createResponse({
         error: 'Item does not exist',
       }),
     );
-    log.error(err);
+    log.error(JSON.stringify(err));
   }
 });
 
 /** Get a single specific consumable, show transaction history as well */
-router.get('/consumable/:id', async function (req, res) {
+router.get('/consumable/:id/', async function (req, res) {
   const { id } = req.params;
   const consumable = await prisma.consumable.findUnique({
     where: {
@@ -76,7 +104,7 @@ router.get('/consumable/:id', async function (req, res) {
 });
 
 /** Consume a given amount of a single consumable */
-router.put('/consumable/:id/take', async function (req, res) {
+router.put('/consumable/:id/take/', async function (req, res) {
   const { id } = req.params;
   const consumable = await prisma.consumable.update({
     where: {
@@ -92,12 +120,12 @@ router.put('/consumable/:id/take', async function (req, res) {
 });
 
 /** Consume a given amount of a single consumable and add into transaction table */
-router.put('/consumable/:id/take/track', passport.authenticate('jwt', { session: false }), async function (req, res) {
+router.put('/consumable/:id/take/track/', passport.authenticate('jwt', { session: false }), async function (req, res) {
   try {
     // used to validate json
     const validator = ajv.getSchema<TakeConsumable>('takeConsumable');
     const { id } = req.params;
-    const userId = (req.user as User).id; // get requester userid from passport
+    const { id: userId } = req.user as User; // get requester userid from passport
     if (validator === undefined) {
       return res.status(500).json(createResponse({ error: 'Unable to get validator to parse json' }));
     }
@@ -137,26 +165,26 @@ function createTransaction(consumableId: string, userId: number, type: Transacti
   });
 }
 
-/**
- * Function that ensures type safety and validation before adding to database
- *
- * Note on types. It says string | null but I think is actually string | undefined.
- * It produces slightly different behavior in Prisma. To get a different type, the ajv
- * type definition needs to change so instead of string | null it's string | undefined.
- */
-const createUserAndPost = (
-  name: string,
-  count: number,
-  description: string | null,
-  guide: string | null,
-  photo: string | null,
-) => {
-  return Prisma.validator<Prisma.ConsumableCreateInput>()({
-    name,
-    count,
-    description,
-    guide,
-    photo,
-  });
-};
+// /**
+//  * Function that ensures type safety and validation before adding to database
+//  *
+//  * Note on types. It says string | null but I think is actually string | undefined.
+//  * It produces slightly different behavior in Prisma. To get a different type, the ajv
+//  * type definition needs to change so instead of string | null it's string | undefined.
+//  */
+// const createUserAndPost = (
+//   name: string,
+//   count: number,
+//   description: string | null,
+//   guide: string | null,
+//   photo: string | null,
+// ) => {
+//   return Prisma.validator<Prisma.ConsumableCreateInput>()({
+//     name,
+//     count,
+//     description,
+//     guide,
+//     photo,
+//   });
+// };
 export default router;

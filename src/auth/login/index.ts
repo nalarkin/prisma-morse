@@ -13,7 +13,7 @@ interface LoginForm {
 }
 
 /** Login user, and respond with JWT if successful. */
-router.post('/auth/login', async function (req, res) {
+router.post('/auth/login/', async function (req, res) {
   try {
     const validator = ajv.getSchema<LoginForm>('login');
     if (validator === undefined) {
@@ -23,12 +23,13 @@ router.post('/auth/login', async function (req, res) {
       return res.status(401).json(createResponse({ error: ajv.errorsText(validator.errors) }));
     }
     const { password, email } = req.body;
+    // search for user in database
     const user = await prisma.user.findUnique({
       where: {
         email: email,
       },
     });
-
+    // if no user with email provided, don't bother verifying password
     if (user === null) {
       return res.status(401).json(
         createResponse({
@@ -36,6 +37,7 @@ router.post('/auth/login', async function (req, res) {
         }),
       );
     }
+    // verify password matches hashed password
     const isAuthenticated = await verifyPassword(user.password, password);
     if (!isAuthenticated) {
       return res.status(401).json(
@@ -44,6 +46,7 @@ router.post('/auth/login', async function (req, res) {
         }),
       );
     }
+    // they are authenticated, so give them a JWT for future requests
     res.json(createResponse({ data: issueJWT(user) }));
   } catch (e) {
     log.error(e);

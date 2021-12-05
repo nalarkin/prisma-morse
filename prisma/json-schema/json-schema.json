@@ -1,0 +1,277 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "unsafePassword": {
+          "type": "string"
+        },
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "role": {
+          "type": "string",
+          "enum": [
+            "USER",
+            "ADMIN"
+          ]
+        },
+        "Consumable": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Consumable"
+          }
+        },
+        "Serializable": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Serializable"
+          }
+        },
+        "Transaction": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Transaction"
+          }
+        }
+      }
+    },
+    "Consumable": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "name": {
+          "type": "string"
+        },
+        "count": {
+          "type": "integer"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "TOOL",
+            "DEVICE",
+            "CONSUMABLE"
+          ]
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "guide": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "photo": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "User": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/User"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Transaction": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Transaction"
+          }
+        }
+      }
+    },
+    "Serializable": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "name": {
+          "type": "string"
+        },
+        "serial_number": {
+          "type": "string"
+        },
+        "brand": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "BROKEN",
+            "USABLE",
+            "SCRAP",
+            "IN_REPAIR"
+          ]
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "TOOL",
+            "DEVICE",
+            "CONSUMABLE"
+          ]
+        },
+        "project": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "guide": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "photo": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "User": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/User"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Transaction": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Transaction"
+          }
+        }
+      }
+    },
+    "Transaction": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "Consumable": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Consumable"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Serializable": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Serializable"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "User": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/User"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "type": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "CHECKOUT",
+            "RETURN",
+            "CONSUME",
+            "CREATE",
+            "DELETE",
+            "EDIT"
+          ]
+        }
+      }
+    }
+  },
+  "type": "object",
+  "properties": {
+    "user": {
+      "$ref": "#/definitions/User"
+    },
+    "consumable": {
+      "$ref": "#/definitions/Consumable"
+    },
+    "serializable": {
+      "$ref": "#/definitions/Serializable"
+    },
+    "transaction": {
+      "$ref": "#/definitions/Transaction"
+    }
+  }
+}
