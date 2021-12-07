@@ -14,7 +14,7 @@ interface LoginForm {
 }
 
 /** Login user, and respond with JWT if successful. */
-router.post('/auth/login/', async function (req, res) {
+router.post('/auth/login/', async function (req, res, next) {
   try {
     const validator = ajv.getSchema<LoginForm>('login');
     if (validator === undefined) {
@@ -54,8 +54,7 @@ router.post('/auth/login/', async function (req, res) {
     };
     res.json(createResponse({ data: payload }));
   } catch (e) {
-    logger.error(e);
-    res.status(401).json({ error: `Unknown error occured. ${JSON.stringify(e)}` });
+    next(e);
   }
 });
 

@@ -69,35 +69,3 @@ export function issueJWT(user: User, expiresIn: SignOptions['expiresIn']) {
 
   return `${signedToken}`;
 }
-
-// /**
-//  * @param {*} user - The user object.  We need this to set the JWT `sub` payload property to the MySQL user ID
-//  */
-// export function issueJWT(user: User) {
-//   const { id, role } = user;
-
-//   const expiresIn = '1d';
-
-//   // this gets stored in jwt, store id to query database for role on each request
-//   // store the role so the front end UI can display the proper UI
-//   const payload = {
-//     sub: id,
-//     role: role,
-//     iat: Date.now(),
-//   };
-
-//   // works for keys with no passphrase and keys with passphrase if .env variable matches correctly
-//   const signedToken = jsonwebtoken.sign(
-//     payload,
-//     { key: PRIV_KEY, passphrase: process.env.RSA_PASSPHRASE ?? '' },
-//     {
-//       expiresIn: expiresIn,
-//       algorithm: 'HS256',
-//     },
-//   );
-
-//   return {
-//     token: `Bearer ${signedToken}`,
-//     expires: expiresIn,
-//   };
-// }
