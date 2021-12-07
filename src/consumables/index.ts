@@ -5,6 +5,7 @@ import prisma from '../config/database';
 import { createResponse } from '../common/response';
 import passport from 'passport';
 import { User, Transaction } from '@prisma/client';
+import { JWTPayload } from '../auth/utils';
 
 const router = express.Router();
 
@@ -19,7 +20,7 @@ router.post('/consumables/', passport.authenticate('jwt', { session: false }), a
   try {
     const validator = ajv.getSchema<NewConsumable>('newConsumable');
     const body = req.body;
-    const { id: userId, role } = req.user as User;
+    const { sub: userId, role } = req.user as JWTPayload;
 
     if (validator === undefined) {
       return res.status(500).json(createResponse({ error: 'Unable to get json validator' }));
@@ -63,7 +64,7 @@ router.post('/consumables/', passport.authenticate('jwt', { session: false }), a
 router.delete('/consumable/:id/', passport.authenticate('jwt', { session: false }), async function (req, res) {
   try {
     const { id } = req.params;
-    const { role } = req.user as User;
+    const { role } = req.user as JWTPayload;
     if (role !== 'ADMIN') {
       return res.status(401).json(createResponse({ error: 'You do not have permission to delete items' }));
     }
@@ -125,7 +126,7 @@ router.put('/consumable/:id/take/track/', passport.authenticate('jwt', { session
     // used to validate json
     const validator = ajv.getSchema<TakeConsumable>('takeConsumable');
     const { id } = req.params;
-    const { id: userId } = req.user as User; // get requester userid from passport
+    const { sub: userId } = req.user as JWTPayload; // get requester userid from passport
     if (validator === undefined) {
       return res.status(500).json(createResponse({ error: 'Unable to get validator to parse json' }));
     }

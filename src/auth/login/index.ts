@@ -1,5 +1,5 @@
 import express from 'express';
-import { verifyPassword } from '../utils';
+import { ACCESS_JWT_EXPIRE, REFRESH_JWT_EXPIRE, verifyPassword } from '../utils';
 import { issueJWT } from '../utils';
 import prisma from '../../config/database';
 import { ajv } from '../../common/validation';
@@ -47,7 +47,11 @@ router.post('/auth/login/', async function (req, res) {
       );
     }
     // they are authenticated, so give them a JWT for future requests
-    res.json(createResponse({ data: issueJWT(user) }));
+    const payload = {
+      access_token: issueJWT(user, ACCESS_JWT_EXPIRE),
+      refresh_token: issueJWT(user, REFRESH_JWT_EXPIRE),
+    };
+    res.json(createResponse({ data: payload }));
   } catch (e) {
     log.error(e);
     res.status(401).json({ error: `Unknown error occured. ${JSON.stringify(e)}` });

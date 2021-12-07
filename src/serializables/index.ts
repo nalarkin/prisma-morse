@@ -1,6 +1,7 @@
 import { Transaction, User } from '@prisma/client';
 import express from 'express';
 import passport from 'passport';
+import { JWTPayload } from '../auth/utils';
 import { createResponse } from '../common/response';
 import prisma from '../config/database';
 
@@ -16,7 +17,7 @@ router.get('/serializables', passport.authenticate('jwt', { session: false }), a
 router.delete('/serializable/:id/', passport.authenticate('jwt', { session: false }), async (req, res) => {
   try {
     const { id } = req.params;
-    const { role } = req.user as User;
+    const { role } = req.user as JWTPayload;
     if (role !== 'ADMIN') {
       return res.status(401).json(createResponse({ error: 'You are not authorized to delete serializable items' }));
     }
@@ -53,67 +54,94 @@ router.get('/serializable/:id/', async (req, res) => {
   }
 });
 
-/** Checkout Item */
-router.put('/serializable/:id/checkout/auth/', passport.authenticate('jwt', { session: false }), async (req, res) => {
+/**
+ * Checkout Item
+ * @TODO: Add validation for making sure item is available before checking it out. Currently people can
+ * checkout item that is already checked out.
+ * See below for example of a way to solve it:
+ *  https://www.prisma.io/docs/guides/performance-and-optimization/prisma-client-transactions-guide#optimistic-concurrency-control
+ * */
+router.put('/serializable/:id/checkout/', passport.authenticate('jwt', { session: false }), async (req, res) => {
   try {
     const { id } = req.params;
-    const { id: userId } = req.user as User;
+    const { sub: userId } = req.user as JWTPayload;
     // find serializable and checkout
-    const checkoutSerializable = prisma.serializable.update({
+    const checkoutSerializable = await prisma.serializable.findUnique({
       where: {
         id,
       },
-      data: {
-        userId,
-      },
     });
-    // update user connection with item
-    const addToUserSerializables = prisma.user.update({
-      where: {
-        id: userId,
-      },
-      data: {
-        Serializable: { connect: { id: id } },
-      },
-    });
-    const checkoutTransaction = createTransaction(id, userId, 'CHECKOUT');
-    const [checkoutResult, addResult, transactionResult] = await prisma.$transaction([
-      checkoutSerializable,
-      addToUserSerializables,
-      checkoutTransaction,
-    ]);
-    res.json(createResponse({ data: { checkoutResult, addResult, transactionResult } }));
+    if (checkoutSerializable === null) {
+      return res.status(404).json(createResponse({ error: 'Serializable does not exist' }));
+    }
+
+    if (checkoutSerializable.userId === userId) {
+      return res.status(400).json(createResponse({ error: 'You are already renting this item' }));
+    }
+    // if no current user is renting it
+    if (checkoutSerializable.userId === null) {
+      const updateSerializable = prisma.serializable.update({
+        where: {
+          id,
+        },
+        data: {
+          userId,
+        },
+      });
+      const addToUserSerializables = prisma.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          Serializable: { connect: { id: id } },
+        },
+      });
+      const checkoutTransaction = createTransaction(id, userId, 'CHECKOUT');
+      const [updateResult, addResult, transactionResult] = await prisma.$transaction([
+        updateSerializable,
+        addToUserSerializables,
+        checkoutTransaction,
+      ]);
+      res.json(createResponse({ data: { updateResult, addResult, transactionResult } }));
+    } else {
+      return res
+        .status(400)
+        .json(createResponse({ error: 'You cannot checkout an item that is already checked out by another user' }));
+    }
   } catch (err) {
     log.error(err);
     res.json(createResponse({ error: 'Error occured during checkout process' }));
   }
 });
 
-router.put('/serializable/:id/checkout/', async (req, res) => {
+/** Return an item, only if the person returning matches the current renter */
+router.put('/serializable/:id/return/', passport.authenticate('jwt', { session: false }), async (req, res) => {
   const { id } = req.params;
+  const { sub: userId } = req.user as JWTPayload;
   /** Insert logic to check if request id requesting change is the same as the current renter */
-  const serializable = await prisma.serializable.update({
+  const serializable = await prisma.serializable.findUnique({
     where: {
-      id: id,
-    },
-    data: {
-      userId: 4,
+      id,
     },
   });
-  res.json(createResponse({ data: serializable }));
-});
-router.put('/serializable/:id/return/', async (req, res) => {
-  const { id } = req.params;
-  /** Insert logic to check if request id requesting change is the same as the current renter */
-  const serializable = await prisma.serializable.update({
+  if (serializable === null) {
+    return res.status(404).json(createResponse({ error: 'Item does not exist' }));
+  }
+  if (serializable.userId === null) {
+    return res.status(400).json(createResponse({ error: 'You cannot return an item that is not being rented' }));
+  }
+  if (serializable.userId !== userId) {
+    return res.status(401).json(createResponse({ error: 'You cannot return an item that someone else is renting' }));
+  }
+  const result = await prisma.serializable.update({
     where: {
-      id: id,
+      id,
     },
     data: {
       userId: null,
     },
   });
-  res.json(createResponse({ data: serializable }));
+  res.json(createResponse({ data: result }));
 });
 
 /** Helper function to create a transaction */

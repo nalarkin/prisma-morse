@@ -6,6 +6,7 @@ import consumables from './consumables/index';
 import transactions from './transactions/index';
 import login from './auth/login/index';
 import register from './auth/register/index';
+import tokenRefresh from './auth/token/refresh';
 import protectedRoute from './auth/protected/index';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import pinohttp from 'pino-http';
@@ -35,6 +36,7 @@ app.use('', login);
 app.use('', register);
 app.use('', protectedRoute);
 app.use('', transactions);
+app.use('', tokenRefresh);
 
 /** Start listening on port */
 app.listen(8000, () =>

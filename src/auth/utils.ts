@@ -3,8 +3,12 @@ import jsonwebtoken from 'jsonwebtoken';
 import path from 'path';
 import fs from 'fs';
 import { User } from '@prisma/client';
+import { SignOptions } from 'jsonwebtoken';
 
-const pathToPrivateKey = path.join(__dirname, 'tokens', 'id_rsa_priv.pem');
+export const ACCESS_JWT_EXPIRE: SignOptions['expiresIn'] = '2 days';
+export const REFRESH_JWT_EXPIRE: SignOptions['expiresIn'] = '7 days';
+
+const pathToPrivateKey = path.join(__dirname, 'token', 'id_rsa_priv.pem');
 const PRIV_KEY = fs.readFileSync(pathToPrivateKey, 'utf8');
 
 /** Recomendations listed here:
@@ -35,17 +39,24 @@ export async function verifyPassword(hashed: string, pw: string) {
   });
 }
 
+export type JWTPayload = {
+  sub: number;
+  role: User['role'];
+  iat: number;
+};
+
 /**
  * @param {*} user - The user object.  We need this to set the JWT `sub` payload property to the MySQL user ID
  */
-export function issueJWT(user: User) {
+export function issueJWT(user: User, expiresIn: SignOptions['expiresIn']) {
   const { id, role } = user;
 
-  const expiresIn = '1d';
+  // const expiresIn = '1d';
+  // const expiresIn = '2s';
 
   // this gets stored in jwt, store id to query database for role on each request
   // store the role so the front end UI can display the proper UI
-  const payload = {
+  const payload: JWTPayload = {
     sub: id,
     role: role,
     iat: Date.now(),
@@ -61,8 +72,37 @@ export function issueJWT(user: User) {
     },
   );
 
-  return {
-    token: `Bearer ${signedToken}`,
-    expires: expiresIn,
-  };
+  return `${signedToken}`;
 }
+
+// /**
+//  * @param {*} user - The user object.  We need this to set the JWT `sub` payload property to the MySQL user ID
+//  */
+// export function issueJWT(user: User) {
+//   const { id, role } = user;
+
+//   const expiresIn = '1d';
+
+//   // this gets stored in jwt, store id to query database for role on each request
+//   // store the role so the front end UI can display the proper UI
+//   const payload = {
+//     sub: id,
+//     role: role,
+//     iat: Date.now(),
+//   };
+
+//   // works for keys with no passphrase and keys with passphrase if .env variable matches correctly
+//   const signedToken = jsonwebtoken.sign(
+//     payload,
+//     { key: PRIV_KEY, passphrase: process.env.RSA_PASSPHRASE ?? '' },
+//     {
+//       expiresIn: expiresIn,
+//       algorithm: 'HS256',
+//     },
+//   );
+
+//   return {
+//     token: `Bearer ${signedToken}`,
+//     expires: expiresIn,
+//   };
+// }

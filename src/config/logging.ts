@@ -16,7 +16,7 @@ export default function initializeLogger() {
         new winston.transports.File({ filename: 'error.log', level: 'error' }),
         new winston.transports.File({ filename: 'combined.log' }),
       ],
-    })
+    }),
   );
 
   //
@@ -28,7 +28,7 @@ export default function initializeLogger() {
     log.add(
       new winston.transports.Console({
         format: combine(colorize(), simple()),
-      })
+      }),
     );
   }
 }
