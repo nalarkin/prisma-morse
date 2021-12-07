@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { PrismaClient, Prisma } from '@prisma/client';
 import * as faker from 'faker';
 import { hashPassword } from '../src/auth/utils';
@@ -9,12 +10,13 @@ async function makeUserData(): Promise<Prisma.UserCreateInput[]> {
       const unsafePassword = faker.internet.password();
       const password = await hashPassword(unsafePassword);
       return {
-        name: `${faker.name.firstName()} ${faker.name.lastName()}`,
+        firstName: faker.name.firstName(),
+        lastName: faker.name.lastName(),
         email: faker.internet.email(),
         password: password,
         unsafePassword: unsafePassword,
       };
-    })
+    }),
   );
 }
 
@@ -42,8 +44,8 @@ const prisma = new PrismaClient();
 
 async function main() {
   console.log(`Start seeding ...`);
-  // const userData: Prisma.UserCreateInput[] = await makeUserData();  /** Uncomment to create fake users */
-  // await prisma.user.createMany({ data: userData });                /** Uncomment to create fake users */
+  // const userData: Prisma.UserCreateInput[] = await makeUserData(); /** Uncomment to create fake users */
+  // await prisma.user.createMany({ data: userData }); /** Uncomment to create fake users */
   // await prisma.consumable.createMany({ data: consumableData });    /** Uncomment to create fake consumables */
   // await prisma.serializable.createMany({ data: serializableData });  /** Uncomment to create fake serializables */
   console.log('Your database has been seeded.');

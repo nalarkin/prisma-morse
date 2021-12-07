@@ -4,7 +4,8 @@ export interface RegisterForm {
   email: string;
   password: string;
   confirmPassword: string;
-  name: string;
+  firstName: string;
+  lastName: string;
 }
 
 /**
@@ -21,8 +22,9 @@ export const schema_register: JSONSchemaType<RegisterForm> = {
     email: { type: 'string' },
     password: { type: 'string' },
     confirmPassword: { type: 'string', pattern: { $data: '1/password' } },
-    name: { type: 'string' },
+    firstName: { type: 'string' },
+    lastName: { type: 'string' },
   },
-  required: ['email', 'password', 'name', 'confirmPassword'],
+  required: ['email', 'password', 'firstName', 'lastName', 'confirmPassword'],
   additionalProperties: true,
 };

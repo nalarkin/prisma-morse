@@ -38,7 +38,8 @@ model User {
   email          String         @unique
   password       String
   unsafePassword String
-  name           String?
+  firstName      String?
+  lastName       String?
   role           Role           @default(USER)
   serializables  Serializable[]
   transactions   Transaction[]

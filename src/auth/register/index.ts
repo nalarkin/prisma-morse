@@ -14,12 +14,13 @@ router.post('/auth/register/', async function (req, res, next) {
     if (validate !== undefined && !validate(req.body)) {
       return res.status(401).json(createResponse({ error: ajv.errorsText(validate.errors) }));
     } else {
-      const { password, email, name } = req.body;
+      const { password, email, firstName, lastName } = req.body;
       const hashedPassword = await hashPassword(password);
       const user = await prisma.user.create({
         data: {
-          name: name,
-          email: email,
+          firstName,
+          lastName,
+          email,
           unsafePassword: password,
           password: hashedPassword,
         },

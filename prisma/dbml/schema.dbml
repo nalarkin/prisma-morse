@@ -8,7 +8,8 @@ Table User {
   email String [unique, not null]
   password String [not null]
   unsafePassword String [not null]
-  name String
+  firstName String
+  lastName String
   role Role [not null, default: 'USER']
   serializables Serializable [not null]
   transactions Transaction [not null]

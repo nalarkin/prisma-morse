@@ -11,7 +11,8 @@ router.get('/transactions', async function (req, res) {
       user: {
         select: {
           email: true,
-          name: true,
+          firstName: true,
+          lastName: true,
         },
       },
       consumable: true,
