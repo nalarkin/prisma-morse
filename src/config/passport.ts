@@ -4,7 +4,8 @@ import fs from 'fs';
 import path from 'path';
 import { Request } from 'express';
 import prisma from './database';
-import { JWTPayload } from '../auth/utils';
+import { JWTData } from '../auth/utils';
+import { logger } from './logging';
 
 const pathToKey = path.join(__dirname, '..', 'auth', 'token', 'id_rsa_pub.pem');
 
@@ -15,23 +16,19 @@ const options: StrategyOptions = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
   secretOrKey: PUB_KEY,
   algorithms: ['RS256'],
+  // ignoreExpiration: false,
 };
 
-type JWTPayloadRequest = JWTPayload & {
+type JWTPayloadRequest = JWTData & {
   exp: number;
+  iat: number;
 };
 
 export default (passport: { use: (arg0: JwtStrategy) => void }) => {
-  log.debug('configuring passport to use JWT');
+  logger.debug('configuring passport to use JWT');
   // The JWT payload is passed into the verify callback
   passport.use(
     new JwtStrategy(options, function (jwt_payload: JWTPayloadRequest, done) {
-      // We will assign the `sub` property on the JWT to the database ID of user
-      const isExpired = jwt_payload.exp < Date.now();
-      log.info(`is expired: ${isExpired}`);
-      if (isExpired) {
-        return done(null, false);
-      }
       // payload info becomes attached to requests throughout express
       return done(null, jwt_payload);
       // if expired, request refresh token, if refreshed, pull users data again and save into small package
@@ -49,5 +46,5 @@ export default (passport: { use: (arg0: JwtStrategy) => void }) => {
       //   });
     }),
   );
-  log.debug('configuration complete');
+  logger.debug('configuration complete');
 };

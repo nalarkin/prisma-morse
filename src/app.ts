@@ -12,13 +12,10 @@ import protectedRoute from './auth/protected/index';
 import pinohttp from 'pino-http';
 import passport from 'passport';
 import configPassport from './config/passport';
-import initializeLogger from './config/logging';
+import { logger } from './config/logging';
 
 /** Make sure environment variables are loaded */
 dotenv.config();
-
-/** Initialize Global Custom Logger */
-initializeLogger();
 
 /** Initialize JWT stategy  */
 configPassport(passport);
@@ -40,7 +37,7 @@ app.use('', tokenRefresh);
 
 /** Start listening on port */
 app.listen(8000, () =>
-  log.info(`
+  logger.info(`
     Server ready at: http://localhost:8000 
     Users: http://localhost:8000/users
     Serializables: http://localhost:8000/serializables

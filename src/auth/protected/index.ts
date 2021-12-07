@@ -2,7 +2,7 @@ import { User } from '@prisma/client';
 import express from 'express';
 import passport from 'passport';
 import { createResponse } from '../../common/response';
-import { JWTPayload } from '../utils';
+import { JWTData } from '../utils';
 
 const router = express.Router();
 
@@ -21,7 +21,7 @@ router.get('/auth/protected', passport.authenticate('jwt', { session: false }), 
 /** Route that only admins can see. */
 router.get('/auth/admin', passport.authenticate('jwt', { session: false }), (req, res) => {
   // casting [req.user] for autocomplete
-  const { role } = req.user as JWTPayload;
+  const { role } = req.user as JWTData;
   if (role === 'USER') {
     // not authorized
     return res.status(401).json(createResponse({ error: 'You do not have sufficient permissions.' }));

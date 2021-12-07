@@ -5,8 +5,8 @@ import fs from 'fs';
 import { User } from '@prisma/client';
 import { SignOptions } from 'jsonwebtoken';
 
-export const ACCESS_JWT_EXPIRE: SignOptions['expiresIn'] = '2 days';
-export const REFRESH_JWT_EXPIRE: SignOptions['expiresIn'] = '7 days';
+export const ACCESS_JWT_EXPIRE: SignOptions['expiresIn'] = 15;
+export const REFRESH_JWT_EXPIRE: SignOptions['expiresIn'] = '7d';
 
 const pathToPrivateKey = path.join(__dirname, 'token', 'id_rsa_priv.pem');
 const PRIV_KEY = fs.readFileSync(pathToPrivateKey, 'utf8');
@@ -39,10 +39,9 @@ export async function verifyPassword(hashed: string, pw: string) {
   });
 }
 
-export type JWTPayload = {
+export type JWTData = {
   sub: number;
   role: User['role'];
-  iat: number;
 };
 
 /**
@@ -51,18 +50,14 @@ export type JWTPayload = {
 export function issueJWT(user: User, expiresIn: SignOptions['expiresIn']) {
   const { id, role } = user;
 
-  // const expiresIn = '1d';
-  // const expiresIn = '2s';
-
   // this gets stored in jwt, store id to query database for role on each request
   // store the role so the front end UI can display the proper UI
-  const payload: JWTPayload = {
+  const payload: JWTData = {
     sub: id,
     role: role,
-    iat: Date.now(),
   };
 
-  // works for keys with no passphrase and keys with passphrase if .env variable matches correctly
+  // works for keys with ao passphrase and keys with passphrase if .env variable matches correctly
   const signedToken = jsonwebtoken.sign(
     payload,
     { key: PRIV_KEY, passphrase: process.env.RSA_PASSPHRASE ?? '' },

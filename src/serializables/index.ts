@@ -1,9 +1,10 @@
 import { Transaction, User } from '@prisma/client';
 import express from 'express';
 import passport from 'passport';
-import { JWTPayload } from '../auth/utils';
+import { JWTData } from '../auth/utils';
 import { createResponse } from '../common/response';
 import prisma from '../config/database';
+import { logger } from '../config/logging';
 
 const router = express.Router();
 
@@ -17,7 +18,7 @@ router.get('/serializables', passport.authenticate('jwt', { session: false }), a
 router.delete('/serializable/:id/', passport.authenticate('jwt', { session: false }), async (req, res) => {
   try {
     const { id } = req.params;
-    const { role } = req.user as JWTPayload;
+    const { role } = req.user as JWTData;
     if (role !== 'ADMIN') {
       return res.status(401).json(createResponse({ error: 'You are not authorized to delete serializable items' }));
     }
@@ -29,7 +30,7 @@ router.delete('/serializable/:id/', passport.authenticate('jwt', { session: fals
     });
     res.json(createResponse({ data: serializable }));
   } catch (err) {
-    log.error(err);
+    logger.error(err);
   }
 });
 
@@ -49,7 +50,7 @@ router.get('/serializable/:id/', async (req, res) => {
     }
     res.json(createResponse({ data: serializable }));
   } catch (err) {
-    log.error(err);
+    logger.error(err);
     res.status(401).json({ error: `Unknown error occured. ${JSON.stringify(err)}` });
   }
 });
@@ -64,7 +65,7 @@ router.get('/serializable/:id/', async (req, res) => {
 router.put('/serializable/:id/checkout/', passport.authenticate('jwt', { session: false }), async (req, res) => {
   try {
     const { id } = req.params;
-    const { sub: userId } = req.user as JWTPayload;
+    const { sub: userId } = req.user as JWTData;
     // find serializable and checkout
     const checkoutSerializable = await prisma.serializable.findUnique({
       where: {
@@ -109,7 +110,7 @@ router.put('/serializable/:id/checkout/', passport.authenticate('jwt', { session
         .json(createResponse({ error: 'You cannot checkout an item that is already checked out by another user' }));
     }
   } catch (err) {
-    log.error(err);
+    logger.error(err);
     res.json(createResponse({ error: 'Error occured during checkout process' }));
   }
 });
@@ -117,7 +118,7 @@ router.put('/serializable/:id/checkout/', passport.authenticate('jwt', { session
 /** Return an item, only if the person returning matches the current renter */
 router.put('/serializable/:id/return/', passport.authenticate('jwt', { session: false }), async (req, res) => {
   const { id } = req.params;
-  const { sub: userId } = req.user as JWTPayload;
+  const { sub: userId } = req.user as JWTData;
   /** Insert logic to check if request id requesting change is the same as the current renter */
   const serializable = await prisma.serializable.findUnique({
     where: {

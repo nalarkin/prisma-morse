@@ -4,6 +4,7 @@ import { issueJWT } from '../utils';
 import prisma from '../../config/database';
 import { ajv } from '../../common/validation';
 import { createResponse } from '../../common/response';
+import { logger } from '../../config/logging';
 
 const router = express.Router();
 
@@ -53,7 +54,7 @@ router.post('/auth/login/', async function (req, res) {
     };
     res.json(createResponse({ data: payload }));
   } catch (e) {
-    log.error(e);
+    logger.error(e);
     res.status(401).json({ error: `Unknown error occured. ${JSON.stringify(e)}` });
   }
 });
