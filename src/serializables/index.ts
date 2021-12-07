@@ -42,7 +42,7 @@ router.get('/serializable/:id/', async (req, res, next) => {
         id: id,
       },
       include: {
-        User: true,
+        renter: true,
       },
     });
     if (serializable === null) {
@@ -93,7 +93,7 @@ router.put('/serializable/:id/checkout/', passport.authenticate('jwt', { session
           id: userId,
         },
         data: {
-          Serializable: { connect: { id: id } },
+          serializables: { connect: { id: id } },
         },
       });
       const checkoutTransaction = createTransaction(id, userId, 'CHECKOUT');

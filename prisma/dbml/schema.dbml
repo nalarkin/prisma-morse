@@ -10,9 +10,8 @@ Table User {
   unsafePassword String [not null]
   name String
   role Role [not null, default: 'USER']
-  Consumable Consumable [not null]
-  Serializable Serializable [not null]
-  Transaction Transaction [not null]
+  serializables Serializable [not null]
+  transactions Transaction [not null]
 }
 
 Table Consumable {
@@ -25,9 +24,7 @@ Table Consumable {
   description String
   guide String
   photo String
-  User User
-  userId Int
-  Transaction Transaction [not null]
+  transactions Transaction [not null]
 }
 
 Table Serializable {
@@ -43,19 +40,19 @@ Table Serializable {
   description String
   guide String
   photo String
-  User User
+  renter User
   userId Int
-  Transaction Transaction [not null]
+  transactions Transaction [not null]
 }
 
 Table Transaction {
   id String [pk]
   createdAt DateTime [default: `now()`, not null]
-  Consumable Consumable
+  consumable Consumable
   consumableId String
-  Serializable Serializable
+  serializable Serializable
   serializableId String
-  User User
+  user User
   userId Int
   type TransactionType
 }
@@ -86,8 +83,6 @@ Enum ItemStatus {
   SCRAP
   IN_REPAIR
 }
-
-Ref: Consumable.userId > User.id
 
 Ref: Serializable.userId > User.id
 

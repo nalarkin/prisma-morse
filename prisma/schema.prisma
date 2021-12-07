@@ -40,24 +40,21 @@ model User {
   unsafePassword String
   name           String?
   role           Role           @default(USER)
-  Consumable     Consumable[]
-  Serializable   Serializable[]
-  Transaction    Transaction[]
+  serializables  Serializable[]
+  transactions   Transaction[]
 }
 
 model Consumable {
-  id          String        @id @default(cuid())
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  name        String
-  count       Int
-  type        ItemType      @default(CONSUMABLE)
-  description String?
-  guide       String?
-  photo       String?
-  User        User?         @relation(fields: [userId], references: [id])
-  userId      Int?
-  Transaction Transaction[]
+  id           String        @id @default(cuid())
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  name         String
+  count        Int
+  type         ItemType      @default(CONSUMABLE)
+  description  String?
+  guide        String?
+  photo        String?
+  transactions Transaction[]
 }
 
 model Serializable {
@@ -73,19 +70,19 @@ model Serializable {
   description   String?
   guide         String?
   photo         String?
-  User          User?         @relation(fields: [userId], references: [id])
+  renter        User?         @relation(fields: [userId], references: [id])
   userId        Int?
-  Transaction   Transaction[]
+  transactions  Transaction[]
 }
 
 model Transaction {
   id             String           @id @default(cuid())
   createdAt      DateTime         @default(now())
-  Consumable     Consumable?      @relation(fields: [consumableId], references: [id])
+  consumable     Consumable?      @relation(fields: [consumableId], references: [id])
   consumableId   String?
-  Serializable   Serializable?    @relation(fields: [serializableId], references: [id])
+  serializable   Serializable?    @relation(fields: [serializableId], references: [id])
   serializableId String?
-  User           User?            @relation(fields: [userId], references: [id])
+  user           User?            @relation(fields: [userId], references: [id])
   userId         Int?
   type           TransactionType?
 }

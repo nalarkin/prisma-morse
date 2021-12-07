@@ -42,7 +42,7 @@ router.post('/consumables/', passport.authenticate('jwt', { session: false }), a
           description,
           guide,
           photo,
-          Transaction: {
+          transactions: {
             create: {
               type: 'CREATE',
               userId,
@@ -96,7 +96,7 @@ router.get('/consumable/:id/', async function (req, res) {
       id: id,
     },
     include: {
-      Transaction: true,
+      transactions: true,
     },
   });
   if (consumable === null) {

@@ -27,8 +27,7 @@ router.get('/user/:id/', async (req, res) => {
       id: Number(id),
     },
     include: {
-      Serializable: true,
-      Consumable: true,
+      serializables: true,
     },
   });
   if (user === null) {

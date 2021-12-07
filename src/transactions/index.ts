@@ -8,14 +8,14 @@ const router = express.Router();
 router.get('/transactions', async function (req, res) {
   const transactions = await prisma.transaction.findMany({
     include: {
-      User: {
+      user: {
         select: {
           email: true,
           name: true,
         },
       },
-      Consumable: true,
-      Serializable: true,
+      consumable: true,
+      serializable: true,
     },
   });
   res.json(createResponse({ data: transactions }));
