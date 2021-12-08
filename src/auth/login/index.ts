@@ -14,7 +14,7 @@ interface LoginForm {
 }
 
 /** Login user, and respond with JWT if successful. */
-router.post('/auth/login/', async function (req, res, next) {
+router.post('/', async function (req, res, next) {
   try {
     const validator = ajv.getSchema<LoginForm>('login');
     if (validator === undefined) {

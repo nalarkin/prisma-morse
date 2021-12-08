@@ -27,15 +27,15 @@ app.use(passport.initialize());
 // app.use(pinohttp()); /** Uncomment if you want to see detailed http debug info*/
 
 /** Setup Routes */
-app.use('', users);
-app.use('', serializables);
-app.use('', consumables);
-app.use('', login);
-app.use('', register);
-app.use('', protectedRoute);
-app.use('', transactions);
-app.use('', tokenRefresh);
-app.use('', error);
+app.use('/auth', protectedRoute);
+app.use('/auth/login', login);
+app.use('/auth/register', register);
+app.use('/auth/token', tokenRefresh);
+app.use('/consumables', consumables);
+app.use('/error', error);
+app.use('/serializables', serializables);
+app.use('/transactions', transactions);
+app.use('/users', users);
 
 /** Start listening on port */
 app.listen(8000, () =>

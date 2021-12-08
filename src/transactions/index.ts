@@ -5,7 +5,7 @@ import prisma from '../config/database';
 const router = express.Router();
 
 /** Example of only sending a few values from the relational data that was included. */
-router.get('/transactions', async function (req, res) {
+router.get('/', async function (req, res) {
   const transactions = await prisma.transaction.findMany({
     include: {
       user: {

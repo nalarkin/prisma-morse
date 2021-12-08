@@ -8,7 +8,7 @@ import { createResponse } from '../../common/response';
 const router = express.Router();
 
 /** Register a new user */
-router.post('/auth/register/', async function (req, res, next) {
+router.post('/', async function (req, res, next) {
   const validate = ajv.getSchema<RegisterForm>('register');
   try {
     if (validate !== undefined && !validate(req.body)) {

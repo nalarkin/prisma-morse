@@ -7,7 +7,7 @@ import { JWTData } from '../utils';
 const router = express.Router();
 
 /** Route that all registered users can see */
-router.get('/auth/protected', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.get('/protected/', passport.authenticate('jwt', { session: false }), (req, res) => {
   res.status(200).json(
     createResponse({
       data: {
@@ -19,7 +19,7 @@ router.get('/auth/protected', passport.authenticate('jwt', { session: false }), 
 });
 
 /** Route that only admins can see. */
-router.get('/auth/admin', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.get('/admin/', passport.authenticate('jwt', { session: false }), (req, res) => {
   // casting [req.user] for autocomplete
   const { role } = req.user as JWTData;
   if (role === 'USER') {

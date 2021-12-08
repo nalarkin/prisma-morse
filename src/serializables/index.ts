@@ -9,13 +9,13 @@ import { logger } from '../config/logging';
 const router = express.Router();
 
 /** Get all serializables if user is authenticated */
-router.get('/serializables', passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.get('/', passport.authenticate('jwt', { session: false }), async (req, res) => {
   const serializables = await prisma.serializable.findMany();
   res.json(createResponse({ data: serializables }));
 });
 
 /** Delete serializable if user is Admin */
-router.delete('/serializable/:id/', passport.authenticate('jwt', { session: false }), async (req, res, next) => {
+router.delete('/:id/', passport.authenticate('jwt', { session: false }), async (req, res, next) => {
   try {
     const { id } = req.params;
     const { role } = req.user as JWTData;
@@ -34,7 +34,7 @@ router.delete('/serializable/:id/', passport.authenticate('jwt', { session: fals
   }
 });
 
-router.get('/serializable/:id/', async (req, res, next) => {
+router.get('/:id/', async (req, res, next) => {
   try {
     const { id } = req.params;
     const serializable = await prisma.serializable.findUnique({
@@ -61,7 +61,7 @@ router.get('/serializable/:id/', async (req, res, next) => {
  * See below for example of a way to solve it:
  *  https://www.prisma.io/docs/guides/performance-and-optimization/prisma-client-transactions-guide#optimistic-concurrency-control
  * */
-router.put('/serializable/:id/checkout/', passport.authenticate('jwt', { session: false }), async (req, res, next) => {
+router.put('/:id/checkout/', passport.authenticate('jwt', { session: false }), async (req, res, next) => {
   try {
     const { id } = req.params;
     const { sub: userId } = req.user as JWTData;
@@ -114,7 +114,7 @@ router.put('/serializable/:id/checkout/', passport.authenticate('jwt', { session
 });
 
 /** Return an item, only if the person returning matches the current renter */
-router.put('/serializable/:id/return/', passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.put('/:id/return/', passport.authenticate('jwt', { session: false }), async (req, res) => {
   const { id } = req.params;
   const { sub: userId } = req.user as JWTData;
   /** Insert logic to check if request id requesting change is the same as the current renter */

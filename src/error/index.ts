@@ -16,15 +16,16 @@ async function functionThatThrowsError() {
 }
 
 /** Expect it to crash server */
-router.get('/error/', async (req, res) => {
+router.get('/', async (req, res) => {
   await functionThatThrowsError();
   res.json(createResponse({ data: { message: 'All good no errors' } }));
 });
 /** Pass to next */
-router.get('/error/handled/', async (req, res, next) => {
+router.get('/handled/', async (req, res, next) => {
   try {
     await functionThatThrowsError();
     res.json(createResponse({ data: { message: 'All good no errors' } }));
+    throw '';
   } catch (err) {
     next(err);
   }

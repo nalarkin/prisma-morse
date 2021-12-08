@@ -11,13 +11,13 @@ import { logger } from '../config/logging';
 const router = express.Router();
 
 /** Get all consumables */
-router.get('/consumables', passport.authenticate('jwt', { session: false }), async function (req, res) {
+router.get('/', passport.authenticate('jwt', { session: false }), async function (req, res) {
   const consumables = await prisma.consumable.findMany();
   res.json(createResponse({ data: consumables }));
 });
 
 /** Create a consumable */
-router.post('/consumables/', passport.authenticate('jwt', { session: false }), async function (req, res, next) {
+router.post('/', passport.authenticate('jwt', { session: false }), async function (req, res, next) {
   try {
     const validator = ajv.getSchema<NewConsumable>('newConsumable');
     const body = req.body;
@@ -62,7 +62,7 @@ router.post('/consumables/', passport.authenticate('jwt', { session: false }), a
  * Delete a consumable. Need to decide on deletion tracking method. Cascade delete
  * is necessary? Maybe move it into a new table?
  * */
-router.delete('/consumable/:id/', passport.authenticate('jwt', { session: false }), async function (req, res, next) {
+router.delete('/:id/', passport.authenticate('jwt', { session: false }), async function (req, res, next) {
   try {
     const { id } = req.params;
     const { role } = req.user as JWTData;
@@ -89,7 +89,7 @@ router.delete('/consumable/:id/', passport.authenticate('jwt', { session: false 
 });
 
 /** Get a single specific consumable, show transaction history as well */
-router.get('/consumable/:id/', async function (req, res) {
+router.get('/:id/', async function (req, res) {
   const { id } = req.params;
   const consumable = await prisma.consumable.findUnique({
     where: {
@@ -106,7 +106,7 @@ router.get('/consumable/:id/', async function (req, res) {
 });
 
 /** Consume a given amount of a single consumable */
-router.put('/consumable/:id/take/', async function (req, res) {
+router.put('/:id/take/', async function (req, res) {
   const { id } = req.params;
   const consumable = await prisma.consumable.update({
     where: {
@@ -122,42 +122,38 @@ router.put('/consumable/:id/take/', async function (req, res) {
 });
 
 /** Consume a given amount of a single consumable and add into transaction table */
-router.put(
-  '/consumable/:id/take/track/',
-  passport.authenticate('jwt', { session: false }),
-  async function (req, res, next) {
-    try {
-      // used to validate json
-      const validator = ajv.getSchema<TakeConsumable>('takeConsumable');
-      const { id } = req.params;
-      const { sub: userId } = req.user as JWTData; // get requester userid from passport
-      if (validator === undefined) {
-        return res.status(500).json(createResponse({ error: 'Unable to get validator to parse json' }));
-      }
-      if (!validator(req.body)) {
-        return res.status(401).json(createResponse({ error: ajv.errorsText(validator.errors) }));
-      }
-
-      const { count } = req.body;
-      const takeConsumable = prisma.consumable.update({
-        where: {
-          id: id,
-        },
-        data: {
-          count: {
-            decrement: count,
-          },
-        },
-      });
-      const addTransaction = createTransaction(id, userId, 'CONSUME');
-      // if one fails, both do not get completed.
-      const [consumeResult, transactionResult] = await prisma.$transaction([takeConsumable, addTransaction]);
-      res.json(createResponse({ data: { consumeResult, transactionResult } }));
-    } catch (err) {
-      next(err);
+router.put('/:id/take/track/', passport.authenticate('jwt', { session: false }), async function (req, res, next) {
+  try {
+    // used to validate json
+    const validator = ajv.getSchema<TakeConsumable>('takeConsumable');
+    const { id } = req.params;
+    const { sub: userId } = req.user as JWTData; // get requester userid from passport
+    if (validator === undefined) {
+      return res.status(500).json(createResponse({ error: 'Unable to get validator to parse json' }));
     }
-  },
-);
+    if (!validator(req.body)) {
+      return res.status(401).json(createResponse({ error: ajv.errorsText(validator.errors) }));
+    }
+
+    const { count } = req.body;
+    const takeConsumable = prisma.consumable.update({
+      where: {
+        id: id,
+      },
+      data: {
+        count: {
+          decrement: count,
+        },
+      },
+    });
+    const addTransaction = createTransaction(id, userId, 'CONSUME');
+    // if one fails, both do not get completed.
+    const [consumeResult, transactionResult] = await prisma.$transaction([takeConsumable, addTransaction]);
+    res.json(createResponse({ data: { consumeResult, transactionResult } }));
+  } catch (err) {
+    next(err);
+  }
+});
 
 /** Helper function to create a transaction */
 function createTransaction(consumableId: string, userId: number, type: Transaction['type']) {

@@ -15,7 +15,7 @@ const router = express.Router();
  * Give user a newly created short-lifetime JWT
  * Should I give them updated refresh token as well?
  */
-router.post('/auth/token/refresh/', passport.authenticate('jwt', { session: false }), async (req, res, next) => {
+router.post('/refresh/', passport.authenticate('jwt', { session: false }), async (req, res, next) => {
   try {
     const { sub: id } = req.user as JWTData;
 
