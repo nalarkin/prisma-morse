@@ -4,11 +4,13 @@ import { createResponse } from '../common/response';
 
 const router = express.Router();
 
+/** Get all users */
 router.get('/', async (req, res) => {
   const users = await prisma.user.findMany();
   res.json(createResponse({ data: users }));
 });
 
+/** Delete specified user */
 router.delete('/:id/', async (req, res) => {
   const { id } = req.params;
   const user = await prisma.user.delete({

@@ -1,10 +1,5 @@
-import { Transaction, User } from '@prisma/client';
 import express from 'express';
-import passport from 'passport';
-import { JWTData } from '../auth/utils';
 import { createResponse } from '../common/response';
-import prisma from '../config/database';
-import { logger } from '../config/logging';
 
 const router = express.Router();
 
@@ -20,6 +15,7 @@ router.get('/', async (req, res) => {
   await functionThatThrowsError();
   res.json(createResponse({ data: { message: 'All good no errors' } }));
 });
+
 /** Pass to next */
 router.get('/handled/', async (req, res, next) => {
   try {

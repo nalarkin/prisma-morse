@@ -39,6 +39,7 @@
     "@typescript-eslint/eslint-plugin": "^5.5.0",
     "@typescript-eslint/parser": "^5.5.0",
     "eslint": "^8.4.0",
+    "eslint-plugin-security": "^1.4.0",
     "nodemon": "^2.0.15",
     "prettier": "^2.5.0",
     "prisma": "^3.6.0",

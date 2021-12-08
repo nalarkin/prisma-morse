@@ -1,4 +1,3 @@
-import { User } from '@prisma/client';
 import express from 'express';
 import passport from 'passport';
 import { createResponse } from '../../common/response';

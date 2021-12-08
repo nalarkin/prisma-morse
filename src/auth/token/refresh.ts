@@ -1,13 +1,9 @@
 import express from 'express';
-import { ACCESS_JWT_EXPIRE, JWTData, REFRESH_JWT_EXPIRE, verifyPassword } from '../utils';
+import { ACCESS_JWT_EXPIRE, JWTData } from '../utils';
 import { issueJWT } from '../utils';
 import prisma from '../../config/database';
-import { ajv } from '../../common/validation';
 import { createResponse } from '../../common/response';
 import passport from 'passport';
-import { RefreshTokenRequest } from '../../common/schema/schema_token';
-import { User } from '@prisma/client';
-import { logger } from '../../config/logging';
 
 const router = express.Router();
 

@@ -21,6 +21,8 @@ generator erd {
 // }
 //
 
+// mysql://root:admin@localhost:3306/testdb
+
 // must use MySQL for ENUMS
 datasource db {
   provider = "mysql"
@@ -74,6 +76,7 @@ model Serializable {
   renter        User?         @relation(fields: [userId], references: [id])
   userId        Int?
   transactions  Transaction[]
+  version       Int           @default(0)
 }
 
 model Transaction {

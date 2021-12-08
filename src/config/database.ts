@@ -1,6 +1,11 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 import { PrismaClient } from '@prisma/client';
 
+/**
+ * All files that connect to prisma should import the client instance from this file.
+ * makes it so hot reloads does not create hundreds of connections
+ * To learn more see: https://www.prisma.io/docs/guides/performance-and-optimization/connection-management
+ */
 declare global {
   namespace NodeJS {
     interface Global {
@@ -8,18 +13,6 @@ declare global {
     }
   }
 }
-
-// declare global {
-//   const prisma: PrismaClient | undefined;
-// }
-
-// export const prisma =
-//   global.prisma ||
-//   new PrismaClient({
-//     log: ['query'],
-//   });
-
-// if (process.env.NODE_ENV !== 'production') global.prisma = prisma;
 
 interface CustomNodeJsGlobal extends NodeJS.Global {
   prisma: PrismaClient;

@@ -9,6 +9,7 @@ export const ACCESS_JWT_EXPIRE: SignOptions['expiresIn'] = 15;
 export const REFRESH_JWT_EXPIRE: SignOptions['expiresIn'] = '7d';
 
 const pathToPrivateKey = path.join(__dirname, 'token', 'id_rsa_priv.pem');
+// eslint-disable-next-line security/detect-non-literal-fs-filename
 const PRIV_KEY = fs.readFileSync(pathToPrivateKey, 'utf8');
 
 /** Recomendations listed here:

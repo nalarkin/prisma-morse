@@ -44,6 +44,7 @@ Table Serializable {
   renter User
   userId Int
   transactions Transaction [not null]
+  version Int [not null, default: 0]
 }
 
 Table Transaction {

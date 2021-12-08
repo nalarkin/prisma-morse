@@ -4,9 +4,8 @@ import { ajv } from '../common/validation';
 import prisma from '../config/database';
 import { createResponse } from '../common/response';
 import passport from 'passport';
-import { User, Transaction } from '@prisma/client';
+import { Transaction } from '@prisma/client';
 import { JWTData } from '../auth/utils';
-import { logger } from '../config/logging';
 
 const router = express.Router();
 

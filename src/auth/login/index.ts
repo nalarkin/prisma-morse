@@ -4,7 +4,6 @@ import { issueJWT } from '../utils';
 import prisma from '../../config/database';
 import { ajv } from '../../common/validation';
 import { createResponse } from '../../common/response';
-import { logger } from '../../config/logging';
 
 const router = express.Router();
 

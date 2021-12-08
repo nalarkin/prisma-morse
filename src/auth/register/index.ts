@@ -9,9 +9,12 @@ const router = express.Router();
 
 /** Register a new user */
 router.post('/', async function (req, res, next) {
-  const validate = ajv.getSchema<RegisterForm>('register');
   try {
-    if (validate !== undefined && !validate(req.body)) {
+    const validate = ajv.getSchema<RegisterForm>('register');
+    if (validate === undefined) {
+      return res.status(500).json(createResponse({ error: 'Unable to get json validator' }));
+    }
+    if (!validate(req.body)) {
       return res.status(401).json(createResponse({ error: ajv.errorsText(validate.errors) }));
     } else {
       const { password, email, firstName, lastName } = req.body;
@@ -29,7 +32,6 @@ router.post('/', async function (req, res, next) {
     }
   } catch (e) {
     next(e);
-    // next(e);
   }
 });
 
