@@ -1,3 +1,4 @@
+import { UserEdit } from '@/common/schema/schema_user';
 import prisma from '../config/database';
 
 /**
@@ -23,6 +24,26 @@ export class UsersDAL {
       },
       include: {
         serializables: includeSerializables,
+      },
+    });
+  }
+  async makeAdmin(id: number) {
+    return await prisma.user.update({
+      where: {
+        id,
+      },
+      data: {
+        role: 'ADMIN',
+      },
+    });
+  }
+  async updateUser(id: number, userChange: UserEdit) {
+    return await prisma.user.update({
+      where: {
+        id,
+      },
+      data: {
+        ...userChange,
       },
     });
   }

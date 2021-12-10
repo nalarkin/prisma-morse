@@ -1,8 +1,5 @@
+import { UserEdit } from '../common/schema/schema_user';
 import { UsersService } from './usersService';
-
-export interface UserControllerContext {
-  id?: string;
-}
 
 /**
  *I think of controllers as "orchestrators". They call the services, which contain more "pure" business logic. 
@@ -11,30 +8,32 @@ export interface UserControllerContext {
  */
 export class UsersController {
   service: UsersService;
-  userIdIsValid: boolean;
-  id: number;
-  constructor({ id }: UserControllerContext) {
+  constructor() {
     this.service = new UsersService();
-    this.id = id !== undefined ? Number(id) : NaN;
-    this.userIdIsValid = true;
-    this.userIdIsValid = Number.isInteger(this.id);
   }
 
   async getAllUsers() {
     return { users: await this.service.getAllUsers() };
   }
 
-  async getUser() {
-    if (!this.userIdIsValid) {
-      return { user: null };
-    }
-    return { user: await this.service.getUser(this.id) };
+  async getUser(id: number) {
+    return { user: await this.service.getUser(id) };
   }
 
-  async deleteUser() {
-    if (!this.userIdIsValid) {
-      return { user: null };
+  async deleteUser(id: number) {
+    return { user: await this.service.deleteUser(id) };
+  }
+
+  async makeAdmin(id: number) {
+    return { user: await this.service.deleteUser(id) };
+  }
+
+  async updateUser(id: number, userChange: UserEdit) {
+    // see if user exists before attempting update
+    const user = await this.service.getUser(id);
+    if (user === null) {
+      return { user };
     }
-    return { user: await this.service.deleteUser(this.id) };
+    return { user: await this.service.updateUser(id, userChange) };
   }
 }

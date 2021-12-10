@@ -20,7 +20,13 @@
         "unsafePassword": {
           "type": "string"
         },
-        "name": {
+        "firstName": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "lastName": {
           "type": [
             "string",
             "null"
@@ -33,19 +39,13 @@
             "ADMIN"
           ]
         },
-        "Consumable": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Consumable"
-          }
-        },
-        "Serializable": {
+        "serializables": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Serializable"
           }
         },
-        "Transaction": {
+        "transactions": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Transaction"
@@ -99,17 +99,7 @@
             "null"
           ]
         },
-        "User": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/User"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "Transaction": {
+        "transactions": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Transaction"
@@ -184,7 +174,7 @@
             "null"
           ]
         },
-        "User": {
+        "renter": {
           "anyOf": [
             {
               "$ref": "#/definitions/User"
@@ -194,11 +184,14 @@
             }
           ]
         },
-        "Transaction": {
+        "transactions": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Transaction"
           }
+        },
+        "version": {
+          "type": "integer"
         }
       }
     },
@@ -212,7 +205,7 @@
           "type": "string",
           "format": "date-time"
         },
-        "Consumable": {
+        "consumable": {
           "anyOf": [
             {
               "$ref": "#/definitions/Consumable"
@@ -222,7 +215,7 @@
             }
           ]
         },
-        "Serializable": {
+        "serializable": {
           "anyOf": [
             {
               "$ref": "#/definitions/Serializable"
@@ -232,7 +225,7 @@
             }
           ]
         },
-        "User": {
+        "user": {
           "anyOf": [
             {
               "$ref": "#/definitions/User"

@@ -19,7 +19,7 @@ export const schema_register: JSONSchemaType<RegisterForm> = {
   $id: '/schemas/register',
   type: 'object',
   properties: {
-    email: { type: 'string' },
+    email: { type: 'string', format: 'email' },
     password: { type: 'string' },
     confirmPassword: { type: 'string', pattern: { $data: '1/password' } },
     firstName: { type: 'string' },

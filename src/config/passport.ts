@@ -15,7 +15,7 @@ const options: StrategyOptions = {
   algorithms: ['RS256'],
 };
 
-type JWTPayloadRequest = JWTData & {
+export type JWTPayloadRequest = JWTData & {
   exp: number;
   iat: number;
 };
