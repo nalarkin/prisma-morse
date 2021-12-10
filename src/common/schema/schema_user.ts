@@ -32,18 +32,7 @@ export const schema_user: JSONSchemaType<UserEdit> = {
   additionalProperties: false,
 };
 
-export type UserId = {
-  id: number;
-};
-
-export const schema_user_id: JSONSchemaType<UserId> = {
-  type: 'object',
-  properties: {
-    id: {
-      type: 'integer',
-      minimum: 0,
-    },
-  },
-  required: ['id'],
-  additionalProperties: false,
+export const schema_user_id: JSONSchemaType<number> = {
+  type: 'integer',
+  minimum: 0,
 };

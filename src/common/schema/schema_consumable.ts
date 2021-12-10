@@ -33,7 +33,7 @@ export const schema_consumable: JSONSchemaType<NewConsumable> = {
 export const schema_take_consumable: JSONSchemaType<TakeConsumable> = {
   type: 'object',
   properties: {
-    count: { type: 'number' },
+    count: { type: 'number', minimum: 1 },
   },
   required: ['count'],
   additionalProperties: false,

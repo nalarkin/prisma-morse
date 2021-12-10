@@ -3,8 +3,8 @@ import passport from 'passport';
 import { createResponse } from '../common/response';
 import { UsersController } from './usersController';
 import { JWTPayloadRequest } from '../config/passport';
-import { ajv } from '../common/validation';
-import { UserEdit, UserId } from '../common/schema/schema_user';
+import { ajv, SCHEMA } from '../common/validation';
+import { UserEdit } from '../common/schema/schema_user';
 
 const route = Router();
 
@@ -64,7 +64,7 @@ export function usersAPI(app: Router) {
         // if id in url was invalid
         return res.status(404).json(createResponse({ error: 'Invalid user id format.', status: 404 }));
       }
-      const validator = ajv.getSchema<UserEdit>('user');
+      const validator = ajv.getSchema<UserEdit>(SCHEMA.USER_EDIT);
       if (validator === undefined) {
         throw new Error('Could not find JSON validator');
       }
@@ -100,15 +100,15 @@ export function usersAPI(app: Router) {
 
 /**
  * Validates that the user id is a valid format.
- * Performs more robust checks and is quicker and less repetitive.
+ * Performs more robust checks and is quicker and less repetitive than a manual implementation.
  */
 function getUserId(id: string) {
   const userId = Number(id);
-  const validateId = ajv.getSchema<UserId>('userId');
+  const validateId = ajv.getSchema<number>(SCHEMA.USER_ID);
   if (validateId === undefined) {
     throw new Error('Could not find JSON validator');
   }
-  if (validateId({ id: userId })) {
+  if (validateId(userId)) {
     return userId;
   }
   return null;

@@ -2,7 +2,7 @@ import express from 'express';
 import { ACCESS_JWT_EXPIRE, REFRESH_JWT_EXPIRE, verifyPassword } from '../utils';
 import { issueJWT } from '../utils';
 import prisma from '../../config/database';
-import { ajv } from '../../common/validation';
+import { ajv, SCHEMA } from '../../common/validation';
 import { createResponse } from '../../common/response';
 
 const router = express.Router();
@@ -15,7 +15,7 @@ interface LoginForm {
 /** Login user, and respond with JWT if successful. */
 router.post('/', async function (req, res, next) {
   try {
-    const validator = ajv.getSchema<LoginForm>('login');
+    const validator = ajv.getSchema<LoginForm>(SCHEMA.LOGIN);
     if (validator === undefined) {
       return res.status(500).json(createResponse({ error: 'Unable to retrieve validator for login', status: 500 }));
     }

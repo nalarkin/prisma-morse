@@ -1,6 +1,6 @@
 import express from 'express';
 import { NewConsumable, TakeConsumable } from '../common/schema/schema_consumable';
-import { ajv } from '../common/validation';
+import { ajv, SCHEMA } from '../common/validation';
 import prisma from '../config/database';
 import { createResponse } from '../common/response';
 import passport from 'passport';
@@ -18,7 +18,7 @@ router.get('/', passport.authenticate('jwt', { session: false }), async function
 /** Create a consumable */
 router.post('/', passport.authenticate('jwt', { session: false }), async function (req, res, next) {
   try {
-    const validator = ajv.getSchema<NewConsumable>('newConsumable');
+    const validator = ajv.getSchema<NewConsumable>(SCHEMA.CONSUMABLE_NEW);
     const body = req.body;
     const { sub: userId, role } = req.user as JWTData;
 
@@ -126,7 +126,7 @@ router.put('/:id/take/', async function (req, res) {
 router.put('/:id/take/track/', passport.authenticate('jwt', { session: false }), async function (req, res, next) {
   try {
     // used to validate json
-    const validator = ajv.getSchema<TakeConsumable>('takeConsumable');
+    const validator = ajv.getSchema<TakeConsumable>(SCHEMA.CONSUMABLE_TAKE);
     const { id } = req.params;
     const { sub: userId } = req.user as JWTData; // get requester userid from passport
     if (validator === undefined) {

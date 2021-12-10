@@ -1,7 +1,7 @@
 import express from 'express';
 import { hashPassword } from '../utils';
 import prisma from '../../config/database';
-import { ajv } from '../../common/validation';
+import { ajv, SCHEMA } from '../../common/validation';
 import { RegisterForm } from '../../common/schema/schema_register';
 import { createResponse } from '../../common/response';
 
@@ -10,7 +10,7 @@ const router = express.Router();
 /** Register a new user */
 router.post('/', async function (req, res, next) {
   try {
-    const validate = ajv.getSchema<RegisterForm>('register');
+    const validate = ajv.getSchema<RegisterForm>(SCHEMA.REGISTER);
     if (validate === undefined) {
       return res.status(500).json(createResponse({ error: 'Unable to get json validator', status: 500 }));
     }
@@ -37,7 +37,7 @@ router.post('/', async function (req, res, next) {
 /** Register a new user */
 router.post('/email/', async function (req, res, next) {
   try {
-    const validate = ajv.getSchema<RegisterForm>('register');
+    const validate = ajv.getSchema<RegisterForm>(SCHEMA.REGISTER);
     if (validate === undefined) {
       return res.status(500).json(createResponse({ error: 'Unable to get json validator', status: 500 }));
     }
