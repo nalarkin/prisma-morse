@@ -1,12 +1,12 @@
-import express from 'express';
-import { NewConsumable, TakeConsumable } from '@/common/schema';
-import { ajv, SCHEMA, createResponse } from '@/common';
-import prisma from '@/loaders/database';
+import { Router } from 'express';
 import passport from 'passport';
 import { Transaction } from '@prisma/client';
+import { NewConsumable, TakeConsumable } from '@/common/schema';
+import { ajv, SCHEMA, createResponse } from '@/common';
 import { JWTData } from '@/auth/utils';
+import prisma from '@/loaders/database';
 
-const router = express.Router();
+const router = Router();
 
 /** Get all consumables */
 router.get('/', passport.authenticate('jwt', { session: false }), async function (req, res) {

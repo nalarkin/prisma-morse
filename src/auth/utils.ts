@@ -1,9 +1,8 @@
-import argon2, { argon2id, Options } from 'argon2';
-import jsonwebtoken from 'jsonwebtoken';
+import { argon2id, Options, hash, verify } from 'argon2';
+import { SignOptions, sign } from 'jsonwebtoken';
 import path from 'path';
 import fs from 'fs';
 import { User } from '@prisma/client';
-import { SignOptions } from 'jsonwebtoken';
 
 export const ACCESS_JWT_EXPIRE: SignOptions['expiresIn'] = 15;
 export const REFRESH_JWT_EXPIRE: SignOptions['expiresIn'] = '7d';
@@ -30,12 +29,12 @@ export const defaultOption = {
 
 // hash password with argon2id for maximum security, this is what gets stored in the database for password
 export async function hashPassword(password: string) {
-  return await argon2.hash(password, hashOptions);
+  return await hash(password, hashOptions);
 }
 
 // compare user password during login with the hashed password in database
 export async function verifyPassword(hashed: string, pw: string) {
-  return await argon2.verify(hashed, pw, {
+  return await verify(hashed, pw, {
     type: argon2id,
   });
 }
@@ -59,7 +58,7 @@ export function issueJWT(user: User, expiresIn: SignOptions['expiresIn']) {
   };
 
   // works for keys with ao passphrase and keys with passphrase if .env variable matches correctly
-  const signedToken = jsonwebtoken.sign(
+  const signedToken = sign(
     payload,
     { key: PRIV_KEY, passphrase: process.env.RSA_PASSPHRASE ?? '' },
     {

@@ -1,9 +1,9 @@
-import express from 'express';
+import { Router } from 'express';
 import passport from 'passport';
 import { createResponse } from '@/common/response';
 import { JWTData } from '@/auth/utils';
 
-const router = express.Router();
+const router = Router();
 
 /** Route that all registered users can see */
 router.get('/protected/', passport.authenticate('jwt', { session: false }), (req, res) => {

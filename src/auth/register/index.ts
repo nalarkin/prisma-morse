@@ -1,9 +1,9 @@
-import express from 'express';
+import { Router } from 'express';
 import { hashPassword } from '@/auth/utils';
 import prisma from '@/loaders/database';
 import { ajv, SCHEMA, createResponse, RegisterForm } from '@/common';
 
-const router = express.Router();
+const router = Router();
 
 /** Register a new user */
 router.post('/', async function (req, res, next) {

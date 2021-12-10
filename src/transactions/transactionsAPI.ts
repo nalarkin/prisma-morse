@@ -1,9 +1,9 @@
-import express from 'express';
+import { Router } from 'express';
 import passport from 'passport';
 import { createResponse } from '@/common/response';
 import prisma from '@/loaders/database';
 
-const router = express.Router();
+const router = Router();
 
 /** Example of only sending a few values from the relational data that was included. */
 router.get('/', async function (req, res) {

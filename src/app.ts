@@ -1,11 +1,11 @@
-import dotenv from 'dotenv';
+import { config } from 'dotenv';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import pinohttp from 'pino-http';
 import { logger } from '@/loaders/logging';
 import { app } from './loaders';
 
 /** Make sure environment variables are loaded */
-dotenv.config();
+config();
 
 /** Main method to start the server. */
 async function startServer() {

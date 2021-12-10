@@ -1,10 +1,10 @@
-import express from 'express';
+import { Router } from 'express';
 import { ACCESS_JWT_EXPIRE, JWTData, issueJWT } from '../utils';
 import prisma from '@/loaders/database';
 import { createResponse } from '@/common';
 import passport from 'passport';
 
-const router = express.Router();
+const router = Router();
 
 /**
  * Give user a newly created short-lifetime JWT

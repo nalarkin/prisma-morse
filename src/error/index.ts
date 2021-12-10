@@ -1,7 +1,7 @@
-import express from 'express';
+import { Router } from 'express';
 import { createResponse } from '@/common';
 
-const router = express.Router();
+const router = Router();
 
 async function functionThatThrowsError() {
   return new Promise(function (resolve) {

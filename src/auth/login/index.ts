@@ -1,9 +1,9 @@
-import express from 'express';
+import { Router } from 'express';
 import { ACCESS_JWT_EXPIRE, REFRESH_JWT_EXPIRE, verifyPassword, issueJWT } from '@/auth/utils';
 import prisma from '@/loaders/database';
 import { ajv, SCHEMA, createResponse } from '@/common';
 
-const router = express.Router();
+const router = Router();
 
 interface LoginForm {
   email: string;
