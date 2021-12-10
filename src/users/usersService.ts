@@ -1,6 +1,6 @@
 import { UsersDAL } from './usersDAL';
 // import logger from 'winston';
-import { logger } from '../config/logging';
+import { logger } from '@/loaders/logging';
 import { UserEdit } from '@/common/schema/schema_user';
 
 /**

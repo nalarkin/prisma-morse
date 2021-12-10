@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import { serializablesAPI } from '../serializables';
-import { usersAPI } from '../users';
-import { refreshTokenAPI, loginAPI, protectedAPI, registerAPI } from '../auth';
-import { consumablesAPI } from '../consumables';
-import { transactionsAPI } from '../transactions';
-import error from '../error/index';
+import { serializablesAPI } from '@/serializables';
+import { usersAPI } from '@/users';
+import { refreshTokenAPI, loginAPI, protectedAPI, registerAPI } from '@/auth';
+import { consumablesAPI } from '@/consumables';
+import { transactionsAPI } from '@/transactions';
+import error from '@/error/index';
 
 /** Loads all the routes that will be used in the app. */
 export function loadRoutes() {

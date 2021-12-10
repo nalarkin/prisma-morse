@@ -1,7 +1,7 @@
 import express from 'express';
 import passport from 'passport';
-import { createResponse } from '../common/response';
-import prisma from '../config/database';
+import { createResponse } from '@/common/response';
+import prisma from '@/loaders/database';
 
 const router = express.Router();
 

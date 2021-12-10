@@ -1,9 +1,7 @@
 import express from 'express';
-import { hashPassword } from '../utils';
-import prisma from '../../config/database';
-import { ajv, SCHEMA } from '../../common/validation';
-import { RegisterForm } from '../../common/schema/schema_register';
-import { createResponse } from '../../common/response';
+import { hashPassword } from '@/auth/utils';
+import prisma from '@/loaders/database';
+import { ajv, SCHEMA, createResponse, RegisterForm } from '@/common';
 
 const router = express.Router();
 

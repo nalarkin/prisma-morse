@@ -9,12 +9,6 @@ export type CustomResponse = {
   status: number;
 };
 
-// // type ResponseArguments = { error: string } | { data: unknown };
-// export type ResponseArguments = {
-//   error?: string;
-//   data?: object;
-// };
-
 type SuccessResponse = { data: object };
 type ErrorResponse = { error: string; status: number };
 export type ResponseArguments = SuccessResponse | ErrorResponse;
@@ -27,10 +21,10 @@ export function createResponse(response: ResponseArguments): CustomResponse {
   return { success: true, data: response.data, error: null, status: 200 };
 }
 
-export const wrap =
-  // @ts-expect-error recommended way to handle errors https://expressjs.com/en/advanced/best-practice-performance.html#use-try-catch
+// export const wrap =
+//   // @ts-expect-error recommended way to handle errors https://expressjs.com/en/advanced/best-practice-performance.html#use-try-catch
 
-    (fn) =>
-    // @ts-expect-error recommended way to handle errors https://expressjs.com/en/advanced/best-practice-performance.html#use-try-catch
-    (...args) =>
-      fn(...args).catch(args[2]);
+//     (fn) =>
+//     // @ts-expect-error recommended way to handle errors https://expressjs.com/en/advanced/best-practice-performance.html#use-try-catch
+//     (...args) =>
+//       fn(...args).catch(args[2]);

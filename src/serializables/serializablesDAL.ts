@@ -1,5 +1,5 @@
 import { Transaction } from '@prisma/client';
-import prisma from '../config/database';
+import prisma from '@/loaders/database';
 export class SerializablesDAL {
   async getAll() {
     return await prisma.serializable.findMany();

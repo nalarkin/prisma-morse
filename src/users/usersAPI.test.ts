@@ -1,7 +1,7 @@
-import { app } from '../loaders';
+import { app } from '@/loaders';
 import supertest from 'supertest';
 import { User } from '@prisma/client';
-import { prismaMock } from '../config/singleton';
+import { prismaMock } from '@/loaders/singleton';
 
 test('GET /users/', async () => {
   // const post = await Post.create({ title: 'Post 1', content: 'Lorem ipsum' });

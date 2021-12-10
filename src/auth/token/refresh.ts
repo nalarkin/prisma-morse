@@ -1,8 +1,7 @@
 import express from 'express';
-import { ACCESS_JWT_EXPIRE, JWTData } from '../utils';
-import { issueJWT } from '../utils';
-import prisma from '../../config/database';
-import { createResponse } from '../../common/response';
+import { ACCESS_JWT_EXPIRE, JWTData, issueJWT } from '../utils';
+import prisma from '@/loaders/database';
+import { createResponse } from '@/common';
 import passport from 'passport';
 
 const router = express.Router();

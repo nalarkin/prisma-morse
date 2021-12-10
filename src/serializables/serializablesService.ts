@@ -1,5 +1,5 @@
 import { SerializablesDAL } from './serializablesDAL';
-import { createResponse } from '../common/response';
+import { createResponse } from '@/common/response';
 
 export class SerializablesService {
   prismaDb: SerializablesDAL;

@@ -1,6 +1,4 @@
-import refreshToken from './token/refresh';
-import register from './register/index';
-import login from './login/index';
-import protectedRoute from './protected/index';
-
-export { refreshToken as refreshTokenAPI, register as registerAPI, login as loginAPI, protectedRoute as protectedAPI };
+export { default as refreshTokenAPI } from './token/refresh';
+export { default as registerAPI } from './register/index';
+export { default as loginAPI } from './login/index';
+export { default as protectedAPI } from './protected/index';

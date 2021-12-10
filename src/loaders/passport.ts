@@ -1,7 +1,7 @@
 import { Strategy as JwtStrategy, ExtractJwt, StrategyOptions } from 'passport-jwt';
 import fs from 'fs';
 import path from 'path';
-import { JWTData } from '../auth/utils';
+import { JWTData } from '@/auth/utils';
 import { logger } from './logging';
 
 const pathToKey = path.join(__dirname, '..', 'auth', 'token', 'id_rsa_pub.pem');

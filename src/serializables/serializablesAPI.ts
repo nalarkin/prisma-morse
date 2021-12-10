@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import passport from 'passport';
-import { JWTData } from '../auth/utils';
-import { createResponse } from '../common/response';
-import prisma from '../config/database';
+import { JWTData } from '@/auth/utils';
+import { createResponse } from '@/common/response';
+import prisma from '@/loaders/database';
 import { SerializablesController } from './serializablesController';
 
 const route = Router();

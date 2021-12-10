@@ -1,11 +1,10 @@
 import express from 'express';
-import { NewConsumable, TakeConsumable } from '../common/schema/schema_consumable';
-import { ajv, SCHEMA } from '../common/validation';
-import prisma from '../config/database';
-import { createResponse } from '../common/response';
+import { NewConsumable, TakeConsumable } from '@/common/schema';
+import { ajv, SCHEMA, createResponse } from '@/common';
+import prisma from '@/loaders/database';
 import passport from 'passport';
 import { Transaction } from '@prisma/client';
-import { JWTData } from '../auth/utils';
+import { JWTData } from '@/auth/utils';
 
 const router = express.Router();
 

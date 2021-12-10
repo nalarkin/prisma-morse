@@ -9,8 +9,6 @@ export interface RegisterForm {
 }
 
 /**
- * @TODO add email verification, see this https://www.npmjs.com/package/ajv-formats
- *
  * Includes confirmed_password matching using the $data directive
  * https://ajv.js.org/guide/combining-schemas.html#data-reference *
  */

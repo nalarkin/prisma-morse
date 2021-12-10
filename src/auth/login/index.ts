@@ -1,9 +1,7 @@
 import express from 'express';
-import { ACCESS_JWT_EXPIRE, REFRESH_JWT_EXPIRE, verifyPassword } from '../utils';
-import { issueJWT } from '../utils';
-import prisma from '../../config/database';
-import { ajv, SCHEMA } from '../../common/validation';
-import { createResponse } from '../../common/response';
+import { ACCESS_JWT_EXPIRE, REFRESH_JWT_EXPIRE, verifyPassword, issueJWT } from '@/auth/utils';
+import prisma from '@/loaders/database';
+import { ajv, SCHEMA, createResponse } from '@/common';
 
 const router = express.Router();
 

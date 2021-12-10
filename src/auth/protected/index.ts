@@ -1,7 +1,7 @@
 import express from 'express';
 import passport from 'passport';
-import { createResponse } from '../../common/response';
-import { JWTData } from '../utils';
+import { createResponse } from '@/common/response';
+import { JWTData } from '@/auth/utils';
 
 const router = express.Router();
 

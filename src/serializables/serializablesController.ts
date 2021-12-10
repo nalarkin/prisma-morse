@@ -1,5 +1,5 @@
 import { SerializablesService } from './serializablesService';
-import { createResponse } from '../common/response';
+import { createResponse } from '@/common/response';
 
 export interface SerializableControllerContext {
   id?: string;

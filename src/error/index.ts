@@ -1,5 +1,5 @@
 import express from 'express';
-import { createResponse } from '../common/response';
+import { createResponse } from '@/common';
 
 const router = express.Router();
 

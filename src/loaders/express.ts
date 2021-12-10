@@ -3,7 +3,7 @@ import express from 'express';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import pinohttp from 'pino-http';
 import passport from 'passport';
-import configPassport from '../config/passport';
+import configPassport from '@/loaders/passport';
 
 import { loadRoutes } from './routes';
 

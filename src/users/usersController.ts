@@ -1,4 +1,4 @@
-import { UserEdit } from '../common/schema/schema_user';
+import { UserEdit } from '@/common/schema/schema_user';
 import { UsersService } from './usersService';
 
 /**

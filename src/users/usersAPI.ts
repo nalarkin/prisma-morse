@@ -1,10 +1,10 @@
 import { Router } from 'express';
 import passport from 'passport';
-import { createResponse } from '../common/response';
+import { createResponse } from '@/common/response';
 import { UsersController } from './usersController';
-import { JWTPayloadRequest } from '../config/passport';
-import { ajv, SCHEMA } from '../common/validation';
-import { UserEdit } from '../common/schema/schema_user';
+import { JWTPayloadRequest } from '@/loaders/passport';
+import { ajv, SCHEMA } from '@/common/validation';
+import { UserEdit } from '@/common/schema/schema_user';
 
 const route = Router();
 

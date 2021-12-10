@@ -1,9 +1,7 @@
 import dotenv from 'dotenv';
-import express from 'express';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import pinohttp from 'pino-http';
-import { logger } from './config/logging';
-import { loadExpress } from './loaders/express';
+import { logger } from '@/loaders/logging';
 import { app } from './loaders';
 
 /** Make sure environment variables are loaded */
