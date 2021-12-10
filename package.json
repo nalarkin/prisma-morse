@@ -11,7 +11,7 @@
     "studio": "prisma studio",
     "lint": "eslint src/**/*.ts",
     "format": "eslint src/**/*.ts --fix",
-    "test": "jest"
+    "test": "jest -i"
   },
   "dependencies": {
     "@prisma/client": "^3.6.0",
@@ -38,17 +38,20 @@
     "@types/jsonwebtoken": "^8.5.6",
     "@types/node": "^16.11.11",
     "@types/passport-jwt": "^3.0.6",
+    "@types/supertest": "^2.0.11",
     "@typescript-eslint/eslint-plugin": "^5.5.0",
     "@typescript-eslint/parser": "^5.5.0",
     "eslint": "^8.4.0",
     "eslint-plugin-security": "^1.4.0",
     "jest": "^27.4.3",
+    "jest-mock-extended": "^2.0.4",
     "nodemon": "^2.0.15",
     "prettier": "^2.5.0",
     "prisma": "^3.6.0",
     "prisma-dbml-generator": "^0.8.3",
     "prisma-erd-generator": "^0.6.1",
     "prisma-json-schema-generator": "^1.5.0",
+    "supertest": "^6.1.6",
     "ts-jest": "^27.1.1",
     "ts-node": "10.4.0",
     "typescript": "^4.5.2"

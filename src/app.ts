@@ -4,15 +4,13 @@ import express from 'express';
 import pinohttp from 'pino-http';
 import { logger } from './config/logging';
 import { loadExpress } from './loaders/express';
+import { app } from './loaders';
 
 /** Make sure environment variables are loaded */
 dotenv.config();
 
 /** Main method to start the server. */
 async function startServer() {
-  const app = express();
-  loadExpress({ app });
-
   /** Start listening on port */
   app.listen(8000, () =>
     logger.info(`
