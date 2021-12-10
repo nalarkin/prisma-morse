@@ -7,13 +7,21 @@
     "strict": true,
     "lib": ["esnext"],
     "esModuleInterop": true,
-    "types": ["node"],
+    "types": ["node", "jest"],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    },
     "typeRoots": [
-      "./src/generated"
+      "./src/generated",
+      "./node_modules/.prisma/client/index.d.ts",
+      "./node_modules/@types"
     ]
   },
     "include": [
-      "src/**/*.ts"
+      "./src/**/*.ts"
     ],
     "exclude": [
       "node_modules"

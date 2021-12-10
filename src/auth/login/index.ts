@@ -17,10 +17,10 @@ router.post('/', async function (req, res, next) {
   try {
     const validator = ajv.getSchema<LoginForm>('login');
     if (validator === undefined) {
-      return res.status(500).json(createResponse({ error: 'Unable to retrieve validator for login' }));
+      return res.status(500).json(createResponse({ error: 'Unable to retrieve validator for login', status: 500 }));
     }
     if (!validator(req.body)) {
-      return res.status(401).json(createResponse({ error: ajv.errorsText(validator.errors) }));
+      return res.status(401).json(createResponse({ error: ajv.errorsText(validator.errors), status: 401 }));
     }
     const { password, email } = req.body;
     // search for user in database
@@ -34,6 +34,7 @@ router.post('/', async function (req, res, next) {
       return res.status(401).json(
         createResponse({
           error: 'User does not exist with these credentials',
+          status: 401,
         }),
       );
     }
@@ -43,6 +44,7 @@ router.post('/', async function (req, res, next) {
       return res.status(401).json(
         createResponse({
           error: 'User does not exist with these credentials',
+          status: 401,
         }),
       );
     }

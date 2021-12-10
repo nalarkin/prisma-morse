@@ -25,6 +25,7 @@ router.post('/refresh/', passport.authenticate('jwt', { session: false }), async
       return res.status(401).json(
         createResponse({
           error: 'JWT has invalid content, please sign in again',
+          status: 401,
         }),
       );
     }

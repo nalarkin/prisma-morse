@@ -23,7 +23,7 @@ router.get('/admin/', passport.authenticate('jwt', { session: false }), (req, re
   const { role } = req.user as JWTData;
   if (role === 'USER') {
     // not authorized
-    return res.status(401).json(createResponse({ error: 'You do not have sufficient permissions.' }));
+    return res.status(401).json(createResponse({ error: 'You do not have sufficient permissions.', status: 401 }));
   }
   // only admins will be able to see below content
   res.status(200).json(
