@@ -1,7 +1,6 @@
 import { Router } from 'express';
 import passport from 'passport';
-import { createResponse, ForbiddenError } from '@/common';
-import { JWTData } from '@/auth/utils';
+import { createResponse, getRequireAdminMiddleware } from '@/common';
 
 const router = Router();
 
@@ -18,15 +17,7 @@ router.get('/protected/', passport.authenticate('jwt', { session: false }), (req
 });
 
 /** Route that only admins can see. */
-router.get('/admin/', passport.authenticate('jwt', { session: false }), (req, res) => {
-  // casting [req.user] for autocomplete
-  const { role } = req.user as JWTData;
-  if (role === 'USER') {
-    // not authorized
-    return res
-      .status(403)
-      .json(createResponse({ error: new ForbiddenError('You do not have sufficient permissions.') }));
-  }
+router.get('/admin/', passport.authenticate('jwt', { session: false }), getRequireAdminMiddleware(), (req, res) => {
   // only admins will be able to see below content
   res.status(200).json(
     createResponse({
@@ -37,4 +28,5 @@ router.get('/admin/', passport.authenticate('jwt', { session: false }), (req, re
     }),
   );
 });
+
 export default router;

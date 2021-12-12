@@ -1,4 +1,4 @@
-import { Handler } from 'express';
+import { RequestHandler } from 'express';
 import { UserEdit } from '@/common/schema';
 import { JWTPayloadRequest } from '@/loaders/passport';
 import { usersService } from './usersService';
@@ -14,7 +14,7 @@ import {
 } from '@/common';
 
 /** Gets a specific user when provided the id through the url */
-const getUser: Handler = async (req, res, next) => {
+const getUser: RequestHandler = async (req, res, next) => {
   try {
     const { id } = req.params;
     const userId = getUserId(id);
@@ -32,7 +32,7 @@ const getUser: Handler = async (req, res, next) => {
 };
 
 /** Delete the user */
-const deleteUser: Handler = async (req, res, next) => {
+const deleteUser: RequestHandler = async (req, res, next) => {
   try {
     const { id } = req.params;
     const userId = getUserId(id);
@@ -50,7 +50,7 @@ const deleteUser: Handler = async (req, res, next) => {
 };
 
 /** Update a user only if the requester has admin permissions. */
-const updateUser: Handler = async (req, res, next) => {
+const updateUser: RequestHandler = async (req, res, next) => {
   try {
     const { id } = req.params;
     const { role } = req.user as JWTPayloadRequest;
@@ -82,7 +82,7 @@ const updateUser: Handler = async (req, res, next) => {
 };
 
 /** Gets all users in the database */
-const getAllUsers: Handler = async (req, res, next) => {
+const getAllUsers: RequestHandler = async (req, res, next) => {
   try {
     res.json(createResponse({ data: await usersService.getAllUsers() }));
   } catch (e) {

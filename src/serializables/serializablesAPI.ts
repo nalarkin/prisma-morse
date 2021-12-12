@@ -1,3 +1,4 @@
+import { getRequireAdminMiddleware } from '@/common';
 import { Router } from 'express';
 import passport from 'passport';
 import { serializablesController } from './serializablesController';
@@ -11,7 +12,12 @@ export function serializablesAPI(app: Router) {
   route.get('/', passport.authenticate('jwt', { session: false }), serializablesController.getAll);
 
   /** Delete serializable if user is Admin */
-  route.delete('/:id/', passport.authenticate('jwt', { session: false }), serializablesController.deleteItem);
+  route.delete(
+    '/:id/',
+    passport.authenticate('jwt', { session: false }),
+    getRequireAdminMiddleware(),
+    serializablesController.deleteItem,
+  );
 
   /** Get specific serializable */
   route.get('/:id/', serializablesController.getSingle);

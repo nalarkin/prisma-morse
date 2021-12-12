@@ -1,9 +1,9 @@
-import { Handler } from 'express';
+import { RequestHandler } from 'express';
 import { serializablesService } from './serializablesService';
 import { createResponse, ForbiddenError, ServerError } from '@/common';
 import { JWTData } from '@/auth/utils';
 
-const getAll: Handler = async (req, res, next) => {
+const getAll: RequestHandler = async (req, res, next) => {
   try {
     const serializables = await serializablesService.getAll();
     res.json(createResponse({ data: serializables }));
@@ -12,7 +12,7 @@ const getAll: Handler = async (req, res, next) => {
   }
 };
 
-const getSingle: Handler = async (req, res, next) => {
+const getSingle: RequestHandler = async (req, res, next) => {
   try {
     const { id } = req.params;
     const item = await serializablesService.getSingle(id);
@@ -25,7 +25,7 @@ const getSingle: Handler = async (req, res, next) => {
   }
 };
 
-const checkout: Handler = async (req, res, next) => {
+const checkout: RequestHandler = async (req, res, next) => {
   try {
     const { id } = req.params;
     const { sub: userId } = req.user as JWTData;
@@ -39,7 +39,7 @@ const checkout: Handler = async (req, res, next) => {
   }
 };
 
-const returnItem: Handler = async (req, res, next) => {
+const returnItem: RequestHandler = async (req, res, next) => {
   try {
     const { id } = req.params;
     const { sub: userId } = req.user as JWTData;
@@ -55,7 +55,7 @@ const returnItem: Handler = async (req, res, next) => {
 };
 
 /** Delete serializable if user is admin */
-const deleteItem: Handler = async (req, res, next) => {
+const deleteItem: RequestHandler = async (req, res, next) => {
   try {
     const { id } = req.params;
     const { role } = req.user as JWTData;
