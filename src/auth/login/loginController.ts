@@ -1,7 +1,7 @@
 import { ajv, AuthenticationError, BadRequestError, createResponse, InternalError, LoginForm, SCHEMA } from '@/common';
 import { RequestHandler } from 'express';
 import { ACCESS_JWT_EXPIRE, issueJWT, REFRESH_JWT_EXPIRE } from '@/auth/utils';
-import { loginService } from './loginService';
+import * as loginService from './loginService';
 
 function loginHasExpectedContent(data: unknown) {
   const validator = ajv.getSchema<LoginForm>(SCHEMA.LOGIN);
@@ -14,7 +14,7 @@ function loginHasExpectedContent(data: unknown) {
   return true;
 }
 
-const login: RequestHandler = async (req, res, next) => {
+export const login: RequestHandler = async (req, res, next) => {
   try {
     const hasExpectedForm = loginHasExpectedContent(req.body);
     if (hasExpectedForm instanceof InternalError || hasExpectedForm instanceof BadRequestError) {
@@ -52,4 +52,4 @@ const login: RequestHandler = async (req, res, next) => {
   }
 };
 
-export const loginController = { login };
+// export const loginController = { login };

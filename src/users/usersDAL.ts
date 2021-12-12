@@ -4,12 +4,11 @@ import prisma from '@/loaders/database';
 /**
  * Make calls do database in here
  */
-
-async function prismaGetAllUsers() {
+export async function prismaGetAllUsers() {
   return await prisma.user.findMany();
 }
 
-async function prismaDeleteUser(id: number) {
+export async function prismaDeleteUser(id: number) {
   return await prisma.user.delete({
     where: {
       id,
@@ -27,7 +26,7 @@ type GetUserByEmail = {
   email: string;
 };
 
-async function prismaGetUser(res: GetUserByEmail | GetUserByID, options?: GetUserOptions) {
+export async function prismaGetUser(res: GetUserByEmail | GetUserByID, options?: GetUserOptions) {
   const serializables = options?.serializables;
   if ('id' in res) {
     const { id } = res;
@@ -51,7 +50,7 @@ async function prismaGetUser(res: GetUserByEmail | GetUserByID, options?: GetUse
   });
 }
 
-async function prismaUpdateUser(id: number, userChange: UserEdit) {
+export async function prismaUpdateUser(id: number, userChange: UserEdit) {
   return await prisma.user.update({
     where: {
       id,
@@ -62,4 +61,4 @@ async function prismaUpdateUser(id: number, userChange: UserEdit) {
   });
 }
 
-export const usersDAL = { prismaGetAllUsers, prismaDeleteUser, prismaGetUser, prismaUpdateUser };
+// export const usersDAL = { prismaGetAllUsers, prismaDeleteUser, prismaGetUser, prismaUpdateUser };

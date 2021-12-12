@@ -1,10 +1,10 @@
 import { Transaction } from '@prisma/client';
 import prisma from '@/loaders/database';
-async function getAll() {
+export async function getAll() {
   return await prisma.serializable.findMany();
 }
 
-async function getSingle(id: string, includeRenter = true) {
+export async function getSingle(id: string, includeRenter = true) {
   return await prisma.serializable.findUnique({
     where: {
       id: id,
@@ -15,7 +15,7 @@ async function getSingle(id: string, includeRenter = true) {
   });
 }
 
-async function deleteItem(id: string) {
+export async function deleteItem(id: string) {
   return await prisma.serializable.delete({
     where: {
       id: id,
@@ -23,7 +23,7 @@ async function deleteItem(id: string) {
   });
 }
 
-// async findAvailableItem(id: string) {
+// export async findAvailableItem(id: string) {
 //   const serializable = await prisma.serializable.findFirst({
 //     where: {
 //       id,
@@ -32,7 +32,7 @@ async function deleteItem(id: string) {
 //   });
 // }
 
-async function attemptCheckout(id: string, userId: number, version: number) {
+export async function attemptCheckout(id: string, userId: number, version: number) {
   // uses version matcher to gaurantee that another renter hasn't checked out the item during the data race
   const checkoutAction = await prisma.serializable.updateMany({
     data: {
@@ -54,11 +54,11 @@ async function attemptCheckout(id: string, userId: number, version: number) {
   return checkoutAction;
 }
 
-async function completeCheckoutTransaction(id: string, userId: number) {
+export async function completeCheckoutTransaction(id: string, userId: number) {
   return await createTransaction(id, userId, 'CHECKOUT');
 }
 
-async function returnItem(id: string, userId: number) {
+export async function returnItem(id: string, userId: number) {
   /** Insert logic to check if request id requesting change is the same as the current renter */
   const updateAction = prisma.serializable.update({
     where: {
@@ -83,12 +83,3 @@ function createTransaction(serializableId: string, userId: number, type: Transac
     },
   });
 }
-
-export const serializablesDAL = {
-  returnItem,
-  attemptCheckout,
-  getSingle,
-  getAll,
-  completeCheckoutTransaction,
-  deleteItem,
-};

@@ -1,4 +1,4 @@
-import { usersDAL } from './usersDAL';
+import * as usersDAL from './usersDAL';
 // import logger from 'winston';
 import { logger } from '@/loaders/logging';
 import { UserEdit } from '@/common/schema/schema_user';
@@ -7,10 +7,10 @@ import { BadRequestError, DoesNotExistError } from '@/common';
 /**
  * Calls external apis and interal DB api
  */
-async function getAllUsers() {
+export async function getAllUsers() {
   return await usersDAL.prismaGetAllUsers();
 }
-async function getUser(id: number) {
+export async function getUser(id: number) {
   try {
     const user = await usersDAL.prismaGetUser({ id });
     if (user === null) {
@@ -23,7 +23,7 @@ async function getUser(id: number) {
   }
 }
 
-async function deleteUser(id: number) {
+export async function deleteUser(id: number) {
   try {
     return await usersDAL.prismaDeleteUser(id);
   } catch (err) {
@@ -32,7 +32,7 @@ async function deleteUser(id: number) {
   }
 }
 
-async function updateUser(id: number, userChange: UserEdit) {
+export async function updateUser(id: number, userChange: UserEdit) {
   try {
     return await usersDAL.prismaUpdateUser(id, userChange);
   } catch (e) {
@@ -40,4 +40,4 @@ async function updateUser(id: number, userChange: UserEdit) {
   }
 }
 
-export const usersService = { getAllUsers, getUser, deleteUser, updateUser };
+// export const usersService = { getAllUsers, getUser, deleteUser, updateUser };

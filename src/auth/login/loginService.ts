@@ -1,8 +1,8 @@
 import { AuthenticationError } from '@/common';
-import { usersDAL } from '@/users/usersDAL';
+import * as usersDAL from '@/users/usersDAL';
 import { verifyPassword } from '../utils';
 
-async function getSingleUser(email: string) {
+export async function getSingleUser(email: string) {
   const user = await usersDAL.prismaGetUser({ email });
   if (user === null) {
     return new AuthenticationError('No user exists with the email provided');
@@ -10,8 +10,6 @@ async function getSingleUser(email: string) {
   return user;
 }
 
-async function verifyProvidedPassword(hashedPassword: string, providedPassword: string) {
+export async function verifyProvidedPassword(hashedPassword: string, providedPassword: string) {
   return await verifyPassword(hashedPassword, providedPassword);
 }
-
-export const loginService = { getSingleUser, verifyProvidedPassword };

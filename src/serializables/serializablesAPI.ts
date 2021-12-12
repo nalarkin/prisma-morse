@@ -1,7 +1,7 @@
 import { getRequireAdminMiddleware } from '@/common';
 import { Router } from 'express';
 import passport from 'passport';
-import { serializablesController } from './serializablesController';
+import * as serializablesController from './serializablesController';
 
 const route = Router();
 

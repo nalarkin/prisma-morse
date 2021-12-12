@@ -1,11 +1,11 @@
-import { serializablesDAL } from './serializablesDAL';
+import * as serializablesDAL from './serializablesDAL';
 import { DoesNotExistError, RentalError } from '@/common';
 
-async function getAll() {
+export async function getAll() {
   return await serializablesDAL.getAll();
 }
 
-async function getSingle(id: string) {
+export async function getSingle(id: string) {
   const item = await serializablesDAL.getSingle(id, true);
   if (item === null) {
     return new DoesNotExistError('Item does not exist');
@@ -13,7 +13,7 @@ async function getSingle(id: string) {
   return item;
 }
 
-async function checkout(id: string, userId: number) {
+export async function checkout(id: string, userId: number) {
   const availableItem = await serializablesDAL.getSingle(id);
 
   if (availableItem === null) {
@@ -29,7 +29,7 @@ async function checkout(id: string, userId: number) {
   return { serializable, transaction };
 }
 
-async function returnItem(id: string, userId: number) {
+export async function returnItem(id: string, userId: number) {
   const itemToReturn = await serializablesDAL.getSingle(id);
 
   if (itemToReturn === null) {
@@ -47,8 +47,6 @@ async function returnItem(id: string, userId: number) {
   return serializable;
 }
 
-async function deleteItem(id: string) {
+export async function deleteItem(id: string) {
   return await serializablesDAL.deleteItem(id);
 }
-
-export const serializablesService = { getAll, getSingle, returnItem, checkout, deleteItem };

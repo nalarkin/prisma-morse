@@ -1,20 +1,10 @@
 import { RequestHandler } from 'express';
 import { UserEdit } from '@/common/schema';
-import { JWTPayloadRequest } from '@/loaders/passport';
-import { usersService } from './usersService';
-import {
-  ajv,
-  createResponse,
-  InvalidIDError,
-  SCHEMA,
-  BadRequestError,
-  DoesNotExistError,
-  ForbiddenError,
-  ServerError,
-} from '@/common';
+import * as usersService from './usersService';
+import { ajv, createResponse, InvalidIDError, SCHEMA, BadRequestError, DoesNotExistError, ServerError } from '@/common';
 
 /** Gets a specific user when provided the id through the url */
-const getUser: RequestHandler = async (req, res, next) => {
+export const getUser: RequestHandler = async (req, res, next) => {
   try {
     const { id } = req.params;
     const userId = getUserId(id);
@@ -32,7 +22,7 @@ const getUser: RequestHandler = async (req, res, next) => {
 };
 
 /** Delete the user */
-const deleteUser: RequestHandler = async (req, res, next) => {
+export const deleteUser: RequestHandler = async (req, res, next) => {
   try {
     const { id } = req.params;
     const userId = getUserId(id);
@@ -50,17 +40,10 @@ const deleteUser: RequestHandler = async (req, res, next) => {
 };
 
 /** Update a user only if the requester has admin permissions. */
-const updateUser: RequestHandler = async (req, res, next) => {
+export const updateUser: RequestHandler = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { role } = req.user as JWTPayloadRequest;
-    if (role !== 'ADMIN') {
-      return res.status(403).json(createResponse({ error: new ForbiddenError('Only admins can change a users role') }));
-    }
-    const userId = getUserId(id);
-    if (userId instanceof InvalidIDError) {
-      return res.status(userId.statusCode).json(createResponse({ error: userId }));
-    }
+    const userId = Number(id); // we know it's valid because it passed through validation middleware
     const validator = ajv.getSchema<UserEdit>(SCHEMA.USER_EDIT);
     if (validator === undefined) {
       throw new Error('Could not find JSON validator');
@@ -82,9 +65,27 @@ const updateUser: RequestHandler = async (req, res, next) => {
 };
 
 /** Gets all users in the database */
-const getAllUsers: RequestHandler = async (req, res, next) => {
+export const getAllUsers: RequestHandler = async (req, res, next) => {
   try {
     res.json(createResponse({ data: await usersService.getAllUsers() }));
+  } catch (e) {
+    next(e);
+  }
+};
+
+/**
+ * Middleware which ensures the id parameter meets the expected format.
+ * If invalid, it returns a status 400 and prevents further middlewares from processing.
+ * If valid, then it will continue onto the next middleware called.
+ */
+export const validateUserID: RequestHandler = (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const userId = getUserId(id);
+    if (userId instanceof InvalidIDError) {
+      return res.status(userId.statusCode).json(createResponse({ error: userId }));
+    }
+    next();
   } catch (e) {
     next(e);
   }
@@ -107,4 +108,4 @@ function getUserId(id: string) {
   return new InvalidIDError(ajv.errorsText(validateId.errors), 400);
 }
 
-export const usersController = { getAllUsers, updateUser, deleteUser, getUser };
+// export const usersController = { getAllUsers, updateUser, deleteUser, getUser, validateUserID };
