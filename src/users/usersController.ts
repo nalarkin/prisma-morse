@@ -30,16 +30,20 @@ const getUser: Handler = async (req, res, next) => {
   // return { user: await usersService.getUser(id) };
 };
 const deleteUser: Handler = async (req, res, next) => {
-  const { id } = req.params;
-  const userId = getUserId(id);
-  if (userId instanceof InvalidIDError) {
-    return res.status(userId.statusCode).json(createResponse({ error: userId }));
+  try {
+    const { id } = req.params;
+    const userId = getUserId(id);
+    if (userId instanceof InvalidIDError) {
+      return res.status(userId.statusCode).json(createResponse({ error: userId }));
+    }
+    const user = await usersService.deleteUser(userId);
+    if (user === null) {
+      return res.status(404).json(createResponse({ error: new DoesNotExistError('User does not exist') }));
+    }
+    res.json(createResponse({ data: user }));
+  } catch (e) {
+    next(e);
   }
-  const user = await usersService.deleteUser(userId);
-  if (user === null) {
-    return res.status(404).json(createResponse({ error: new DoesNotExistError('User does not exist') }));
-  }
-  res.json(createResponse({ data: user }));
 };
 
 // const makeAdmin: Handler = async (req, res, next) => {

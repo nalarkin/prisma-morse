@@ -6,7 +6,6 @@
     "dev": "nodemon -r tsconfig-paths/register src/app.ts",
     "pino": "nodemon -r tsconfig-paths/register src/app.ts | pino-pretty",
     "keypair": "ts-node -r tsconfig-paths/register src/auth/generateKeyPair.ts",
-    "debug": "ts-node -r tsconfig-paths/register src/auth/tokenDebug.ts",
     "seed": "prisma db seed",
     "studio": "prisma studio",
     "lint": "eslint src/**/*.ts",

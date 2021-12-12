@@ -1,6 +1,6 @@
 import { ajv, AuthenticationError, BadRequestError, createResponse, InternalError, LoginForm, SCHEMA } from '@/common';
 import { Handler } from 'express';
-import { ACCESS_JWT_EXPIRE, issueJWT, REFRESH_JWT_EXPIRE, verifyPassword } from '@/auth/utils';
+import { ACCESS_JWT_EXPIRE, issueJWT, REFRESH_JWT_EXPIRE } from '@/auth/utils';
 import { loginService } from './loginService';
 
 function loginHasExpectedContent(data: unknown) {
