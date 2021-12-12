@@ -1,7 +1,15 @@
 import { Router } from 'express';
 import { ACCESS_JWT_EXPIRE, REFRESH_JWT_EXPIRE, verifyPassword, issueJWT } from '@/auth/utils';
 import prisma from '@/loaders/database';
-import { ajv, SCHEMA, createResponse } from '@/common';
+import {
+  ajv,
+  SCHEMA,
+  createResponse,
+  InternalError,
+  BadRequestError,
+  DoesNotExistError,
+  AuthenticationError,
+} from '@/common';
 
 const router = Router();
 
@@ -15,10 +23,12 @@ router.post('/', async function (req, res, next) {
   try {
     const validator = ajv.getSchema<LoginForm>(SCHEMA.LOGIN);
     if (validator === undefined) {
-      return res.status(500).json(createResponse({ error: 'Unable to retrieve validator for login', status: 500 }));
+      return res
+        .status(500)
+        .json(createResponse({ error: new InternalError('Unable to retrieve validator for login') }));
     }
     if (!validator(req.body)) {
-      return res.status(401).json(createResponse({ error: ajv.errorsText(validator.errors), status: 401 }));
+      return res.status(400).json(createResponse({ error: new BadRequestError(ajv.errorsText(validator.errors)) }));
     }
     const { password, email } = req.body;
     // search for user in database
@@ -31,8 +41,7 @@ router.post('/', async function (req, res, next) {
     if (user === null) {
       return res.status(401).json(
         createResponse({
-          error: 'User does not exist with these credentials',
-          status: 401,
+          error: new AuthenticationError('No user exists with the email provided. '),
         }),
       );
     }
@@ -41,8 +50,7 @@ router.post('/', async function (req, res, next) {
     if (!isAuthenticated) {
       return res.status(401).json(
         createResponse({
-          error: 'User does not exist with these credentials',
-          status: 401,
+          error: new AuthenticationError('User does not exist with these credentials'),
         }),
       );
     }

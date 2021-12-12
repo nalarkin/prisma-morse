@@ -2,7 +2,15 @@ import { Router } from 'express';
 import passport from 'passport';
 import { Transaction } from '@prisma/client';
 import { NewConsumable, TakeConsumable } from '@/common/schema';
-import { ajv, SCHEMA, createResponse } from '@/common';
+import {
+  ajv,
+  SCHEMA,
+  createResponse,
+  InternalError,
+  DoesNotExistError,
+  BadRequestError,
+  ForbiddenError,
+} from '@/common';
 import { JWTData } from '@/auth/utils';
 import prisma from '@/loaders/database';
 
@@ -22,13 +30,13 @@ router.post('/', passport.authenticate('jwt', { session: false }), async functio
     const { sub: userId, role } = req.user as JWTData;
 
     if (validator === undefined) {
-      return res.status(500).json(createResponse({ error: 'Unable to get json validator', status: 500 }));
+      return res.status(500).json(createResponse({ error: new InternalError('Unable to get json validator') }));
     }
 
     if (role !== 'ADMIN') {
       return res
-        .status(401)
-        .json(createResponse({ error: 'You do not have permission to create consumables', status: 401 }));
+        .status(403)
+        .json(createResponse({ error: new ForbiddenError('You do not have permission to create consumables') }));
     }
     if (validator(body)) {
       // we can be certain data is safe to use because we used ajv to verify
@@ -52,7 +60,7 @@ router.post('/', passport.authenticate('jwt', { session: false }), async functio
       });
       return res.json(createResponse({ data: consumable }));
     }
-    res.status(400).json(createResponse({ error: ajv.errorsText(validator?.errors), status: 400 }));
+    res.status(400).json(createResponse({ error: new BadRequestError(ajv.errorsText(validator.errors)) }));
   } catch (err) {
     next(err);
   }
@@ -67,7 +75,9 @@ router.delete('/:id/', passport.authenticate('jwt', { session: false }), async f
     const { id } = req.params;
     const { role } = req.user as JWTData;
     if (role !== 'ADMIN') {
-      return res.status(401).json(createResponse({ error: 'You do not have permission to delete items', status: 401 }));
+      return res
+        .status(403)
+        .json(createResponse({ error: new ForbiddenError('You do not have permission to delete items') }));
     }
     const deleteAction = prisma.consumable.delete({
       where: {
@@ -100,7 +110,7 @@ router.get('/:id/', async function (req, res) {
     },
   });
   if (consumable === null) {
-    return res.status(404).json(createResponse({ error: 'Consumable does not exist', status: 404 }));
+    return res.status(404).json(createResponse({ error: new DoesNotExistError('Consumable does not exist') }));
   }
   res.json(createResponse({ data: consumable }));
 });
@@ -129,10 +139,12 @@ router.put('/:id/take/track/', passport.authenticate('jwt', { session: false }),
     const { id } = req.params;
     const { sub: userId } = req.user as JWTData; // get requester userid from passport
     if (validator === undefined) {
-      return res.status(500).json(createResponse({ error: 'Unable to get validator to parse json', status: 500 }));
+      return res
+        .status(500)
+        .json(createResponse({ error: new InternalError('Unable to get validator to parse json') }));
     }
     if (!validator(req.body)) {
-      return res.status(401).json(createResponse({ error: ajv.errorsText(validator.errors), status: 401 }));
+      return res.status(400).json(createResponse({ error: new BadRequestError(ajv.errorsText(validator.errors)) }));
     }
 
     const { count } = req.body;

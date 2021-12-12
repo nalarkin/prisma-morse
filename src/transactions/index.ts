@@ -1,3 +1,1 @@
-import transactions from './transactionsAPI';
-
-export { transactions as transactionsAPI };
+export { default as transactionsAPI } from './transactionsAPI';

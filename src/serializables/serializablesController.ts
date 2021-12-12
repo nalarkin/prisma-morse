@@ -2,6 +2,7 @@ import { Handler } from 'express';
 import { serializablesService } from './serializablesService';
 import { DoesNotExistError, RentalError, createResponse } from '@/common';
 import { JWTData } from '@/auth/utils';
+import { ForbiddenError } from '../common/response';
 
 const getAll: Handler = async (req, res, next) => {
   try {
@@ -17,7 +18,7 @@ const getSingle: Handler = async (req, res, next) => {
     const { id } = req.params;
     const item = await serializablesService.getSingle(id);
     if (item === null) {
-      res.status(404).json(createResponse({ error: 'Item does not exist', status: 404 }));
+      res.status(404).json(createResponse({ error: new DoesNotExistError('Item does not exist') }));
     }
     res.json(item);
   } catch (err) {
@@ -31,7 +32,7 @@ const checkout: Handler = async (req, res, next) => {
     const { sub: userId } = req.user as JWTData;
     const checkoutResult = await serializablesService.checkout(id, userId);
     if (checkoutResult instanceof DoesNotExistError || checkoutResult instanceof RentalError) {
-      return res.status(checkoutResult.statusCode).json(createResponse({ error: checkoutResult.message }));
+      return res.status(checkoutResult.statusCode).json(createResponse({ error: checkoutResult }));
     }
     return res.json(checkoutResult);
   } catch (err) {
@@ -46,7 +47,7 @@ const returnItem: Handler = async (req, res, next) => {
     /** Insert logic to check if request id requesting change is the same as the current renter */
     const returnResult = await serializablesService.returnItem(id, userId);
     if (returnResult instanceof DoesNotExistError || returnResult instanceof RentalError) {
-      return res.status(returnResult.statusCode).json(createResponse({ error: returnResult.message }));
+      return res.status(returnResult.statusCode).json(createResponse({ error: returnResult }));
     }
     return res.json(returnResult);
   } catch (err) {
@@ -61,8 +62,8 @@ const deleteItem: Handler = async (req, res, next) => {
     const { role } = req.user as JWTData;
     if (role !== 'ADMIN') {
       return res
-        .status(401)
-        .json(createResponse({ error: 'You are not authorized to delete serializable items', status: 401 }));
+        .status(403)
+        .json(createResponse({ error: new ForbiddenError('You are not authorized to delete serializable items') }));
     }
 
     const serializable = await serializablesService.deleteItem(id);

@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { ACCESS_JWT_EXPIRE, JWTData, issueJWT } from '../utils';
 import prisma from '@/loaders/database';
-import { createResponse } from '@/common';
+import { AuthenticationError, createResponse } from '@/common';
 import passport from 'passport';
 
 const router = Router();
@@ -23,8 +23,7 @@ router.post('/refresh/', passport.authenticate('jwt', { session: false }), async
     if (user === null) {
       return res.status(401).json(
         createResponse({
-          error: 'JWT has invalid content, please sign in again',
-          status: 401,
+          error: new AuthenticationError('JWT has invalid content, please sign in again'),
         }),
       );
     }

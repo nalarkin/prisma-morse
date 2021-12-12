@@ -2,6 +2,7 @@ import { usersDAL } from './usersDAL';
 // import logger from 'winston';
 import { logger } from '@/loaders/logging';
 import { UserEdit } from '@/common/schema/schema_user';
+import { DoesNotExistError } from '@/common';
 
 /**
  * Calls external apis and interal DB api
@@ -15,7 +16,7 @@ async function getUser(id: number) {
     return await usersDAL.prismaGetUser(id);
   } catch (err) {
     logger.error('User does not exist.');
-    return null;
+    return new DoesNotExistError('User does not exist');
   }
 }
 

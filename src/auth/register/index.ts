@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { hashPassword } from '@/auth/utils';
 import prisma from '@/loaders/database';
-import { ajv, SCHEMA, createResponse, RegisterForm } from '@/common';
+import { ajv, SCHEMA, createResponse, RegisterForm, InternalError, BadRequestError } from '@/common';
 
 const router = Router();
 
@@ -10,10 +10,10 @@ router.post('/', async function (req, res, next) {
   try {
     const validate = ajv.getSchema<RegisterForm>(SCHEMA.REGISTER);
     if (validate === undefined) {
-      return res.status(500).json(createResponse({ error: 'Unable to get json validator', status: 500 }));
+      return res.status(500).json(createResponse({ error: new InternalError('Unable to get json validator') }));
     }
     if (!validate(req.body)) {
-      return res.status(401).json(createResponse({ error: ajv.errorsText(validate.errors), status: 401 }));
+      return res.status(400).json(createResponse({ error: new BadRequestError(ajv.errorsText(validate.errors)) }));
     } else {
       const { password, email, firstName, lastName } = req.body;
       const hashedPassword = await hashPassword(password);
@@ -37,10 +37,10 @@ router.post('/email/', async function (req, res, next) {
   try {
     const validate = ajv.getSchema<RegisterForm>(SCHEMA.REGISTER);
     if (validate === undefined) {
-      return res.status(500).json(createResponse({ error: 'Unable to get json validator', status: 500 }));
+      return res.status(500).json(createResponse({ error: new InternalError('Unable to get json validator') }));
     }
     if (!validate(req.body)) {
-      return res.status(401).json(createResponse({ error: ajv.errorsText(validate.errors), status: 401 }));
+      return res.status(400).json(createResponse({ error: new BadRequestError(ajv.errorsText(validate.errors)) }));
     } else {
       // const { password, email, firstName, lastName } = req.body;
       // const hashedPassword = await hashPassword(password);

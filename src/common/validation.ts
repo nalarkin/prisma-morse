@@ -31,13 +31,6 @@ ajv.addSchema(schema_take_consumable, CONSUMABLE_TAKE);
 ajv.addSchema(schema_refresh_token, TOKEN_REFRESH);
 ajv.addSchema(schema_user, USER_EDIT);
 ajv.addSchema(schema_user_id, USER_ID);
-// ajv.addSchema(schema_login, 'login');
-// ajv.addSchema(schema_register, 'register');
-// ajv.addSchema(schema_consumable, 'newConsumable');
-// ajv.addSchema(schema_take_consumable, 'takeConsumable');
-// ajv.addSchema(schema_refresh_token, 'refreshToken');
-// ajv.addSchema(schema_user, 'user');
-// ajv.addSchema(schema_user_id, 'userId');
 
 /** Exported constants to make access to schema reliable and supportive of autocomplete */
 export const SCHEMA = { LOGIN, REGISTER, CONSUMABLE_NEW, CONSUMABLE_TAKE, TOKEN_REFRESH, USER_EDIT, USER_ID };

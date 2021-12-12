@@ -13,7 +13,7 @@ async function checkout(id: string, userId: number) {
   const availableItem = await serializablesDAL.getSingle(id);
 
   if (availableItem === null) {
-    return new DoesNotExistError('Item does not exist', 404);
+    return new DoesNotExistError('Item does not exist');
   }
 
   if (availableItem.userId !== null) {
@@ -29,7 +29,7 @@ async function returnItem(id: string, userId: number) {
   const itemToReturn = await serializablesDAL.getSingle(id);
 
   if (itemToReturn === null) {
-    return new DoesNotExistError('Serializable does not exist', 404);
+    return new DoesNotExistError('Serializable does not exist');
   }
 
   if (itemToReturn.userId === null) {
