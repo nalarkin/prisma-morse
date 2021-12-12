@@ -10,12 +10,13 @@ config();
 /** Main method to start the server. */
 async function startServer() {
   /** Start listening on port */
-  app.listen(8000, () =>
+  const PORT = Number(process.env.PORT) || 8000;
+  app.listen(PORT, () =>
     logger.info(`
-    Server ready at: http://localhost:8000 
-    Users: http://localhost:8000/users
-    Serializables: http://localhost:8000/serializables
-    Consumables: http://localhost:8000/consumables
+    Server ready at: http://localhost:${PORT} 
+    Users: http://localhost:${PORT}/users/
+    Serializables: http://localhost:${PORT}/serializables/
+    Consumables: http://localhost:${PORT}/consumables/
     `),
   );
 }

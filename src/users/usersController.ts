@@ -1,18 +1,20 @@
-import { ajv, createResponse, InvalidIDError, SCHEMA } from '@/common';
-import { UserEdit } from '@/common/schema/schema_user';
-import { JWTPayloadRequest } from '@/loaders/passport';
 import { Handler } from 'express';
+import { UserEdit } from '@/common/schema';
+import { JWTPayloadRequest } from '@/loaders/passport';
 import { usersService } from './usersService';
-import { BadRequestError, DoesNotExistError, ForbiddenError } from '../common/response';
+import {
+  ajv,
+  createResponse,
+  InvalidIDError,
+  SCHEMA,
+  BadRequestError,
+  DoesNotExistError,
+  ForbiddenError,
+  ServerError,
+} from '@/common';
 
-/**
- *I think of controllers as "orchestrators". They call the services, which contain more "pure" business logic. 
- But by themselves,controllers don't really contain any logic other than handling the request and calling services. 
- The services do most of the work, while the controllers orchestrate the service calls and decide what to do with the data returned.
- */
-
+/** Gets a specific user when provided the id through the url */
 const getUser: Handler = async (req, res, next) => {
-  // async getUser(id: number) {
   try {
     const { id } = req.params;
     const userId = getUserId(id);
@@ -20,15 +22,16 @@ const getUser: Handler = async (req, res, next) => {
       return res.status(userId.statusCode).json(createResponse({ error: userId }));
     }
     const user = await usersService.getUser(userId);
-    if (user === null) {
-      return res.status(404).json(createResponse({ error: new DoesNotExistError('User does not exist') }));
+    if (user instanceof ServerError) {
+      return res.status(user.statusCode).json(createResponse({ error: user }));
     }
     res.json(createResponse({ data: user }));
   } catch (e) {
     next(e);
   }
-  // return { user: await usersService.getUser(id) };
 };
+
+/** Delete the user */
 const deleteUser: Handler = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -37,8 +40,8 @@ const deleteUser: Handler = async (req, res, next) => {
       return res.status(userId.statusCode).json(createResponse({ error: userId }));
     }
     const user = await usersService.deleteUser(userId);
-    if (user === null) {
-      return res.status(404).json(createResponse({ error: new DoesNotExistError('User does not exist') }));
+    if (user instanceof DoesNotExistError) {
+      return res.status(user.statusCode).json(createResponse({ error: user }));
     }
     res.json(createResponse({ data: user }));
   } catch (e) {
@@ -46,13 +49,8 @@ const deleteUser: Handler = async (req, res, next) => {
   }
 };
 
-// const makeAdmin: Handler = async (req, res, next) => {
-//   // async makeAdmin(id: number) {
-//   return { user: await usersService.deleteUser(id) };
-// };
-
+/** Update a user only if the requester has admin permissions. */
 const updateUser: Handler = async (req, res, next) => {
-  // see if user exists before attempting update
   try {
     const { id } = req.params;
     const { role } = req.user as JWTPayloadRequest;
@@ -74,8 +72,8 @@ const updateUser: Handler = async (req, res, next) => {
     }
 
     const user = await usersService.updateUser(userId, body);
-    if (user === null) {
-      return res.status(404).json(createResponse({ error: new DoesNotExistError('User does not exist') }));
+    if (user instanceof ServerError) {
+      return res.status(user.statusCode).json(createResponse({ error: user }));
     }
     res.json(createResponse({ data: user }));
   } catch (e) {
@@ -83,6 +81,7 @@ const updateUser: Handler = async (req, res, next) => {
   }
 };
 
+/** Gets all users in the database */
 const getAllUsers: Handler = async (req, res, next) => {
   try {
     res.json(createResponse({ data: await usersService.getAllUsers() }));
@@ -92,8 +91,9 @@ const getAllUsers: Handler = async (req, res, next) => {
 };
 
 /**
- * Validates that the user id is a valid format.
- * Performs more robust checks and is quicker and less repetitive than a manual implementation.
+ * Helper function that validates that the user id is a valid format.
+ * Performs more robust checks and is quicker and less repetitive than a
+ * manual implementation.
  */
 function getUserId(id: string) {
   const userId = Number(id);

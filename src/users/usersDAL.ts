@@ -50,16 +50,7 @@ async function prismaGetUser(res: GetUserByEmail | GetUserByID, options?: GetUse
     },
   });
 }
-// async function primsaMakeAdmin(id: number) {
-//   return await prisma.user.update({
-//     where: {
-//       id,
-//     },
-//     data: {
-//       role: 'ADMIN',
-//     },
-//   });
-// }
+
 async function prismaUpdateUser(id: number, userChange: UserEdit) {
   return await prisma.user.update({
     where: {

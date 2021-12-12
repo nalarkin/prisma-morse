@@ -31,7 +31,7 @@ export function createResponse(response: ResponseArguments): CustomResponse {
 //       fn(...args).catch(args[2]);
 
 /** Base class  which all errors inherit */
-class ServerError extends ReferenceError {
+export class ServerError extends ReferenceError {
   statusCode: number;
   constructor(message: string, statusCode: number) {
     super(message);

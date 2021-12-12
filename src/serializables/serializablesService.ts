@@ -6,7 +6,11 @@ async function getAll() {
 }
 
 async function getSingle(id: string) {
-  return await serializablesDAL.getSingle(id, true);
+  const item = await serializablesDAL.getSingle(id, true);
+  if (item === null) {
+    return new DoesNotExistError('Item does not exist');
+  }
+  return item;
 }
 
 async function checkout(id: string, userId: number) {

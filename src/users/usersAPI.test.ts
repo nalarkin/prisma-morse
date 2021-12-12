@@ -5,7 +5,7 @@ import { prismaMock } from '@/loaders/singleton';
 
 describe('Users API', () => {
   describe('GET /users/', () => {
-    it('When all are requested, the response is an array of users', async () => {
+    it('When all users are requested, the response is an array of users', async () => {
       // const post = await Post.create({ title: 'Post 1', content: 'Lorem ipsum' });
       // type Tester = Omit<User, 'createdAt'>;
       const testUser: User = {

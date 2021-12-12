@@ -1,13 +1,12 @@
 import { Handler } from 'express';
 import { serializablesService } from './serializablesService';
-import { DoesNotExistError, RentalError, createResponse } from '@/common';
+import { createResponse, ForbiddenError, ServerError } from '@/common';
 import { JWTData } from '@/auth/utils';
-import { ForbiddenError } from '../common/response';
 
 const getAll: Handler = async (req, res, next) => {
   try {
     const serializables = await serializablesService.getAll();
-    res.json(createResponse({ data: { serializables } }));
+    res.json(createResponse({ data: serializables }));
   } catch (e) {
     next(e);
   }
@@ -17,8 +16,8 @@ const getSingle: Handler = async (req, res, next) => {
   try {
     const { id } = req.params;
     const item = await serializablesService.getSingle(id);
-    if (item === null) {
-      res.status(404).json(createResponse({ error: new DoesNotExistError('Item does not exist') }));
+    if (item instanceof ServerError) {
+      return res.status(item.statusCode).json(createResponse({ error: item }));
     }
     res.json(item);
   } catch (err) {
@@ -31,7 +30,7 @@ const checkout: Handler = async (req, res, next) => {
     const { id } = req.params;
     const { sub: userId } = req.user as JWTData;
     const checkoutResult = await serializablesService.checkout(id, userId);
-    if (checkoutResult instanceof DoesNotExistError || checkoutResult instanceof RentalError) {
+    if (checkoutResult instanceof ServerError) {
       return res.status(checkoutResult.statusCode).json(createResponse({ error: checkoutResult }));
     }
     return res.json(checkoutResult);
@@ -46,7 +45,7 @@ const returnItem: Handler = async (req, res, next) => {
     const { sub: userId } = req.user as JWTData;
     /** Insert logic to check if request id requesting change is the same as the current renter */
     const returnResult = await serializablesService.returnItem(id, userId);
-    if (returnResult instanceof DoesNotExistError || returnResult instanceof RentalError) {
+    if (returnResult instanceof ServerError) {
       return res.status(returnResult.statusCode).json(createResponse({ error: returnResult }));
     }
     return res.json(returnResult);
@@ -65,7 +64,7 @@ const deleteItem: Handler = async (req, res, next) => {
         .status(403)
         .json(createResponse({ error: new ForbiddenError('You are not authorized to delete serializable items') }));
     }
-
+    // @TODO: Add error handling when deleting item
     const serializable = await serializablesService.deleteItem(id);
     res.json(createResponse({ data: serializable }));
   } catch (err) {

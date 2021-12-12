@@ -5,6 +5,7 @@ import { refreshTokenAPI, loginAPI, protectedAPI, registerAPI } from '@/auth';
 import { consumablesAPI } from '@/consumables';
 import { transactionsAPI } from '@/transactions';
 import error from '@/error/index';
+import { devAPI } from '@/dev';
 
 /** Loads all the routes that will be used in the app. */
 export function loadRoutes() {
@@ -21,5 +22,8 @@ export function loadRoutes() {
   router.use('/consumables', consumablesAPI);
   router.use('/transactions', transactionsAPI);
   router.use('/error', error);
+  if (process.env.NODE_ENV !== 'production') {
+    devAPI(router);
+  }
   return router;
 }
