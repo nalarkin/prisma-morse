@@ -11,7 +11,7 @@
     "studio": "prisma studio",
     "lint": "eslint src/**/*.ts",
     "format": "eslint src/**/*.ts --fix",
-    "test": "jest -i"
+    "test": "jest -i --verbose"
   },
   "dependencies": {
     "@prisma/client": "^3.6.0",

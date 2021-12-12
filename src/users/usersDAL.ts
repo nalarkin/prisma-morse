@@ -1,5 +1,6 @@
 import { UserEdit } from '@/common/schema/schema_user';
 import prisma from '@/loaders/database';
+import { Serializable, User } from '@prisma/client';
 
 /**
  * Make calls do database in here
@@ -17,13 +18,46 @@ async function prismaDeleteUser(id: number) {
   });
 }
 
-async function prismaGetUser(id: number, includeSerializables = true) {
+// async function prismaGetUser(id: number, includeSerializables = true) {
+//   return await prisma.user.findUnique({
+//     where: {
+//       id,
+//     },
+//     include: {
+//       serializables: includeSerializables,
+//     },
+//   });
+// }
+interface GetUserOptions {
+  serializables?: boolean;
+}
+type GetUserByID = {
+  id: number;
+};
+type GetUserByEmail = {
+  email: string;
+};
+
+async function prismaGetUser(res: GetUserByEmail | GetUserByID, options?: GetUserOptions) {
+  const serializables = options?.serializables;
+  if ('id' in res) {
+    const { id } = res;
+    return await prisma.user.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        serializables,
+      },
+    });
+  }
+  const { email } = res;
   return await prisma.user.findUnique({
     where: {
-      id,
+      email,
     },
     include: {
-      serializables: includeSerializables,
+      serializables,
     },
   });
 }

@@ -21,7 +21,7 @@ const getUser: Handler = async (req, res, next) => {
     }
     const user = await usersService.getUser(userId);
     if (user === null) {
-      return res.status(404).json(createResponse({ error: new DoesNotExistError('Item does not exist') }));
+      return res.status(404).json(createResponse({ error: new DoesNotExistError('User does not exist') }));
     }
     res.json(createResponse({ data: user }));
   } catch (e) {
@@ -37,7 +37,7 @@ const deleteUser: Handler = async (req, res, next) => {
   }
   const user = await usersService.deleteUser(userId);
   if (user === null) {
-    return res.status(404).json(createResponse({ error: new DoesNotExistError('Item does not exist') }));
+    return res.status(404).json(createResponse({ error: new DoesNotExistError('User does not exist') }));
   }
   res.json(createResponse({ data: user }));
 };
@@ -77,17 +77,11 @@ const updateUser: Handler = async (req, res, next) => {
   } catch (e) {
     next(e);
   }
-  // const user = await usersService.getUser(id);
-  // if (user === null) {
-  //   return { user };
-  // }
-  // return { user: await usersService.updateUser(id, userChange) };
 };
-// }
 
 const getAllUsers: Handler = async (req, res, next) => {
   try {
-    res.json(createResponse({ data: { users: await usersService.getAllUsers() } }));
+    res.json(createResponse({ data: await usersService.getAllUsers() }));
   } catch (e) {
     next(e);
   }

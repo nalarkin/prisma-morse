@@ -9,7 +9,7 @@ export type CustomResponse = {
   status?: number;
 };
 
-type SuccessResponse = { data: object };
+type SuccessResponse = { data: object | unknown[] };
 // type ErrorResponse = { error: string; status?: number };
 type ErrorResponse = { error: ServerError };
 export type ResponseArguments = SuccessResponse | ErrorResponse;

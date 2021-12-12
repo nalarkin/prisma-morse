@@ -13,7 +13,7 @@ async function getAllUsers() {
 }
 async function getUser(id: number) {
   try {
-    return await usersDAL.prismaGetUser(id);
+    return await usersDAL.prismaGetUser({ id });
   } catch (err) {
     logger.error('User does not exist.');
     return new DoesNotExistError('User does not exist');
