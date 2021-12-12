@@ -35,7 +35,7 @@ describe('Users API', () => {
     });
   });
   describe('GET /users/:id/', () => {
-    it('When an existing user is requsted, the server responds with the user', async () => {
+    it('When an existing user is requested, the server responds with the user', async () => {
       const testUser: User = {
         createdAt: new Date(),
         email: 'test@test.com',
@@ -62,15 +62,15 @@ describe('Users API', () => {
           expect(data).toStrictEqual(expected);
         });
     });
-    it('When an user that does not exist is requsted, the response code is 404', async () => {
+    it('When an user that does not exist is requested, the response code is 404', async () => {
       prismaMock.user.findUnique.mockResolvedValue(null);
       await supertest(app).get(`/users/83280329039/`).expect(404);
     });
-    it('When an id that is a floating point is requsted, the response code is 400', async () => {
+    it('When an id that is a floating point is requested, the response code is 400', async () => {
       prismaMock.user.findUnique.mockResolvedValue(null);
       await supertest(app).get(`/users/832803.29039/`).expect(400);
     });
-    it('When an id that is a negative integer is requsted, the response code is 400', async () => {
+    it('When an id that is a negative integer is requested, the response code is 400', async () => {
       prismaMock.user.findUnique.mockResolvedValue(null);
       await supertest(app).get(`/users/-9039/`).expect(400);
     });
