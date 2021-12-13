@@ -11,18 +11,20 @@ export function usersAPI(app: Router) {
   /** Get all users */
   route.get('/', usersController.getAllUsers);
 
+  /** This middleware gets used on all routes that match this form */
+  route.use('/:id/', usersController.validateUserIDParam);
+
   /** Delete specified user */
-  route.delete('/:id/', usersController.validateUserID, usersController.deleteUser);
+  route.delete('/:id/', usersController.deleteUser);
 
   /** Get the current user info, including the serializables they currently have checked out. */
-  route.get('/:id/', usersController.validateUserID, usersController.getUser);
+  route.get('/:id/', usersController.getUser);
 
   /** Gives admins the power to update other users */
   route.put(
     '/:id/',
     passport.authenticate('jwt', { session: false }),
     getRequireAdminMiddleware('You must be an admin to edit other users.'),
-    usersController.validateUserID,
     usersController.updateUser,
   );
 }

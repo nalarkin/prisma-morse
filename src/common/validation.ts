@@ -5,6 +5,7 @@ import { schema_consumable, schema_take_consumable } from './schema/schema_consu
 import { schema_refresh_token } from './schema/schema_token';
 import { schema_user, schema_user_id } from './schema/schema_user';
 import addFormats from 'ajv-formats';
+import { schema_item_id } from './schema/schema_cuid';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 
 /**
@@ -23,6 +24,7 @@ const CONSUMABLE_TAKE = 'takeConsumable';
 const TOKEN_REFRESH = 'refreshToken';
 const USER_EDIT = 'userEdit';
 const USER_ID = 'userId';
+const CUID = 'itemId';
 
 ajv.addSchema(schema_login, LOGIN);
 ajv.addSchema(schema_register, REGISTER);
@@ -31,6 +33,7 @@ ajv.addSchema(schema_take_consumable, CONSUMABLE_TAKE);
 ajv.addSchema(schema_refresh_token, TOKEN_REFRESH);
 ajv.addSchema(schema_user, USER_EDIT);
 ajv.addSchema(schema_user_id, USER_ID);
+ajv.addSchema(schema_item_id, CUID);
 
 /** Exported constants to make access to schema reliable and supportive of autocomplete */
-export const SCHEMA = { LOGIN, REGISTER, CONSUMABLE_NEW, CONSUMABLE_TAKE, TOKEN_REFRESH, USER_EDIT, USER_ID };
+export const SCHEMA = { LOGIN, REGISTER, CONSUMABLE_NEW, CONSUMABLE_TAKE, TOKEN_REFRESH, USER_EDIT, USER_ID, CUID };

@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 import { JWTData } from '@/auth/utils';
-import { createResponse, ForbiddenError } from '@/common';
+import { ajv, BadRequestError, createResponse, ForbiddenError, SCHEMA } from '@/common';
 
 const DEFAULT_MESSAGE = 'You do not have sufficient permissions.';
 
@@ -15,4 +15,24 @@ export const getRequireAdminMiddleware = (customMessage = DEFAULT_MESSAGE): Requ
     next();
   };
   return requireAdminMiddleware;
+};
+
+/**
+ * CUIDs follow a certain pattern. To learn more about the pattern,
+ * see https://github.com/ericelliott/cuid#broken-down
+ */
+export const verifyCUIDMiddleware: RequestHandler = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const validator = ajv.getSchema<string>(SCHEMA.CUID);
+    if (validator === undefined) {
+      throw new Error('Could not locate json validator');
+    }
+    if (!validator(id)) {
+      return res.status(400).json(createResponse({ error: new BadRequestError('Invalid ID format.') }));
+    }
+    next();
+  } catch (e) {
+    next(e);
+  }
 };

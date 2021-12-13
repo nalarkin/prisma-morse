@@ -1,4 +1,4 @@
-import {config} from 'dotenv';
+import { config } from 'dotenv';
 import express from 'express';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import pinohttp from 'pino-http';

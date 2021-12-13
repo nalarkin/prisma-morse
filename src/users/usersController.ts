@@ -78,7 +78,7 @@ export const getAllUsers: RequestHandler = async (req, res, next) => {
  * If invalid, it returns a status 400 and prevents further middlewares from processing.
  * If valid, then it will continue onto the next middleware called.
  */
-export const validateUserID: RequestHandler = (req, res, next) => {
+export const validateUserIDParam: RequestHandler = (req, res, next) => {
   try {
     const { id } = req.params;
     const userId = getUserId(id);

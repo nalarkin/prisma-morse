@@ -10,6 +10,7 @@ import {
   DoesNotExistError,
   BadRequestError,
   ForbiddenError,
+  verifyCUIDMiddleware,
 } from '@/common';
 import { JWTData } from '@/auth/utils';
 import prisma from '@/loaders/database';
@@ -66,6 +67,8 @@ router.post('/', passport.authenticate('jwt', { session: false }), async functio
   }
 });
 
+/** Use item id verification for every request that provides an id param */
+router.use('/:id/', verifyCUIDMiddleware);
 /**
  * Delete a consumable. Need to decide on deletion tracking method. Cascade delete
  * is necessary? Maybe move it into a new table?
