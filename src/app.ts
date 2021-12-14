@@ -17,6 +17,7 @@ async function startServer() {
     Users: http://localhost:${PORT}/users/
     Serializables: http://localhost:${PORT}/serializables/
     Consumables: http://localhost:${PORT}/consumables/
+    Environment: '${process.env.NODE_ENV}'
     `),
   );
 }

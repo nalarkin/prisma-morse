@@ -44,10 +44,10 @@ const prisma = new PrismaClient();
 
 async function main() {
   console.log(`Start seeding ...`);
-  // const userData: Prisma.UserCreateInput[] = await makeUserData(); /** Uncomment to create fake users */
+  const userData: Prisma.UserCreateInput[] = await makeUserData(); /** Uncomment to create fake users */
   // await prisma.user.createMany({ data: userData }); /** Uncomment to create fake users */
-  // await prisma.consumable.createMany({ data: consumableData });    /** Uncomment to create fake consumables */
-  // await prisma.serializable.createMany({ data: serializableData });  /** Uncomment to create fake serializables */
+  // await prisma.consumable.createMany({ data: consumableData }); /** Uncomment to create fake consumables */
+  // await prisma.serializable.createMany({ data: serializableData }); /** Uncomment to create fake serializables */
   console.log('Your database has been seeded.');
 }
 

@@ -36,3 +36,9 @@ export class InternalError extends ServerError {
     super(message, 500);
   }
 }
+
+// /** Different way of handling errors */
+// type Error<E> = E;
+// type Success<T> = T;
+
+// type Result<T, E> = Success<T> | Error<E>;

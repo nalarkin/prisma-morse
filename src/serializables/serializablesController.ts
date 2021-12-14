@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 import * as serializablesService from './serializablesService';
-import { createResponse, ForbiddenError, ServerError } from '@/common';
+import { createResponse, ServerError } from '@/common';
 import { JWTData } from '@/auth/utils';
 
 export const getAll: RequestHandler = async (req, res, next) => {
@@ -58,12 +58,6 @@ export const returnItem: RequestHandler = async (req, res, next) => {
 export const deleteItem: RequestHandler = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { role } = req.user as JWTData;
-    if (role !== 'ADMIN') {
-      return res
-        .status(403)
-        .json(createResponse({ error: new ForbiddenError('You are not authorized to delete serializable items') }));
-    }
     // @TODO: Add error handling when deleting item
     const serializable = await serializablesService.deleteItem(id);
     res.json(createResponse({ data: serializable }));

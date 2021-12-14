@@ -20,7 +20,8 @@ const router = Router();
 /** Get all consumables */
 router.get('/', passport.authenticate('jwt', { session: false }), async function (req, res) {
   const consumables = await prisma.consumable.findMany();
-  res.json(createResponse({ data: consumables }));
+  console.log('after i got value');
+  return res.json(createResponse({ data: consumables }));
 });
 
 /** Create a consumable */

@@ -13,11 +13,11 @@ export function loadRoutes() {
   // one way of adding routes to app
   usersAPI(router);
   serializablesAPI(router);
+  registerAPI(router);
 
   // alternative way where we prefix the pages within this file
   router.use('/auth', protectedAPI);
   router.use('/auth/login', loginAPI);
-  router.use('/auth/register', registerAPI);
   router.use('/auth/token', refreshTokenAPI);
   router.use('/consumables', consumablesAPI);
   router.use('/transactions', transactionsAPI);

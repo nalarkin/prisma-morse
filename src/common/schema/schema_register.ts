@@ -24,5 +24,5 @@ export const schema_register: JSONSchemaType<RegisterForm> = {
     lastName: { type: 'string' },
   },
   required: ['email', 'password', 'firstName', 'lastName', 'confirmPassword'],
-  additionalProperties: true,
+  additionalProperties: false,
 };
