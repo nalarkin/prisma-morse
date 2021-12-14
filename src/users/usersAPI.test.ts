@@ -26,7 +26,7 @@ expect.extend({
 describe('Users API', () => {
   describe('GET /users/', () => {
     it('When all users are requested, the response is an array of users', async () => {
-      const [testUser, expected] = makeTestUser();
+      const testUser = makeTestUser();
 
       prismaMock.user.findMany.mockResolvedValue([testUser]);
       await supertest(app)
@@ -37,13 +37,13 @@ describe('Users API', () => {
           expect(Array.isArray(data)).toBeTruthy();
           expect(data.length).toBe(1);
           const user = data[0];
-          expect(user).toStrictEqual(expected);
+          expect(user).toStrictEqual(JSON.parse(JSON.stringify(testUser)));
         });
     });
   });
   describe('GET /users/:id/', () => {
     it('When an existing user is requested, the server responds with the user', async () => {
-      const [testUser, expected] = makeTestUser();
+      const testUser = makeTestUser();
       prismaMock.user.findUnique.mockResolvedValue(testUser);
       await supertest(app)
         .get(`/users/${testUser.id}/`)
@@ -54,7 +54,7 @@ describe('Users API', () => {
           // ensure that it is a user object before accessing properties
           expect(data && typeof data === 'object').toBe(true);
           expect(!Array.isArray(data)).toBeTruthy();
-          expect(data).toStrictEqual(expected);
+          expect(data).toStrictEqual(JSON.parse(JSON.stringify(testUser)));
         });
     });
     it('When an user that does not exist is requested, the response code is 404', async () => {

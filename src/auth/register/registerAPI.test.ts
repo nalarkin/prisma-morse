@@ -1,64 +1,72 @@
 import { app } from '@/loaders';
 import supertest from 'supertest';
 import { RegisterForm } from '@/common';
+import faker from 'faker';
 
 describe('Register API', () => {
-  describe('post /auth/register/', () => {
+  describe('POST /auth/register/', () => {
     it('When the passwords do not match in the registration form, the response code is 400', async () => {
       const form: RegisterForm = {
-        confirmPassword: '000000',
-        firstName: 'John',
-        lastName: 'Doe',
-        password: '123456',
-        email: 'test@test.com',
+        confirmPassword: faker.internet.password(),
+        firstName: faker.name.firstName(),
+        lastName: faker.name.lastName(),
+        password: faker.internet.password(),
+        email: faker.internet.email(),
       };
       await supertest(app).post('/auth/register/').send(form).expect(400);
     });
     it('When the email has an invalid format in the registration form, the response code is 400', async () => {
+      const password = faker.internet.password();
       const form: RegisterForm = {
-        confirmPassword: '123456',
-        firstName: 'John',
-        lastName: 'Doe',
-        password: '123456',
-        email: 'testtest.com',
+        password,
+        confirmPassword: password,
+        firstName: faker.name.firstName(),
+        lastName: faker.name.lastName(),
+        email: faker.internet.domainName(),
       };
       await supertest(app).post('/auth/register/').send(form).expect(400);
     });
     it('When the registration form is missing an email, the response code is 400', async () => {
+      const password = faker.internet.password();
+
       const form: Omit<RegisterForm, 'email'> = {
-        confirmPassword: '123456',
-        firstName: 'John',
-        lastName: 'Doe',
-        password: '123456',
+        password,
+        confirmPassword: password,
+        firstName: faker.name.firstName(),
+        lastName: faker.name.lastName(),
       };
       await supertest(app).post('/auth/register/').send(form).expect(400);
     });
     it('When the registration form is missing a first name, the response code is 400', async () => {
+      const password = faker.internet.password();
       const form: Omit<RegisterForm, 'firstName'> = {
-        confirmPassword: '123456',
-        lastName: 'Doe',
-        password: '123456',
-        email: 'test@test.com',
+        password,
+        confirmPassword: password,
+        lastName: faker.name.lastName(),
+        email: faker.internet.email(),
       };
       await supertest(app).post('/auth/register/').send(form).expect(400);
     });
     it('When the registration form is missing a last name, the response code is 400', async () => {
+      const password = faker.internet.password();
       const form: Omit<RegisterForm, 'lastName'> = {
-        confirmPassword: '123456',
-        firstName: 'John',
-        password: '123456',
-        email: 'test@test.com',
+        password,
+        confirmPassword: password,
+        firstName: faker.name.firstName(),
+        email: faker.internet.email(),
       };
       await supertest(app).post('/auth/register/').send(form).expect(400);
     });
     it('When the registration form has additional properties, the response code is 400', async () => {
+      const password = faker.internet.password();
+
       const form: RegisterForm & { random: string } = {
-        confirmPassword: '123456',
-        firstName: 'John',
-        lastName: 'Doe',
-        password: '123456',
-        email: 'test@test.com',
-        random: 'randomAdditionalProperty',
+        password,
+        confirmPassword: password,
+        firstName: faker.name.firstName(),
+        lastName: faker.name.lastName(),
+        email: faker.internet.email(),
+        random: faker.random.word(),
       };
       await supertest(app).post('/auth/register/').send(form).expect(400);
     });

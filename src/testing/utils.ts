@@ -2,11 +2,12 @@ import { Consumable, Serializable, User } from '@prisma/client';
 import faker from 'faker';
 import cuid from 'cuid';
 
-type DatabaseUser = Omit<User, 'createdAt'> & { createdAt: string };
+/** To get expected value use JSON.parse(JSON.stringify(user)) */
 
-export function makeTestUser(): [User, DatabaseUser] {
+/** Make a user with randomized data */
+export function makeTestUser(): User {
   const pass = faker.internet.password();
-  const testUser = {
+  return {
     role: faker.random.arrayElement(['ADMIN', 'USER']) as User['role'],
     createdAt: faker.date.past(),
     email: faker.internet.email(),
@@ -16,10 +17,9 @@ export function makeTestUser(): [User, DatabaseUser] {
     unsafePassword: pass,
     id: faker.datatype.number(99999),
   };
-  const databaseUser = { ...testUser, createdAt: testUser.createdAt.toISOString() };
-  return [testUser, databaseUser];
 }
 
+/** Make a serializable with randomized data, and with optional userId of renter */
 export function makeTestSerializable(userId: number | null = null): Serializable {
   const updatedAt = faker.date.past();
   return {
