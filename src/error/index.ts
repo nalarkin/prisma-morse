@@ -20,8 +20,7 @@ router.get('/', async (req, res) => {
 router.get('/handled/', async (req, res, next) => {
   try {
     await functionThatThrowsError();
-    res.json(createResponse({ data: { message: 'All good no errors' } }));
-    throw '';
+    return res.json(createResponse({ data: { message: 'All good no errors' } }));
   } catch (err) {
     next(err);
   }

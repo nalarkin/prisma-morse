@@ -73,6 +73,7 @@ router.use('/:id/', verifyCUIDMiddleware);
 /**
  * Delete a consumable. Need to decide on deletion tracking method. Cascade delete
  * is necessary? Maybe move it into a new table?
+ * @TODO: find way to delete item while retaining history and users
  * */
 router.delete('/:id/', passport.authenticate('jwt', { session: false }), async function (req, res, next) {
   try {
@@ -88,16 +89,9 @@ router.delete('/:id/', passport.authenticate('jwt', { session: false }), async f
         id: id,
       },
     });
-    // const deleteTransaction = createTransaction(id, userId, 'DELETE');
-    // const [deleteResult, createdTransaction] = await prisma.$transaction([deleteAction, deleteTransaction]);
     const [deleteResult] = await prisma.$transaction([deleteAction]);
     res.json(createResponse({ data: { deleteResult } }));
   } catch (err) {
-    // res.status(400).json(
-    //   createResponse({
-    //     error: 'Item does not exist',
-    //   }),
-    // );
     next(err);
   }
 });

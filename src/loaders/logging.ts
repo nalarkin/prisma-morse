@@ -4,7 +4,6 @@ const { combine, simple, colorize, json } = winston.format;
 export const logger = winston.createLogger({
   level: 'info',
   format: json(),
-  // defaultMeta: { service: 'user-service' },
   transports: [
     //
     // - Write all logs with level `error` and below to `error.log`
@@ -20,10 +19,10 @@ export const logger = winston.createLogger({
 // `${info.level}: ${info.message} JSON.stringify({ ...rest }) `
 //
 if (process.env.NODE_ENV !== 'production') {
-  // log.add(new winston.transports.Console({ level: 'info' }));
   logger.add(
     new winston.transports.Console({
       format: combine(colorize(), simple()),
+      level: 'info',
     }),
   );
 }

@@ -29,15 +29,13 @@ export function devAPI(appRouter: Router) {
   function buildHTML() {
     const endpoints = listEndpoints(app);
     const arr = endpoints.map((val) => buildLink(val.path, val.methods));
-    const doc = `<!DOCTYPE html><html lang="en">${arr.join('')}</html>`;
-    return doc;
+    return `<!DOCTYPE html><html lang="en">${arr.join('')}</html>`;
   }
   const PORT = process.env.PORT || 8000;
   function buildLink(href: string, methods: string[]) {
     if (!methods.includes('GET')) {
       return '';
     }
-    // const methodHTML = `${methods.join(' ')}`;
     const uri = `http://localhost:${PORT}${href}`;
     return `<a href="${uri}">${uri}</a><br>`;
   }

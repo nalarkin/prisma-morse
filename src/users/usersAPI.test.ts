@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 import { app } from '@/loaders';
 import supertest from 'supertest';
-// import { User } from '@prisma/client';
 import { prismaMock } from '@/loaders/singleton';
 import { makeTestUser } from '@/testing';
 import faker from 'faker';

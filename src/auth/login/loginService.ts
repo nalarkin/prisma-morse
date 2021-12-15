@@ -11,5 +11,5 @@ export async function getSingleUser(email: string) {
 }
 
 export async function verifyProvidedPassword(hashedPassword: string, providedPassword: string) {
-  return await verifyPassword(hashedPassword, providedPassword);
+  return verifyPassword(hashedPassword, providedPassword);
 }

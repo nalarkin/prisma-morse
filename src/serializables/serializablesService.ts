@@ -2,7 +2,7 @@ import * as serializablesDAL from './serializablesDAL';
 import { DoesNotExistError, RentalError } from '@/common';
 
 export async function getAll() {
-  return await serializablesDAL.getAll();
+  return serializablesDAL.getAll();
 }
 
 export async function getSingle(id: string) {
@@ -43,10 +43,9 @@ export async function returnItem(id: string, userId: number) {
   if (itemToReturn.userId !== userId) {
     return new RentalError('You cannot return an item that someone else is renting.', 401);
   }
-  const serializable = await serializablesDAL.returnItem(id, userId);
-  return serializable;
+  return serializablesDAL.returnItem(id, userId);
 }
 
 export async function deleteItem(id: string) {
-  return await serializablesDAL.deleteItem(id);
+  return serializablesDAL.deleteItem(id);
 }
