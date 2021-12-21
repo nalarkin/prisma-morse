@@ -5,8 +5,8 @@ import { getRequireAdminMiddleware } from '@/common';
 
 const route = Router();
 
-export function usersAPI(app: Router) {
-  app.use('/users', route);
+export function usersAPI(app: Router, baseRoute = '/users') {
+  app.use(baseRoute, route);
 
   /** Get all users */
   route.get('/', usersController.getAllUsers);

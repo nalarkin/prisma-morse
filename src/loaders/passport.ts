@@ -1,6 +1,12 @@
-import { Strategy as JwtStrategy, ExtractJwt, StrategyOptions } from 'passport-jwt';
+/**
+ * Handles all JWT authentication throughout application.
+ *
+ * Request Authorization Header must be in the format `Bearer TOKENSTRING`
+ * If JWT lifetime is expired, then JWT authorization will fail.
+ */
 import fs from 'fs';
 import path from 'path';
+import { Strategy as JwtStrategy, ExtractJwt, StrategyOptions } from 'passport-jwt';
 import { JWTData } from '@/auth/utils';
 import { logger } from './logging';
 

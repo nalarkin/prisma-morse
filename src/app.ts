@@ -1,3 +1,7 @@
+/**
+ * This file is what gets called to start the express server, which will handle the http requests.
+ */
+
 import { config } from 'dotenv';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import pinohttp from 'pino-http';

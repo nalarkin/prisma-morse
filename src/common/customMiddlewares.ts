@@ -1,10 +1,19 @@
+/**
+ * File contains express middleware that is used throughout many parts of the application.
+ */
+
 import { RequestHandler } from 'express';
 import { JWTData } from '@/auth/utils';
 import { ajv, BadRequestError, createResponse, ForbiddenError, SCHEMA } from '@/common';
 
 const DEFAULT_MESSAGE = 'You do not have sufficient permissions.';
 
-/** Call this method with an optional error message before you access routes which require admin permissions. */
+/**
+ * Call this method with an optional error message before you access routes which require admin permissions.
+ *
+ * This middleware is accessible by method call which allows custom messages to be made, thus increase the
+ * reusability of this middleware.
+ */
 export const getRequireAdminMiddleware = (customMessage = DEFAULT_MESSAGE): RequestHandler => {
   const requireAdminMiddleware: RequestHandler = (req, res, next) => {
     const { role } = req.user as JWTData;
@@ -12,12 +21,18 @@ export const getRequireAdminMiddleware = (customMessage = DEFAULT_MESSAGE): Requ
       // not authorized
       return res.status(403).json(createResponse({ error: new ForbiddenError(customMessage) }));
     }
-    next();
+    next(); // is authorized, allow request to get sent to the following middleware
   };
   return requireAdminMiddleware;
 };
 
 /**
+ * Middleware that does nothing if the ID param of the url is a valid CUID pattern,
+ * but returns a Bad Request response if it does not follow the valid CUID format.
+ *
+ * This middleware only proves that this CUID follows the proper CUID format, it does
+ * not determine if it actually exists in the database.
+ *
  * CUIDs follow a certain pattern. To learn more about the pattern,
  * see https://github.com/ericelliott/cuid#broken-down
  */

@@ -1,6 +1,6 @@
 /**
  * This is only used during development, it will list all routes available to the user
- * It is simply for convenience.
+ * It is simply for convenience, will not be pushed to production.
  */
 
 import { Router } from 'express';

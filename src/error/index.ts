@@ -1,3 +1,8 @@
+/**
+ * Routes that are used for testing how to propery handle errors in Express.
+ * These routes will not be used in the production application.
+ */
+
 import { Router } from 'express';
 import { createResponse } from '@/common';
 
