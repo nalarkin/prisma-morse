@@ -1,11 +1,9 @@
 import { Router } from 'express';
 import * as registerController from './registerController';
 
-const route = Router();
+const router = Router();
 
-export function registerAPI(app: Router) {
-  app.use('/auth/register', route);
+/** Register a user */
+router.post('/', registerController.validateRegistrationForm, registerController.registerUser);
 
-  /** Register a user */
-  route.post('/', registerController.validateRegistrationForm, registerController.registerUser);
-}
+export default router;

@@ -27,8 +27,11 @@ export const getRequireAdminMiddleware = (customMessage = DEFAULT_MESSAGE): Requ
 };
 
 /**
- * Middleware that does nothing if the ID param of the url is a valid CUID pattern,
- * but returns a Bad Request response if it does not follow the valid CUID format.
+ * Middleware that ensures ID param of the url is a valid CUID pattern.
+ *
+ * Middleware that is added after this middleware will only get executed if url id param
+ * is a valid CUID format. If url id param is invalid, then this returns a Bad Request
+ * response to the user.
  *
  * This middleware only proves that this CUID follows the proper CUID format, it does
  * not determine if it actually exists in the database.
@@ -46,7 +49,7 @@ export const verifyCUIDMiddleware: RequestHandler = async (req, res, next) => {
     if (!validator(id)) {
       return res.status(400).json(createResponse({ error: new BadRequestError('Invalid ID format.') }));
     }
-    next();
+    next(); // has valid CUID format, allow request to get sent to the following middleware
   } catch (e) {
     next(e);
   }

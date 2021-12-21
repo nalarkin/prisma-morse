@@ -9,22 +9,25 @@
 
 ## Missing features and future improvements
 
-1. Create API endpoint to get all serializable and consumables in 1 request?
-2. Search feature
+1. Add additional column to transactions (can use this as a tutorial for Prisma with teammates) to track potential quantity change
+   1. Can also possibly add a date returned? Should the processing be done on server or client side?
+
+2. Create API endpoint to get all serializable and consumables in 1 request?
+3. Search feature
    1. example of searching using express and prisma: https://github.com/prisma/prisma-examples/blob/latest/typescript/rest-nextjs-express/backend/src/index.ts
-3. Image uploading to Google Drive
+4. Image uploading to Google Drive
    1. Use google drive api
       1. `create` api endpoint is possible way to upload 
          1. https://developers.google.com/drive/api/v3/reference/files/create
-4. Add Unit testing to API
+5. Add Unit testing to API
    1. can use a built in library like Mocha/Chai
    2. can use Postman 
    2. https://dev.to/mhmdlotfy96/testing-nodejs-express-api-with-jest-and-supertest-1bk0
    2. https://www.prisma.io/docs/guides/testing/unit-testing
-5. Create API documentation
+6. Create API documentation
    1. OpenAPI 3.0 is the standard format
-6. Create link that can give users who signup with it admin permissions
-7. Add OAuth2.0 sign in options (google, outlook, github, etc)
+7. Create link that can give users who signup with it admin permissions
+8. Add OAuth2.0 sign in options (google, outlook, github, etc)
 
 
 

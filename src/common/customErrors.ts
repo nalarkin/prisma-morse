@@ -7,7 +7,10 @@
  * with TypeScripts return type inference. Functions that call a function with multiple
  * return multiple types must handle all return types.
  * 
- * Example: ```
+ * Error messages are modeled after the HTTP error codes. Link to more info:
+ * https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+ * 
+ * @example
       async function getUser(id: number) {
         try {
           const user = await usersDAL.prismaGetUser({ id });
@@ -20,9 +23,6 @@
           return new BadRequestError('Error occurred when querying user info.');
         }
       }
- * ```
- * Error messages are modeled after the HTTP error codes. Link to more info:
- * https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
  */
 // Base class  which all errors inherit
 export class ServerError extends ReferenceError {

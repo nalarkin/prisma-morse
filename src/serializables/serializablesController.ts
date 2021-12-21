@@ -3,15 +3,17 @@ import * as serializablesService from './serializablesService';
 import { createResponse, ServerError } from '@/common';
 import { JWTData } from '@/auth/utils';
 
+/** Get all serializables */
 export const getAll: RequestHandler = async (req, res, next) => {
   try {
     const serializables = await serializablesService.getAll();
-    res.json(createResponse({ data: serializables }));
+    return res.json(createResponse({ data: serializables }));
   } catch (e) {
     next(e);
   }
 };
 
+/** Get detailed information of a single provided serializable*/
 export const getSingle: RequestHandler = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -19,12 +21,17 @@ export const getSingle: RequestHandler = async (req, res, next) => {
     if (item instanceof ServerError) {
       return res.status(item.statusCode).json(createResponse({ error: item }));
     }
-    res.json(item);
+    return res.json(item);
   } catch (err) {
     next(err);
   }
 };
 
+/**
+ * Checkout Serializable
+ * Solve issue of double checking by using the following recommendation
+ * https://bit.ly/3pjbG40
+ */
 export const checkout: RequestHandler = async (req, res, next) => {
   try {
     const { id } = req.params;

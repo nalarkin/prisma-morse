@@ -21,6 +21,7 @@ const options: StrategyOptions = {
   algorithms: ['RS256'],
 };
 
+/** Data that stored in the JWT Payload on each request with a valid JWT */
 export type JWTPayloadRequest = JWTData & {
   exp: number;
   iat: number;
@@ -33,8 +34,8 @@ export default (passport: { use: (arg0: JwtStrategy) => void }) => {
   passport.use(
     new JwtStrategy(options, function (jwt_payload: JWTPayloadRequest, done) {
       // payload info becomes attached to requests throughout express
-      // if it reaches this point, it's not expired, so assume stored credentials
-      // are still valid
+      // if it reaches this point, it's not expired, so you can assume stored
+      // user credentials are still valid
       return done(null, jwt_payload);
     }),
   );

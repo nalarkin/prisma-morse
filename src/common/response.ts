@@ -1,9 +1,11 @@
 /**
  * Helper function Used to create unified responses throughout the express application.
  *
- * Example usage:
- * `return res.json(createResponse({ data: {name: 'John Doe', age: 25 }));`
- * `return res.status(400).json(createResponse({ error: new BadRequestError('You made a bad request') }));`
+ * @example
+ * // return successful response
+ * return res.json(createResponse({ data: {name: 'John Doe', age: 25 }));
+ * // return response with error
+ * return res.status(400).json(createResponse({ error: new BadRequestError('You made a bad request') }));
  */
 import { ServerError } from './customErrors';
 

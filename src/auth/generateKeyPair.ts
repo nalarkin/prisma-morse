@@ -11,7 +11,7 @@ function genKeyPair() {
       format: 'pem', // Most common formatting choice
     },
     privateKeyEncoding: {
-      type: 'pkcs8', // "Public Key Cryptography Standards 1"
+      type: 'pkcs8',
       format: 'pem', // Most common formatting choice
     },
   });

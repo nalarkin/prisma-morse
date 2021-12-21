@@ -1,1 +1,1 @@
-export * from './registerAPI';
+export { default as registerAPI } from './registerAPI';

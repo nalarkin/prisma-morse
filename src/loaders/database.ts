@@ -1,7 +1,7 @@
 /**
  * All files that connect to prisma should import the client instance from this file.
  * makes it so hot reloads does not create hundreds of connections
- * To learn more see: https://www.prisma.io/docs/guides/performance-and-optimization/connection-management
+ * To learn more see: https://bit.ly/3JbeKXs
  */
 
 /* eslint-disable @typescript-eslint/no-namespace */

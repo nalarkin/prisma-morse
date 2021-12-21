@@ -1,1 +1,1 @@
-export { serializablesAPI } from './serializablesAPI';
+export { default as serializablesAPI } from './serializablesAPI';
