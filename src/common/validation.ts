@@ -12,9 +12,12 @@
  */
 
 import Ajv from 'ajv';
+import Ajv2 from 'ajv/dist/jtd';
 import { schema_login } from './schema/schema_login';
 import { schema_register } from './schema/schema_register';
-import { schema_consumable, schema_take_consumable } from './schema/schema_consumable';
+import { schema_consumable, schema_take_consumable, schema_consumable_update } from './schema/schema_consumable';
+import { schema_serializable } from './schema/schema_serializable';
+import { serializableTypeSchema } from './jsonType/serializable';
 import { schema_refresh_token } from './schema/schema_token';
 import { schema_user, schema_user_id } from './schema/schema_user';
 import addFormats from 'ajv-formats';
@@ -51,6 +54,7 @@ import { schema_item_id } from './schema/schema_cuid';
  * }
  */
 export const ajv = new Ajv({ $data: true, allErrors: true });
+export const ajv2 = new Ajv2();
 
 // used to validate email format during user registration
 addFormats(ajv, ['email', 'date-time', 'date']);
@@ -59,8 +63,10 @@ addFormats(ajv, ['email', 'date-time', 'date']);
 // same string to retrieve the schema as was used for storage.
 const LOGIN = 'login';
 const REGISTER = 'register';
-const CONSUMABLE_NEW = 'newConsumable';
-const CONSUMABLE_TAKE = 'takeConsumable';
+const CONSUMABLE_NEW = 'consumableNew';
+const CONSUMABLE_TAKE = 'consumableTake';
+const CONSUMABLE_UPDATE = 'consumableUpdate';
+const SERIALIZABLE_UPDATE = 'serializableUpdate';
 const TOKEN_REFRESH = 'refreshToken';
 const USER_EDIT = 'userEdit';
 const USER_ID = 'userId';
@@ -77,6 +83,21 @@ ajv.addSchema(schema_refresh_token, TOKEN_REFRESH);
 ajv.addSchema(schema_user, USER_EDIT);
 ajv.addSchema(schema_user_id, USER_ID);
 ajv.addSchema(schema_item_id, CUID);
+ajv.addSchema(schema_serializable, SERIALIZABLE_UPDATE);
+ajv.addSchema(schema_consumable_update, CONSUMABLE_UPDATE);
+
+ajv2.addSchema(serializableTypeSchema, SERIALIZABLE_UPDATE);
 
 /** Exported constants improve schema retrieval reliability and provide autocomplete feature */
-export const SCHEMA = { LOGIN, REGISTER, CONSUMABLE_NEW, CONSUMABLE_TAKE, TOKEN_REFRESH, USER_EDIT, USER_ID, CUID };
+export const SCHEMA = {
+  LOGIN,
+  REGISTER,
+  CONSUMABLE_NEW,
+  CONSUMABLE_TAKE,
+  TOKEN_REFRESH,
+  USER_EDIT,
+  USER_ID,
+  CUID,
+  SERIALIZABLE_UPDATE,
+  CONSUMABLE_UPDATE,
+};

@@ -7,6 +7,14 @@
    1. fill in the angled brackets with the info of your machine
    1. for example, a username of `joe` , password `pass` , port `9999`, with db `test` would set the url as `mysql://joe:pass@localhost:9999/test`
 
+## TODO
+
+1. Implement CRSF protection, see https://github.com/expressjs/csurf and https://www.stackhawk.com/blog/react-csrf-protection-guide-examples-and-how-to-enable-it/
+   1. https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html
+   2. Other options: https://cheatsheetseries.owasp.org/cheatsheets/JSON_Web_Token_for_Java_Cheat_Sheet.html
+   3. Other option: https://datatracker.ietf.org/doc/rfc8725/
+   4. Best option might be to only use local storage, because supposedly this will only be an issue if using CDN, and that is not a requirement of this project
+
 ## Missing features and future improvements
 
 1. Add additional column to transactions (can use this as a tutorial for Prisma with teammates) to track potential quantity change

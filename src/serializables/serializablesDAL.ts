@@ -1,5 +1,6 @@
 import { Transaction } from '@prisma/client';
 import prisma from '@/loaders/database';
+import { SerializableUpdate } from '@/common/schema/schema_serializable';
 
 export async function getAll() {
   return prisma.serializable.findMany();
@@ -9,7 +10,6 @@ export async function getSingle(id: string, includeRenter = true) {
   return prisma.serializable.findUnique({
     where: {
       id: id,
-      // id: id,
     },
     include: {
       renter: includeRenter,
@@ -64,6 +64,10 @@ export async function returnItem(id: string, userId: number) {
   const recordAction = createTransaction(id, userId, 'RETURN');
   const [actionResult] = await prisma.$transaction([updateAction, recordAction]);
   return actionResult;
+}
+
+export async function updateItem(id: string, item: SerializableUpdate) {
+  return prisma.serializable.update({ where: { id }, data: { ...item } });
 }
 
 /** Helper function to create a transaction */

@@ -19,7 +19,7 @@ const router = Router();
 router.get('/verify/:id/', verifyCUIDMiddleware); // used for debugging purposes
 
 // Require every route handler here to be from authenticated source (must have valid JWT token)
-router.use('/', passport.authenticate('jwt', { session: false }));
+router.use(passport.authenticate('jwt', { session: false }));
 
 router.get('/', serializablesController.getAll);
 
@@ -29,6 +29,13 @@ router.use('/:id/', verifyCUIDMiddleware); // ensure that ID is a valid CUID pat
 router.delete('/:id/', getRequireAdminMiddleware(), serializablesController.deleteItem);
 
 router.get('/:id/', serializablesController.getSingle);
+
+router.put(
+  '/:id/',
+  getRequireAdminMiddleware('You must be an admin to edit items'),
+  serializablesController.validateUpdateItemForm,
+  serializablesController.updateItem,
+);
 
 /**
  * Checkout Serializable

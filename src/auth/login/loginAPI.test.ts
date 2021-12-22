@@ -47,13 +47,12 @@ describe('Login API', () => {
         .post('/auth/login/')
         .send(body)
         .expect(200)
-        .then((response) => {
-          const { data } = response.body;
-          expect(data).toBeTruthy();
-          expect(data && typeof data === 'object').toBe(true);
-          expect(!Array.isArray(data)).toBeTruthy();
-          expect(data).toHaveProperty('access_token');
-          expect(data).toHaveProperty('refresh_token');
+        .then(({ body }) => {
+          expect(body).toBeTruthy();
+          expect(body && typeof body === 'object').toBe(true);
+          expect(!Array.isArray(body)).toBeTruthy();
+          expect(body).toHaveProperty('access_token');
+          expect(body).toHaveProperty('refresh_token');
         });
     });
   });
