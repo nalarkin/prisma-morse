@@ -54,6 +54,8 @@ router.delete(
 
 /** Get a single specific consumable, show transaction history as well */
 router.get('/:id/', consumablesController.getConsumable);
+/** Update a single specific consumable */
+router.put('/:id/', consumablesController.validateUpdateConsumableForm, consumablesController.updateConsumable);
 
 /** Consume a given amount of a single consumable and add into transaction table */
 router.put('/:id/take/', consumablesController.takeConsumable);

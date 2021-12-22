@@ -4,7 +4,7 @@ import { JSONSchemaType } from 'ajv';
 type UpdatableValues = Omit<Serializable, 'id' | 'createdAt' | 'updatedAt' | 'version'>;
 export type SerializableUpdate = Partial<UpdatableValues>;
 
-type SerializableJson = Omit<Serializable, 'createdAt' | 'updatedAt'> & {
+export type SerializableJson = Omit<Serializable, 'createdAt' | 'updatedAt'> & {
   createdAt: string;
   updatedAt: string;
 };
@@ -79,7 +79,6 @@ export const schema_serializable: JSONSchemaType<SerializableJson> = {
     'version',
   ],
   additionalProperties: false,
-
 };
 // // type SerializableUpdate = Omit<Serializable, 'createdAt' | 'updatedAt'>
 // export const schema_serializable_update: JSONSchemaType<SerializableUpdate> = {

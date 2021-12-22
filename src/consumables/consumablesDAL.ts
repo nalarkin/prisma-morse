@@ -1,4 +1,4 @@
-import { NewConsumable } from '@/common';
+import { ConsumableUpdate, NewConsumable } from '@/common';
 import prisma from '@/loaders/database';
 import { Prisma, Transaction } from '@prisma/client';
 
@@ -52,6 +52,10 @@ export async function takeConsumable(id: string, userId: number, amount: number)
   const addTransaction = createTransaction(id, userId, 'CONSUME');
   // if one fails, both do not get completed.
   return prisma.$transaction([consumableAction, addTransaction]);
+}
+
+export async function updateConsuamble(id: string, consumable: ConsumableUpdate) {
+  return prisma.consumable.update({ where: { id }, data: { ...consumable } });
 }
 
 /** Helper function to create a transaction */

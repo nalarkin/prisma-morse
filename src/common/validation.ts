@@ -15,7 +15,7 @@ import Ajv from 'ajv';
 import Ajv2 from 'ajv/dist/jtd';
 import { schema_login } from './schema/schema_login';
 import { schema_register } from './schema/schema_register';
-import { schema_consumable, schema_take_consumable } from './schema/schema_consumable';
+import { schema_consumable, schema_take_consumable, schema_consumable_update } from './schema/schema_consumable';
 import { schema_serializable } from './schema/schema_serializable';
 import { serializableTypeSchema } from './jsonType/serializable';
 import { schema_refresh_token } from './schema/schema_token';
@@ -65,6 +65,7 @@ const LOGIN = 'login';
 const REGISTER = 'register';
 const CONSUMABLE_NEW = 'consumableNew';
 const CONSUMABLE_TAKE = 'consumableTake';
+const CONSUMABLE_UPDATE = 'consumableUpdate';
 const SERIALIZABLE_UPDATE = 'serializableUpdate';
 const TOKEN_REFRESH = 'refreshToken';
 const USER_EDIT = 'userEdit';
@@ -83,6 +84,7 @@ ajv.addSchema(schema_user, USER_EDIT);
 ajv.addSchema(schema_user_id, USER_ID);
 ajv.addSchema(schema_item_id, CUID);
 ajv.addSchema(schema_serializable, SERIALIZABLE_UPDATE);
+ajv.addSchema(schema_consumable_update, CONSUMABLE_UPDATE);
 
 ajv2.addSchema(serializableTypeSchema, SERIALIZABLE_UPDATE);
 
@@ -97,4 +99,5 @@ export const SCHEMA = {
   USER_ID,
   CUID,
   SERIALIZABLE_UPDATE,
+  CONSUMABLE_UPDATE,
 };

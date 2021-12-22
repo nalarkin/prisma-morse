@@ -4,6 +4,7 @@ import { JWTData } from '@/auth/utils';
 import { Serializable } from '@prisma/client';
 import { ajv, SCHEMA } from '@/common';
 import createError from 'http-errors';
+import { SerializableJson } from '@/common/schema/schema_serializable';
 
 /** Get all serializables */
 export const getAll: RequestHandler = async (req, res, next) => {
@@ -74,12 +75,18 @@ export const updateItem: RequestHandler = async (req, res, next) => {
 /** Ensure that a complete item is provided for the update */
 export const validateUpdateItemForm: RequestHandler = async (req, res, next) => {
   try {
-    const validator = ajv.getSchema(SCHEMA.SERIALIZABLE_UPDATE);
+    const validator = ajv.getSchema<SerializableJson>(SCHEMA.SERIALIZABLE_UPDATE);
     if (validator === undefined) {
       throw createError(500, 'Unable to get JSON validator');
     }
-    if (!validator(req.body)) {
+    const { body } = req;
+    if (!validator(body)) {
       throw createError(400, ajv.errorsText(validator.errors));
+    }
+
+    const { id } = req.params;
+    if (id !== body.id) {
+      throw createError(400, 'ID in URI must match the ID in HTTP request');
     }
     next();
   } catch (e) {

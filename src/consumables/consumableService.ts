@@ -1,6 +1,6 @@
 import * as consumableDAL from './consumablesDAL';
 import createError from 'http-errors';
-import { NewConsumable } from '@/common';
+import { ConsumableJson, NewConsumable } from '@/common';
 
 export async function getConsumable(id: string) {
   const consumable = await consumableDAL.getConsumable(id);
@@ -17,4 +17,10 @@ export async function takeConsumable(id: string, userId: number, amount: number)
 
 export async function createConsumable(consumable: NewConsumable, userId: number) {
   return consumableDAL.createConsumable(consumable, userId);
+}
+
+export async function updateConsumable(consumable: ConsumableJson) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { id, createdAt, updatedAt, ...updatedItem } = consumable; // remove unnecessary properties
+  return await consumableDAL.updateConsuamble(id, updatedItem);
 }
