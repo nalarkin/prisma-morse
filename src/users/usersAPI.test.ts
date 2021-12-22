@@ -5,23 +5,6 @@ import { prismaMock } from '@/loaders/singleton';
 import { makeTestUser } from '@/testing';
 import faker from 'faker';
 
-expect.extend({
-  toBeWithinRange(received, floor, ceiling) {
-    const pass = received >= floor && received <= ceiling;
-    if (pass) {
-      return {
-        message: () => `expected ${received} not to be within range ${floor} - ${ceiling}`,
-        pass: true,
-      };
-    } else {
-      return {
-        message: () => `expected ${received} to be within range ${floor} - ${ceiling}`,
-        pass: false,
-      };
-    }
-  },
-});
-
 describe('Users API', () => {
   describe('GET /users/', () => {
     it('When all users are requested, the response is an array of users', async () => {
@@ -31,11 +14,10 @@ describe('Users API', () => {
       await supertest(app)
         .get('/users/')
         .expect(200)
-        .then((response) => {
-          const { data } = response.body;
-          expect(Array.isArray(data)).toBeTruthy();
-          expect(data.length).toBe(1);
-          const user = data[0];
+        .then(({ body }) => {
+          expect(Array.isArray(body)).toBeTruthy();
+          expect(body.length).toBe(1);
+          const user = body[0];
           expect(user).toStrictEqual(JSON.parse(JSON.stringify(testUser)));
         });
     });
@@ -47,13 +29,12 @@ describe('Users API', () => {
       await supertest(app)
         .get(`/users/${testUser.id}/`)
         .expect(200)
-        .then((response) => {
-          const { data } = response.body;
-          expect(data).toBeTruthy();
+        .then(({ body }) => {
+          expect(body).toBeTruthy();
           // ensure that it is a user object before accessing properties
-          expect(data && typeof data === 'object').toBe(true);
-          expect(!Array.isArray(data)).toBeTruthy();
-          expect(data).toStrictEqual(JSON.parse(JSON.stringify(testUser)));
+          expect(body && typeof body === 'object').toBe(true);
+          expect(!Array.isArray(body)).toBeTruthy();
+          expect(body).toStrictEqual(JSON.parse(JSON.stringify(testUser)));
         });
     });
     it('When an user that does not exist is requested, the response code is 404', async () => {

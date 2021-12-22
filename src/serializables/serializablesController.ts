@@ -6,8 +6,7 @@ import { JWTData } from '@/auth/utils';
 /** Get all serializables */
 export const getAll: RequestHandler = async (req, res, next) => {
   try {
-    const serializables = await serializablesService.getAll();
-    return res.json(createResponse({ data: serializables }));
+    return res.json(await serializablesService.getAll());
   } catch (e) {
     next(e);
   }
@@ -17,11 +16,7 @@ export const getAll: RequestHandler = async (req, res, next) => {
 export const getSingle: RequestHandler = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const item = await serializablesService.getSingle(id);
-    if (item instanceof ServerError) {
-      return res.status(item.statusCode).json(createResponse({ error: item }));
-    }
-    return res.json(item);
+    return res.json(await serializablesService.getSingle(id));
   } catch (err) {
     next(err);
   }
@@ -36,11 +31,7 @@ export const checkout: RequestHandler = async (req, res, next) => {
   try {
     const { id } = req.params;
     const { sub: userId } = req.user as JWTData;
-    const checkoutResult = await serializablesService.checkout(id, userId);
-    if (checkoutResult instanceof ServerError) {
-      return res.status(checkoutResult.statusCode).json(createResponse({ error: checkoutResult }));
-    }
-    return res.json(checkoutResult);
+    return res.json(await serializablesService.checkout(id, userId));
   } catch (err) {
     next(err);
   }
@@ -51,11 +42,7 @@ export const returnItem: RequestHandler = async (req, res, next) => {
     const { id } = req.params;
     const { sub: userId } = req.user as JWTData;
     /** Insert logic to check if request id requesting change is the same as the current renter */
-    const returnResult = await serializablesService.returnItem(id, userId);
-    if (returnResult instanceof ServerError) {
-      return res.status(returnResult.statusCode).json(createResponse({ error: returnResult }));
-    }
-    return res.json(returnResult);
+    return res.json(await serializablesService.returnItem(id, userId));
   } catch (err) {
     next(err);
   }
@@ -66,8 +53,7 @@ export const deleteItem: RequestHandler = async (req, res, next) => {
   try {
     const { id } = req.params;
     // @TODO: Add error handling when deleting item
-    const serializable = await serializablesService.deleteItem(id);
-    res.json(createResponse({ data: serializable }));
+    return res.json(await serializablesService.deleteItem(id));
   } catch (err) {
     next(err);
   }

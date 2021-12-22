@@ -9,7 +9,6 @@ export async function getSingle(id: string, includeRenter = true) {
   return prisma.serializable.findUnique({
     where: {
       id: id,
-      // id: id,
     },
     include: {
       renter: includeRenter,

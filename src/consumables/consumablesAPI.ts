@@ -14,6 +14,7 @@ import {
 } from '@/common';
 import { JWTData } from '@/auth/utils';
 import prisma from '@/loaders/database';
+import createError from 'http-errors';
 
 const router = Router();
 
@@ -97,20 +98,25 @@ router.delete('/:id/', passport.authenticate('jwt', { session: false }), async f
 });
 
 /** Get a single specific consumable, show transaction history as well */
-router.get('/:id/', async function (req, res) {
-  const { id } = req.params;
-  const consumable = await prisma.consumable.findUnique({
-    where: {
-      id: id,
-    },
-    include: {
-      transactions: true,
-    },
-  });
-  if (consumable === null) {
-    return res.status(404).json(createResponse({ error: new DoesNotExistError('Consumable does not exist') }));
+router.get('/:id/', async function (req, res, next) {
+  try {
+    const { id } = req.params;
+    const consumable = await prisma.consumable.findUnique({
+      where: {
+        id: id,
+      },
+      include: {
+        transactions: true,
+      },
+    });
+    if (consumable === null) {
+      throw createError(404, 'Consumable does not exist');
+      // return res.status(404).json(createResponse({ error: new DoesNotExistError('Consumable does not exist') }));
+    }
+    return res.json(createResponse({ data: consumable }));
+  } catch (e) {
+    next(e);
   }
-  res.json(createResponse({ data: consumable }));
 });
 
 /** Consume a given amount of a single consumable */

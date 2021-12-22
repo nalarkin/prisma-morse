@@ -5,6 +5,7 @@
 
 import { Router } from 'express';
 import { createResponse } from '@/common';
+import createError from 'http-errors';
 
 const router = Router();
 
@@ -30,5 +31,25 @@ router.get('/handled/', async (req, res, next) => {
     next(err);
   }
 });
+
+router.get('/http-error/', async (req, res, next) => {
+  // const e = new createError.Unauthorized('Please login to view this page.');
+  // const d = createError(401, 'Please Login');
+  // return next(new createError.Unauthorized('Please login to view this page.'));
+  try {
+    await testThrow();
+    return res.send('success');
+  } catch (e) {
+    next(e);
+  }
+});
+
+async function testThrow() {
+  test2();
+}
+
+function test2() {
+  throw createError(401, 'Please Login');
+}
 
 export default router;

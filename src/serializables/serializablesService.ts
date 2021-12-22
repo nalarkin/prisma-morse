@@ -1,5 +1,6 @@
 import * as serializablesDAL from './serializablesDAL';
 import { DoesNotExistError, RentalError } from '@/common';
+import createError from 'http-errors';
 
 export async function getAll() {
   return serializablesDAL.getAll();
@@ -8,7 +9,7 @@ export async function getAll() {
 export async function getSingle(id: string) {
   const item = await serializablesDAL.getSingle(id, true);
   if (item === null) {
-    return new DoesNotExistError('Item does not exist');
+    throw createError(404, 'Item does not exist');
   }
   return item;
 }
@@ -17,11 +18,11 @@ export async function checkout(id: string, userId: number) {
   const availableItem = await serializablesDAL.getSingle(id);
 
   if (availableItem === null) {
-    return new DoesNotExistError('Item does not exist');
+    throw createError(404, 'Item does not exist');
   }
 
   if (availableItem.userId !== null) {
-    return new RentalError('Item is already checked out.', 400);
+    throw createError(400, 'Item is already checked out.');
   }
 
   const serializable = await serializablesDAL.attemptCheckout(id, userId, availableItem.version);
@@ -33,15 +34,15 @@ export async function returnItem(id: string, userId: number) {
   const itemToReturn = await serializablesDAL.getSingle(id);
 
   if (itemToReturn === null) {
-    return new DoesNotExistError('Serializable does not exist');
+    throw createError(404, 'Item does not exist');
   }
 
   if (itemToReturn.userId === null) {
-    return new RentalError('You cannot return an item that is not being rented.', 400);
+    throw createError(400, 'You cannot return an item that is not being rented.');
   }
 
   if (itemToReturn.userId !== userId) {
-    return new RentalError('You cannot return an item that someone else is renting.', 401);
+    throw createError(401, 'You cannot return an item that someone else is renting.');
   }
   return serializablesDAL.returnItem(id, userId);
 }
