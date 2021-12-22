@@ -8,12 +8,13 @@
     "keypair": "ts-node -r tsconfig-paths/register src/auth/generateKeyPair.ts",
     "seed": "prisma db seed",
     "studio": "prisma studio",
+    "migrate": "prisma migrate dev",
     "lint": "eslint src/**/*.ts",
     "format": "eslint src/**/*.ts --fix",
     "test": "jest -i --verbose"
   },
   "dependencies": {
-    "@prisma/client": "^3.6.0",
+    "@prisma/client": "^3.7.0",
     "@types/cookie-parser": "^1.4.2",
     "ajv": "^8.8.2",
     "ajv-formats": "^2.1.1",
@@ -55,7 +56,7 @@
     "jest-mock-extended": "^2.0.4",
     "nodemon": "^2.0.15",
     "prettier": "^2.5.0",
-    "prisma": "^3.6.0",
+    "prisma": "^3.7.0",
     "prisma-dbml-generator": "^0.8.3",
     "prisma-erd-generator": "^0.6.1",
     "prisma-json-schema-generator": "^1.5.0",

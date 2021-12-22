@@ -42,8 +42,8 @@ export const login: RequestHandler = async (req, res, next) => {
         }),
       );
     }
-    res.setHeader('Cache-Control', 'no-store');
-    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Cache-Control', 'no-store'); // recommended by spec here: https://bit.ly/3srGCkw
+    res.setHeader('Pragma', 'no-cache'); // recommended by spec here: https://bit.ly/3srGCkw
     // they are authenticated, so give them a JWT for future requests
     const refresh_token = issueJWT(userResult, REFRESH_JWT_EXPIRE);
     const payload = {
@@ -51,13 +51,14 @@ export const login: RequestHandler = async (req, res, next) => {
       refresh_token,
     };
 
+    // attach refresh_token to cookie
     res.cookie('refresh_token', refresh_token, {
       secure: process.env.NODE_ENV !== 'development',
       httpOnly: true, // prevents improved security against cross site scripting attacks
       expires: dayjs().add(7, 'days').toDate(), // note, this should line up with REFRESH_JWT_EXIPIRE time
       path: '/auth/token/refresh/', // only gets sent on requests to this path
     });
-    res.json(createResponse({ data: payload }));
+    return res.json(createResponse({ data: payload }));
   } catch (e) {
     next(e);
   }

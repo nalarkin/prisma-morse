@@ -80,10 +80,6 @@ model Serializable {
   version       Int           @default(0)
 }
 
-model Nail {
-  id String @id @default(cuid())
-}
-
 model Transaction {
   id             String           @id @default(cuid())
   createdAt      DateTime         @default(now())

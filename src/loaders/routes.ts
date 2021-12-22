@@ -9,7 +9,7 @@
 import { Router } from 'express';
 import { serializablesAPI } from '@/serializables';
 import { usersAPI } from '@/users';
-import { refreshTokenAPI, loginAPI, protectedAPI, registerAPI } from '@/auth';
+import { refreshAPI, loginAPI, protectedAPI, registerAPI } from '@/auth';
 import { consumablesAPI } from '@/consumables';
 import { transactionsAPI } from '@/transactions';
 import { testingAPI } from '@/testing';
@@ -24,7 +24,7 @@ export function loadRoutes() {
   // combine all route handlers into this single route handler
   router.use('/auth', protectedAPI);
   router.use('/auth/login', loginAPI);
-  router.use('/auth/token', refreshTokenAPI);
+  router.use('/auth/token', refreshAPI);
   router.use('/consumables', consumablesAPI);
   router.use('/auth/register', registerAPI);
   router.use('/serializables', serializablesAPI);
