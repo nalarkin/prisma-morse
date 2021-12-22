@@ -1,4 +1,3 @@
-import { AuthenticationError } from '@/common';
 import * as usersDAL from '@/users/usersDAL';
 import { verifyPassword } from '../utils';
 import createError from 'http-errors';

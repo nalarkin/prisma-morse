@@ -1,7 +1,6 @@
 import * as usersDAL from './usersDAL';
 import { logger } from '@/loaders/logging';
 import { UserEdit } from '@/common/schema/schema_user';
-import { BadRequestError, DoesNotExistError } from '@/common';
 import createError from 'http-errors';
 
 /**

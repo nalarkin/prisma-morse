@@ -4,7 +4,8 @@
 
 import { RequestHandler } from 'express';
 import { JWTData } from '@/auth/utils';
-import { ajv, BadRequestError, createResponse, ForbiddenError, SCHEMA } from '@/common';
+import { ajv, SCHEMA } from '@/common';
+import createError from 'http-errors';
 
 const DEFAULT_MESSAGE = 'You do not have sufficient permissions.';
 
@@ -16,12 +17,16 @@ const DEFAULT_MESSAGE = 'You do not have sufficient permissions.';
  */
 export const getRequireAdminMiddleware = (customMessage = DEFAULT_MESSAGE): RequestHandler => {
   const requireAdminMiddleware: RequestHandler = (req, res, next) => {
-    const { role } = req.user as JWTData;
-    if (role !== 'ADMIN') {
-      // not authorized
-      return res.status(403).json(createResponse({ error: new ForbiddenError(customMessage) }));
+    try {
+      const { role } = req.user as JWTData;
+      if (role !== 'ADMIN') {
+        // not authorized
+        throw createError(403, customMessage);
+      }
+      next(); // is authorized, allow request to get sent to the following middleware
+    } catch (e) {
+      next(e);
     }
-    next(); // is authorized, allow request to get sent to the following middleware
   };
   return requireAdminMiddleware;
 };
@@ -44,10 +49,10 @@ export const verifyCUIDMiddleware: RequestHandler = async (req, res, next) => {
     const { id } = req.params;
     const validator = ajv.getSchema<string>(SCHEMA.CUID);
     if (validator === undefined) {
-      throw new Error('Could not locate json validator');
+      throw createError(500, 'Could not locate json validator');
     }
     if (!validator(id)) {
-      return res.status(400).json(createResponse({ error: new BadRequestError('Invalid ID format.') }));
+      throw createError(400, 'Invalid ID format.');
     }
     next(); // has valid CUID format, allow request to get sent to the following middleware
   } catch (e) {

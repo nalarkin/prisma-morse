@@ -4,7 +4,6 @@
  */
 
 import { Router } from 'express';
-import { createResponse } from '@/common';
 import createError from 'http-errors';
 
 const router = Router();
@@ -19,14 +18,14 @@ async function functionThatThrowsError() {
 /** Expect it to crash server */
 router.get('/', async (req, res) => {
   await functionThatThrowsError();
-  res.json(createResponse({ data: { message: 'All good no errors' } }));
+  res.json({ message: 'All good no errors' });
 });
 
 /** Pass to next */
 router.get('/handled/', async (req, res, next) => {
   try {
     await functionThatThrowsError();
-    return res.json(createResponse({ data: { message: 'All good no errors' } }));
+    return res.json({ message: 'All good no errors' });
   } catch (err) {
     next(err);
   }

@@ -1,6 +1,5 @@
 import { RequestHandler } from 'express';
 import * as serializablesService from './serializablesService';
-import { createResponse, ServerError } from '@/common';
 import { JWTData } from '@/auth/utils';
 
 /** Get all serializables */

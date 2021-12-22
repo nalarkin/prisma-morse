@@ -2,16 +2,7 @@ import { Router } from 'express';
 import passport from 'passport';
 import { Transaction } from '@prisma/client';
 import { NewConsumable, TakeConsumable } from '@/common/schema';
-import {
-  ajv,
-  SCHEMA,
-  createResponse,
-  InternalError,
-  DoesNotExistError,
-  BadRequestError,
-  ForbiddenError,
-  verifyCUIDMiddleware,
-} from '@/common';
+import { ajv, SCHEMA, verifyCUIDMiddleware, getRequireAdminMiddleware } from '@/common';
 import { JWTData } from '@/auth/utils';
 import prisma from '@/loaders/database';
 import createError from 'http-errors';
@@ -20,30 +11,27 @@ const router = Router();
 
 /** Get all consumables */
 router.get('/', passport.authenticate('jwt', { session: false }), async function (req, res) {
-  const consumables = await prisma.consumable.findMany();
-  console.log('after i got value');
-  return res.json(createResponse({ data: consumables }));
+  return res.json(await prisma.consumable.findMany());
 });
 
 /** Create a consumable */
-router.post('/', passport.authenticate('jwt', { session: false }), async function (req, res, next) {
-  try {
-    const validator = ajv.getSchema<NewConsumable>(SCHEMA.CONSUMABLE_NEW);
-    const body = req.body;
-    const { sub: userId, role } = req.user as JWTData;
+router.post(
+  '/',
+  passport.authenticate('jwt', { session: false }),
+  getRequireAdminMiddleware('You do not have permission to create consumables'),
+  async function (req, res, next) {
+    try {
+      const validator = ajv.getSchema<NewConsumable>(SCHEMA.CONSUMABLE_NEW);
+      const body = req.body;
+      const { sub: userId } = req.user as JWTData;
 
-    if (validator === undefined) {
-      return res.status(500).json(createResponse({ error: new InternalError('Unable to get json validator') }));
-    }
-
-    if (role !== 'ADMIN') {
-      return res
-        .status(403)
-        .json(createResponse({ error: new ForbiddenError('You do not have permission to create consumables') }));
-    }
-    if (validator(body)) {
+      if (validator === undefined) {
+        throw createError(500, 'Unable to get json validator');
+      }
+      if (!validator(body)) {
+        throw createError(400, ajv.errorsText(validator.errors));
+      }
       // we can be certain data is safe to use because we used ajv to verify
-
       const { name, count, description, guide, photo } = body;
       // nested write creates a transaction only if we successfully created the item
       const consumable = await prisma.consumable.create({
@@ -61,13 +49,12 @@ router.post('/', passport.authenticate('jwt', { session: false }), async functio
           },
         },
       });
-      return res.json(createResponse({ data: consumable }));
+      return res.json(consumable);
+    } catch (err) {
+      next(err);
     }
-    res.status(400).json(createResponse({ error: new BadRequestError(ajv.errorsText(validator.errors)) }));
-  } catch (err) {
-    next(err);
-  }
-});
+  },
+);
 
 /** Use item id verification for every request that provides an id param */
 router.use('/:id/', verifyCUIDMiddleware);
@@ -76,26 +63,25 @@ router.use('/:id/', verifyCUIDMiddleware);
  * is necessary? Maybe move it into a new table?
  * @TODO: find way to delete item while retaining history and users
  * */
-router.delete('/:id/', passport.authenticate('jwt', { session: false }), async function (req, res, next) {
-  try {
-    const { id } = req.params;
-    const { role } = req.user as JWTData;
-    if (role !== 'ADMIN') {
-      return res
-        .status(403)
-        .json(createResponse({ error: new ForbiddenError('You do not have permission to delete items') }));
+router.delete(
+  '/:id/',
+  passport.authenticate('jwt', { session: false }),
+  getRequireAdminMiddleware('You do not have permission to delete items'),
+  async function (req, res, next) {
+    try {
+      const { id } = req.params;
+      const deleteAction = prisma.consumable.delete({
+        where: {
+          id: id,
+        },
+      });
+      const [deleteResult] = await prisma.$transaction([deleteAction]);
+      return res.json(deleteResult);
+    } catch (err) {
+      next(err);
     }
-    const deleteAction = prisma.consumable.delete({
-      where: {
-        id: id,
-      },
-    });
-    const [deleteResult] = await prisma.$transaction([deleteAction]);
-    res.json(createResponse({ data: { deleteResult } }));
-  } catch (err) {
-    next(err);
-  }
-});
+  },
+);
 
 /** Get a single specific consumable, show transaction history as well */
 router.get('/:id/', async function (req, res, next) {
@@ -111,9 +97,8 @@ router.get('/:id/', async function (req, res, next) {
     });
     if (consumable === null) {
       throw createError(404, 'Consumable does not exist');
-      // return res.status(404).json(createResponse({ error: new DoesNotExistError('Consumable does not exist') }));
     }
-    return res.json(createResponse({ data: consumable }));
+    return res.json(consumable);
   } catch (e) {
     next(e);
   }
@@ -132,7 +117,7 @@ router.put('/:id/take/', async function (req, res) {
       },
     },
   });
-  res.json(createResponse({ data: consumable }));
+  return res.json(consumable);
 });
 
 /** Consume a given amount of a single consumable and add into transaction table */
@@ -143,12 +128,10 @@ router.put('/:id/take/track/', passport.authenticate('jwt', { session: false }),
     const { id } = req.params;
     const { sub: userId } = req.user as JWTData; // get requester userid from passport
     if (validator === undefined) {
-      return res
-        .status(500)
-        .json(createResponse({ error: new InternalError('Unable to get validator to parse json') }));
+      throw createError(500, 'Unable to get validator to parse json');
     }
     if (!validator(req.body)) {
-      return res.status(400).json(createResponse({ error: new BadRequestError(ajv.errorsText(validator.errors)) }));
+      throw createError(400, ajv.errorsText(validator.errors));
     }
 
     const { count } = req.body;
@@ -165,7 +148,7 @@ router.put('/:id/take/track/', passport.authenticate('jwt', { session: false }),
     const addTransaction = createTransaction(id, userId, 'CONSUME');
     // if one fails, both do not get completed.
     const [consumeResult, transactionResult] = await prisma.$transaction([takeConsumable, addTransaction]);
-    res.json(createResponse({ data: { consumeResult, transactionResult } }));
+    return res.json({ consumeResult, transactionResult });
   } catch (err) {
     next(err);
   }

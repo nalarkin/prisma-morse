@@ -1,5 +1,4 @@
 import * as serializablesDAL from './serializablesDAL';
-import { DoesNotExistError, RentalError } from '@/common';
 import createError from 'http-errors';
 
 export async function getAll() {

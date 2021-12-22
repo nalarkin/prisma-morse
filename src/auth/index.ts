@@ -1,4 +1,3 @@
-export * from './token/refresh';
 export * from './register/index';
 export * from './login/index';
 export * from './token';
