@@ -1,8 +1,9 @@
 import { argon2id, Options, hash, verify } from 'argon2';
-import { SignOptions, sign } from 'jsonwebtoken';
+import { SignOptions, sign, verify as verifyJWT } from 'jsonwebtoken';
 import path from 'path';
 import fs from 'fs';
 import { User } from '@prisma/client';
+import dayjs from 'dayjs';
 
 export const ACCESS_JWT_EXPIRE: SignOptions['expiresIn'] = 15;
 export const REFRESH_JWT_EXPIRE: SignOptions['expiresIn'] = '7d';
@@ -69,3 +70,13 @@ export function issueJWT(user: User, expiresIn: SignOptions['expiresIn']) {
 
   return `${signedToken}`;
 }
+
+export function validateJWT(token: string) {
+  return verifyJWT(token, PRIV_KEY, { algorithms: ['RS256'] });
+}
+
+export function tokenIsExpired(expireDate: number) {
+  return dayjs().isAfter(dayjs(expireDate * 1000));
+}
+
+// export function tokenIsExpired(token: string) {}

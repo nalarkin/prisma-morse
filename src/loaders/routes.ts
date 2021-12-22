@@ -14,6 +14,7 @@ import { consumablesAPI } from '@/consumables';
 import { transactionsAPI } from '@/transactions';
 import { testingAPI } from '@/testing';
 import error from '@/error/index';
+import cookieAPI from '@/auth/token/cookie';
 import { devAPI } from '@/dev';
 
 /** Loads all the routes that will be used in the app. */
@@ -29,6 +30,7 @@ export function loadRoutes() {
   router.use('/serializables', serializablesAPI);
   router.use('/transactions', transactionsAPI);
   router.use('/users', usersAPI);
+  router.use('/cookies', cookieAPI);
 
   // request handlers that are used during development phase
   if (process.env.NODE_ENV !== 'production') {

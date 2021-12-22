@@ -6,7 +6,7 @@
  */
 import fs from 'fs';
 import path from 'path';
-import { Strategy as JwtStrategy, ExtractJwt, StrategyOptions } from 'passport-jwt';
+import { Strategy as JwtStrategy, ExtractJwt, StrategyOptions, VerifiedCallback } from 'passport-jwt';
 import { JWTData } from '@/auth/utils';
 import { logger } from './logging';
 
@@ -32,7 +32,7 @@ export default (passport: { use: (arg0: JwtStrategy) => void }) => {
   logger.debug('configuring passport to use JWT');
   // The JWT payload is passed into the verify callback
   passport.use(
-    new JwtStrategy(options, function (jwt_payload: JWTPayloadRequest, done) {
+    new JwtStrategy(options, function (jwt_payload: JWTPayloadRequest, done: VerifiedCallback) {
       // payload info becomes attached to requests throughout express
       // if it reaches this point, it's not expired, so you can assume stored
       // user credentials are still valid
