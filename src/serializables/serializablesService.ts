@@ -1,5 +1,6 @@
 import * as serializablesDAL from './serializablesDAL';
 import createError from 'http-errors';
+import { Serializable } from '@prisma/client';
 
 export async function getAll() {
   return serializablesDAL.getAll();
@@ -48,4 +49,10 @@ export async function returnItem(id: string, userId: number) {
 
 export async function deleteItem(id: string) {
   return serializablesDAL.deleteItem(id);
+}
+
+export async function updateItem(serializable: Serializable) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { id, createdAt, updatedAt, version, ...updatedItem } = serializable; // remove unnecessary properties
+  return await serializablesDAL.updateItem(id, updatedItem);
 }

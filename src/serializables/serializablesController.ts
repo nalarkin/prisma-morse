@@ -1,6 +1,9 @@
 import { RequestHandler } from 'express';
 import * as serializablesService from './serializablesService';
 import { JWTData } from '@/auth/utils';
+import { Serializable } from '@prisma/client';
+import { ajv, SCHEMA } from '@/common';
+import createError from 'http-errors';
 
 /** Get all serializables */
 export const getAll: RequestHandler = async (req, res, next) => {
@@ -57,3 +60,44 @@ export const deleteItem: RequestHandler = async (req, res, next) => {
     next(err);
   }
 };
+/** Update serializable if user is admin */
+export const updateItem: RequestHandler = async (req, res, next) => {
+  try {
+    const body = req.body as Serializable;
+    // @TODO: Add error handling when deleting item
+    return res.json(await serializablesService.updateItem(body));
+  } catch (err) {
+    next(err);
+  }
+};
+
+/** Ensure that a complete item is provided for the update */
+export const validateUpdateItemForm: RequestHandler = async (req, res, next) => {
+  try {
+    const validator = ajv.getSchema(SCHEMA.SERIALIZABLE_UPDATE);
+    if (validator === undefined) {
+      throw createError(500, 'Unable to get JSON validator');
+    }
+    if (!validator(req.body)) {
+      throw createError(400, ajv.errorsText(validator.errors));
+    }
+    next();
+  } catch (e) {
+    next(e);
+  }
+};
+// export const validateUpdateItemFormType: RequestHandler = async (req, res, next) => {
+//   try {
+//     const validator = ajv2.getSchema(SCHEMA.SERIALIZABLE_UPDATE);
+//     if (validator === undefined) {
+//       throw createError(500, 'Unable to get JSON validator');
+//     }
+
+//     if (!validator(req.body)) {
+//       throw createError(400, ajv.errorsText(validator.errors));
+//     }
+//     return res.send('success!!');
+//   } catch (e) {
+//     next(e);
+//   }
+// };
