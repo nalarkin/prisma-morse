@@ -12,12 +12,10 @@
  */
 
 import Ajv from 'ajv';
-import Ajv2 from 'ajv/dist/jtd';
 import { schema_login } from './schema/schema_login';
-import { schema_register } from './schema/schema_register';
+import { schema_register, schema_password_reset } from './schema/schema_register';
 import { schema_consumable, schema_take_consumable, schema_consumable_update } from './schema/schema_consumable';
-import { schema_serializable } from './schema/schema_serializable';
-import { serializableTypeSchema } from './jsonType/serializable';
+import { schema_serializable } from './schema';
 import { schema_refresh_token } from './schema/schema_token';
 import { schema_user, schema_user_id } from './schema/schema_user';
 import addFormats from 'ajv-formats';
@@ -54,7 +52,6 @@ import { schema_item_id } from './schema/schema_cuid';
  * }
  */
 export const ajv = new Ajv({ $data: true, allErrors: true });
-export const ajv2 = new Ajv2();
 
 // used to validate email format during user registration
 addFormats(ajv, ['email', 'date-time', 'date']);
@@ -63,6 +60,7 @@ addFormats(ajv, ['email', 'date-time', 'date']);
 // same string to retrieve the schema as was used for storage.
 const LOGIN = 'login';
 const REGISTER = 'register';
+const PASSWORD_RESET = 'passwordReset';
 const CONSUMABLE_NEW = 'consumableNew';
 const CONSUMABLE_TAKE = 'consumableTake';
 const CONSUMABLE_UPDATE = 'consumableUpdate';
@@ -85,8 +83,7 @@ ajv.addSchema(schema_user_id, USER_ID);
 ajv.addSchema(schema_item_id, CUID);
 ajv.addSchema(schema_serializable, SERIALIZABLE_UPDATE);
 ajv.addSchema(schema_consumable_update, CONSUMABLE_UPDATE);
-
-ajv2.addSchema(serializableTypeSchema, SERIALIZABLE_UPDATE);
+ajv.addSchema(schema_password_reset, PASSWORD_RESET);
 
 /** Exported constants improve schema retrieval reliability and provide autocomplete feature */
 export const SCHEMA = {
@@ -100,4 +97,5 @@ export const SCHEMA = {
   CUID,
   SERIALIZABLE_UPDATE,
   CONSUMABLE_UPDATE,
+  PASSWORD_RESET,
 };

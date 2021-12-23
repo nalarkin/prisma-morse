@@ -4,7 +4,7 @@ import { JWTData } from '@/auth/utils';
 import { Serializable } from '@prisma/client';
 import { ajv, SCHEMA } from '@/common';
 import createError from 'http-errors';
-import { SerializableJson } from '@/common/schema/schema_serializable';
+import { SerializableJson } from '@/common/schema';
 
 /** Get all serializables */
 export const getAll: RequestHandler = async (req, res, next) => {

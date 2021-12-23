@@ -16,6 +16,7 @@ import { testingAPI } from '@/testing';
 import error from '@/error/index';
 import cookieAPI from '@/auth/token/cookie';
 import { devAPI } from '@/dev';
+import { resetAPI } from '@/auth/reset';
 
 /** Loads all the routes that will be used in the app. */
 export function loadRoutes() {
@@ -27,6 +28,7 @@ export function loadRoutes() {
   router.use('/auth/token', refreshAPI);
   router.use('/consumables', consumablesAPI);
   router.use('/auth/register', registerAPI);
+  router.use('/auth/reset', resetAPI);
   router.use('/serializables', serializablesAPI);
   router.use('/transactions', transactionsAPI);
   router.use('/users', usersAPI);
