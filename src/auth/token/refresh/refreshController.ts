@@ -1,7 +1,8 @@
-import { ACCESS_JWT_EXPIRE, issueJWT, JWTData } from '@/auth/utils';
+import { ACCESS_JWT_EXPIRE, issueJWT } from '@/auth/utils';
 import { RequestHandler } from 'express';
 import * as refreshService from './refreshService';
 import * as usersService from '@/users/usersService';
+import { validateJWTFormat } from '@/common';
 
 /**
  * Returns a response with a new valid short-lived acccess token if the cookies in the request
@@ -27,7 +28,7 @@ export const generateNewAccessToken: RequestHandler = async (req, res, next) => 
   try {
     // const { refresh_token } = req.cookies;
     // const retrievedToken = await refreshService.validateRefreshToken(refresh_token);
-    const { sub } = req.user as JWTData;
+    const { sub } = validateJWTFormat(req.user);
     const user = await usersService.getUser(sub);
     const access_token = issueJWT(user, ACCESS_JWT_EXPIRE); // new valid short-lived access token
     return res.json({ access_token });

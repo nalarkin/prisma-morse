@@ -5,24 +5,20 @@ import * as loginService from './loginService';
 import dayjs from 'dayjs';
 import createError from 'http-errors';
 
-export const validateLoginForm: RequestHandler = async (req, res, next) => {
-  try {
-    const validator = ajv.getSchema<LoginForm>(SCHEMA.LOGIN);
-    if (validator === undefined) {
-      throw createError(500, 'Unable to retrieve validator for login');
-    }
-    if (!validator(req.body)) {
-      throw createError(400, ajv.errorsText(validator.errors));
-    }
-    next();
-  } catch (e) {
-    next(e);
+function validateLoginForm(body: unknown) {
+  const validator = ajv.getSchema<LoginForm>(SCHEMA.LOGIN);
+  if (validator === undefined) {
+    throw createError(500, 'Unable to retrieve validator for login');
   }
-};
+  if (!validator(body)) {
+    throw createError(400, ajv.errorsText(validator.errors));
+  }
+  return body;
+}
 
 export const login: RequestHandler = async (req, res, next) => {
   try {
-    const { password, email } = req.body as LoginForm; // must be validated because previous middleware
+    const { password, email } = validateLoginForm(req.body); // must be validated because previous middleware
     // search for user in database
     const userResult = await loginService.getSingleUser(email);
     // verify password matches hashed password

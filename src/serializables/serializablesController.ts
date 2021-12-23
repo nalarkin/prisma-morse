@@ -1,8 +1,6 @@
 import { RequestHandler } from 'express';
 import * as serializablesService from './serializablesService';
-import { JWTData } from '@/auth/utils';
-import { Serializable } from '@prisma/client';
-import { ajv, SCHEMA } from '@/common';
+import { ajv, SCHEMA, validateJWTFormat } from '@/common';
 import createError from 'http-errors';
 import { SerializableJson } from '@/common/schema';
 
@@ -33,7 +31,7 @@ export const getSingle: RequestHandler = async (req, res, next) => {
 export const checkout: RequestHandler = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { sub: userId } = req.user as JWTData;
+    const { sub: userId } = validateJWTFormat(req.user);
     return res.json(await serializablesService.checkout(id, userId));
   } catch (err) {
     next(err);
@@ -43,7 +41,7 @@ export const checkout: RequestHandler = async (req, res, next) => {
 export const returnItem: RequestHandler = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { sub: userId } = req.user as JWTData;
+    const { sub: userId } = validateJWTFormat(req.user);
     /** Insert logic to check if request id requesting change is the same as the current renter */
     return res.json(await serializablesService.returnItem(id, userId));
   } catch (err) {
@@ -64,7 +62,8 @@ export const deleteItem: RequestHandler = async (req, res, next) => {
 /** Update serializable if user is admin */
 export const updateItem: RequestHandler = async (req, res, next) => {
   try {
-    const body = req.body as Serializable;
+    const { id } = req.params;
+    const body = validateUpdateItemForm(id, req.body);
     // @TODO: Add error handling when deleting item
     return res.json(await serializablesService.updateItem(body));
   } catch (err) {
@@ -73,26 +72,20 @@ export const updateItem: RequestHandler = async (req, res, next) => {
 };
 
 /** Ensure that a complete item is provided for the update */
-export const validateUpdateItemForm: RequestHandler = async (req, res, next) => {
-  try {
-    const validator = ajv.getSchema<SerializableJson>(SCHEMA.SERIALIZABLE_UPDATE);
-    if (validator === undefined) {
-      throw createError(500, 'Unable to get JSON validator');
-    }
-    const { body } = req;
-    if (!validator(body)) {
-      throw createError(400, ajv.errorsText(validator.errors));
-    }
-
-    const { id } = req.params;
-    if (id !== body.id) {
-      throw createError(400, 'ID in URI must match the ID in HTTP request');
-    }
-    next();
-  } catch (e) {
-    next(e);
+function validateUpdateItemForm(id: string, body: unknown) {
+  const validator = ajv.getSchema<SerializableJson>(SCHEMA.SERIALIZABLE_UPDATE);
+  if (validator === undefined) {
+    throw createError(500, 'Unable to get JSON validator');
   }
-};
+  if (!validator(body)) {
+    throw createError(400, ajv.errorsText(validator.errors));
+  }
+
+  if (id !== body.id) {
+    throw createError(400, 'ID in URI must match the ID in HTTP request');
+  }
+  return body;
+}
 // export const validateUpdateItemFormType: RequestHandler = async (req, res, next) => {
 //   try {
 //     const validator = ajv2.getSchema(SCHEMA.SERIALIZABLE_UPDATE);

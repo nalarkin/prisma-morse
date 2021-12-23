@@ -2,14 +2,17 @@ import { ajv, SCHEMA } from '@/common';
 import { RequestHandler } from 'express';
 import { PasswordResetForm } from '@/common/schema';
 import createError from 'http-errors';
-import { JWTData, verifyPassword } from '../utils';
+import { verifyPassword } from '../utils';
 import * as usersService from '@/users/usersService';
 import * as resetService from './resetService';
+import { validateJWTFormat } from '../../common/validation';
 
 export const passwordReset: RequestHandler = async (req, res, next) => {
   try {
     const passwordResetForm = validatePasswordResetForm(req.body);
-    const { sub: userId } = req.user as JWTData;
+
+    const { sub: userId } = validateJWTFormat(req.user);
+    // const { sub: userId } = req.user as JWTData;
     const user = await usersService.getUser(userId);
 
     const matchesCurrentPassword = await verifyPassword(user.password, passwordResetForm.password);

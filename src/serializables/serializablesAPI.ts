@@ -33,7 +33,6 @@ router.get('/:id/', serializablesController.getSingle);
 router.put(
   '/:id/',
   getRequireAdminMiddleware('You must be an admin to edit items'),
-  serializablesController.validateUpdateItemForm,
   serializablesController.updateItem,
 );
 

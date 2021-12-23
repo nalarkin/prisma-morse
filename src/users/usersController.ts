@@ -31,20 +31,24 @@ export const updateUser: RequestHandler = async (req, res, next) => {
   try {
     const { id } = req.params;
     const userId = Number(id); // we know it's valid because it passed through validation middleware
-    const validator = ajv.getSchema<UserEdit>(SCHEMA.USER_EDIT);
-    if (validator === undefined) {
-      throw createError(500, 'Could not find JSON validator');
-    }
-    const { body } = req;
-    if (!validator(body)) {
-      // if data in request body is invalid
-      throw createError(400, ajv.errorsText(validator.errors));
-    }
+    const body = validateUserEdit(req.body);
     return res.json(await usersService.updateUser(userId, body));
   } catch (e) {
     next(e);
   }
 };
+
+function validateUserEdit(body: unknown) {
+  const validator = ajv.getSchema<UserEdit>(SCHEMA.USER_EDIT);
+  if (validator === undefined) {
+    throw createError(500, 'Could not find JSON validator');
+  }
+  if (!validator(body)) {
+    // if data in request body is invalid
+    throw createError(400, ajv.errorsText(validator.errors));
+  }
+  return body;
+}
 
 /** Gets all users in the database */
 export const getAllUsers: RequestHandler = async (req, res, next) => {
@@ -63,26 +67,33 @@ export const getAllUsers: RequestHandler = async (req, res, next) => {
 export const validateUserIDParam: RequestHandler = (req, res, next) => {
   try {
     const { id } = req.params;
-    getUserId(id);
+    const userId = Number(id);
+    const validateId = ajv.getSchema<number>(SCHEMA.USER_ID);
+    if (validateId === undefined) {
+      throw createError(500, 'Could not find JSON validator');
+    }
+    if (!validateId(userId)) {
+      throw createError(400, ajv.errorsText(validateId.errors));
+    }
     next();
   } catch (e) {
     next(e);
   }
 };
 
-/**
- * Helper function that validates that the user id is a valid format.
- * Performs more robust checks and is quicker and less repetitive than a
- * manual implementation.
- */
-function getUserId(id: string) {
-  const userId = Number(id);
-  const validateId = ajv.getSchema<number>(SCHEMA.USER_ID);
-  if (validateId === undefined) {
-    throw createError(500, 'Could not find JSON validator');
-  }
-  if (!validateId(userId)) {
-    throw createError(400, ajv.errorsText(validateId.errors));
-  }
-  return userId;
-}
+// /**
+//  * Helper function that validates that the user id is a valid format.
+//  * Performs more robust checks and is quicker and less repetitive than a
+//  * manual implementation.
+//  */
+// function getUserId(id: string) {
+//   const userId = Number(id);
+//   const validateId = ajv.getSchema<number>(SCHEMA.USER_ID);
+//   if (validateId === undefined) {
+//     throw createError(500, 'Could not find JSON validator');
+//   }
+//   if (!validateId(userId)) {
+//     throw createError(400, ajv.errorsText(validateId.errors));
+//   }
+//   return userId;
+// }

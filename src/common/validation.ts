@@ -20,6 +20,8 @@ import { schema_refresh_token } from './schema/schema_token';
 import { schema_user, schema_user_id } from './schema/schema_user';
 import addFormats from 'ajv-formats';
 import { schema_item_id } from './schema/schema_cuid';
+import { schema_jwt, JWTPayloadRequest } from './schema/schema_jwt';
+import createError from 'http-errors';
 /**
  * Validates and type creates type guards. Makes it great to do all
  * validation when first receiving json request
@@ -69,6 +71,7 @@ const TOKEN_REFRESH = 'refreshToken';
 const USER_EDIT = 'userEdit';
 const USER_ID = 'userId';
 const CUID = 'itemId';
+const JWT_REQUEST = 'jwtRequest';
 
 // Add all the schema to this single instance. It will get cached so repeated schema validations are very quick.
 // If you want to use access schema in application, then you must add it here, then use the `ajv.getSchema()`
@@ -84,6 +87,7 @@ ajv.addSchema(schema_item_id, CUID);
 ajv.addSchema(schema_serializable, SERIALIZABLE_UPDATE);
 ajv.addSchema(schema_consumable_update, CONSUMABLE_UPDATE);
 ajv.addSchema(schema_password_reset, PASSWORD_RESET);
+ajv.addSchema(schema_jwt, JWT_REQUEST);
 
 /** Exported constants improve schema retrieval reliability and provide autocomplete feature */
 export const SCHEMA = {
@@ -98,4 +102,16 @@ export const SCHEMA = {
   SERIALIZABLE_UPDATE,
   CONSUMABLE_UPDATE,
   PASSWORD_RESET,
+  JWT_REQUEST,
 };
+
+export function validateJWTFormat(payload: unknown) {
+  const validator = ajv.getSchema<JWTPayloadRequest>(JWT_REQUEST);
+  if (validator === undefined) {
+    throw createError(500, 'Unable to find JSON validator');
+  }
+  if (!validator(payload)) {
+    throw createError(400, 'JWT Payload has invalid format, please login in again');
+  }
+  return payload;
+}

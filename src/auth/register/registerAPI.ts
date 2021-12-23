@@ -4,6 +4,6 @@ import * as registerController from './registerController';
 const router = Router();
 
 /** Register a user */
-router.post('/', registerController.validateRegistrationForm, registerController.registerUser);
+router.post('/', registerController.registerUser);
 
 export default router;

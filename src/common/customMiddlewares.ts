@@ -3,8 +3,7 @@
  */
 
 import { RequestHandler } from 'express';
-import { JWTData } from '@/auth/utils';
-import { ajv, SCHEMA } from '@/common';
+import { ajv, SCHEMA, validateJWTFormat } from '@/common';
 import createError from 'http-errors';
 
 const DEFAULT_MESSAGE = 'You do not have sufficient permissions.';
@@ -18,7 +17,7 @@ const DEFAULT_MESSAGE = 'You do not have sufficient permissions.';
 export const getRequireAdminMiddleware = (customMessage = DEFAULT_MESSAGE): RequestHandler => {
   const requireAdminMiddleware: RequestHandler = (req, res, next) => {
     try {
-      const { role } = req.user as JWTData;
+      const { role } = validateJWTFormat(req.user);
       if (role !== 'ADMIN') {
         // not authorized
         throw createError(403, customMessage);
