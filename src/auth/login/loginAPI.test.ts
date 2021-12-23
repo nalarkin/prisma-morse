@@ -5,20 +5,20 @@ import { makeTestUser } from '@/testing';
 import faker from 'faker';
 
 describe('Login API', () => {
-  describe('POST /auth/login/', () => {
+  describe('POST /api/auth/login/', () => {
     it('When request body is missing email, then the response code is 400', async () => {
       const body = {
         password: faker.internet.password(),
       };
 
-      await supertest(app).post('/auth/login/').send(body).expect(400);
+      await supertest(app).post('/api/auth/login/').send(body).expect(400);
     });
     it('When request body is missing password, then the response code is 400', async () => {
       const body = {
         email: faker.internet.email(),
       };
 
-      await supertest(app).post('/auth/login/').send(body).expect(400);
+      await supertest(app).post('/api/auth/login/').send(body).expect(400);
     });
     it('When request body is has additional properties, then the response code is 400', async () => {
       const body = {
@@ -27,7 +27,7 @@ describe('Login API', () => {
         message: faker.random.word(),
       };
 
-      await supertest(app).post('/auth/login/').send(body).expect(400);
+      await supertest(app).post('/api/auth/login/').send(body).expect(400);
     });
     it('When user attempts login with correct information, the server responds with an access_token and refresh_token', async () => {
       const user = makeTestUser();
@@ -44,7 +44,7 @@ describe('Login API', () => {
 
       prismaMock.user.findUnique.mockResolvedValue(testUser);
       await supertest(app)
-        .post('/auth/login/')
+        .post('/api/auth/login/')
         .send(body)
         .expect(200)
         .then(({ body }) => {

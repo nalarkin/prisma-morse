@@ -26,5 +26,5 @@ export function loadExpress({ app }: { app: express.Application }) {
 
   // app.use( pinohttp()); /** Uncomment to get detailed HTML logs, recommend command `yarn pino` to improve visual output */
 
-  app.use(loadRoutes()); // apply all route handlers to the express app
+  app.use('/api', loadRoutes()); // apply all route handlers to the express app
 }

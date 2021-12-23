@@ -4,7 +4,7 @@ import { RegisterForm } from '@/common';
 import faker from 'faker';
 
 describe('Register API', () => {
-  describe('POST /auth/register/', () => {
+  describe('POST /api/auth/register/', () => {
     it('When the passwords do not match in the registration form, the response code is 400', async () => {
       const form: RegisterForm = {
         confirmPassword: faker.internet.password(),
@@ -13,7 +13,7 @@ describe('Register API', () => {
         password: faker.internet.password(),
         email: faker.internet.email(),
       };
-      await supertest(app).post('/auth/register/').send(form).expect(400);
+      await supertest(app).post('/api/auth/register/').send(form).expect(400);
     });
     it('When the email has an invalid format in the registration form, the response code is 400', async () => {
       const password = faker.internet.password();
@@ -24,7 +24,7 @@ describe('Register API', () => {
         lastName: faker.name.lastName(),
         email: faker.internet.domainName(),
       };
-      await supertest(app).post('/auth/register/').send(form).expect(400);
+      await supertest(app).post('/api/auth/register/').send(form).expect(400);
     });
     it('When the registration form is missing an email, the response code is 400', async () => {
       const password = faker.internet.password();
@@ -35,7 +35,7 @@ describe('Register API', () => {
         firstName: faker.name.firstName(),
         lastName: faker.name.lastName(),
       };
-      await supertest(app).post('/auth/register/').send(form).expect(400);
+      await supertest(app).post('/api/auth/register/').send(form).expect(400);
     });
     it('When the registration form is missing a first name, the response code is 400', async () => {
       const password = faker.internet.password();
@@ -45,7 +45,7 @@ describe('Register API', () => {
         lastName: faker.name.lastName(),
         email: faker.internet.email(),
       };
-      await supertest(app).post('/auth/register/').send(form).expect(400);
+      await supertest(app).post('/api/auth/register/').send(form).expect(400);
     });
     it('When the registration form is missing a last name, the response code is 400', async () => {
       const password = faker.internet.password();
@@ -55,7 +55,7 @@ describe('Register API', () => {
         firstName: faker.name.firstName(),
         email: faker.internet.email(),
       };
-      await supertest(app).post('/auth/register/').send(form).expect(400);
+      await supertest(app).post('/api/auth/register/').send(form).expect(400);
     });
     it('When the registration form has additional properties, the response code is 400', async () => {
       const password = faker.internet.password();
@@ -68,7 +68,7 @@ describe('Register API', () => {
         email: faker.internet.email(),
         random: faker.random.word(),
       };
-      await supertest(app).post('/auth/register/').send(form).expect(400);
+      await supertest(app).post('/api/auth/register/').send(form).expect(400);
     });
   });
 });

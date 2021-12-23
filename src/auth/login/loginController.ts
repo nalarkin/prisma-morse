@@ -4,6 +4,7 @@ import { ACCESS_JWT_EXPIRE, issueJWT, REFRESH_JWT_EXPIRE } from '@/auth/utils';
 import * as loginService from './loginService';
 import dayjs from 'dayjs';
 import createError from 'http-errors';
+import { logger } from '@/loaders/logging';
 
 function validateLoginForm(body: unknown) {
   const validator = ajv.getSchema<LoginForm>(SCHEMA.LOGIN);
@@ -18,6 +19,7 @@ function validateLoginForm(body: unknown) {
 
 export const login: RequestHandler = async (req, res, next) => {
   try {
+    logger.info('attempting to login a user...');
     const { password, email } = validateLoginForm(req.body); // must be validated because previous middleware
     // search for user in database
     const userResult = await loginService.getSingleUser(email);

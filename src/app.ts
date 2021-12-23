@@ -17,10 +17,10 @@ async function startServer() {
   const PORT = Number(process.env.PORT) || 8000;
   app.listen(PORT, () =>
     logger.info(`
-    Server ready at: http://localhost:${PORT} 
-    Users: http://localhost:${PORT}/users/
-    Serializables: http://localhost:${PORT}/serializables/
-    Consumables: http://localhost:${PORT}/consumables/
+    Server ready at: http://localhost:${PORT}/api/ 
+    Users: http://localhost:${PORT}/api/users/
+    Serializables: http://localhost:${PORT}/api/serializables/
+    Consumables: http://localhost:${PORT}/api/consumables/
     Environment: '${process.env.NODE_ENV}'
     `),
   );

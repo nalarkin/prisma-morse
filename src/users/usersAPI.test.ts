@@ -6,13 +6,13 @@ import { makeTestUser } from '@/testing';
 import faker from 'faker';
 
 describe('Users API', () => {
-  describe('GET /users/', () => {
+  describe('GET /api/users/', () => {
     it('When all users are requested, the response is an array of users', async () => {
       const testUser = makeTestUser();
 
       prismaMock.user.findMany.mockResolvedValue([testUser]);
       await supertest(app)
-        .get('/users/')
+        .get('/api/users/')
         .expect(200)
         .then(({ body }) => {
           expect(Array.isArray(body)).toBeTruthy();
@@ -22,12 +22,12 @@ describe('Users API', () => {
         });
     });
   });
-  describe('GET /users/:id/', () => {
+  describe('GET /api/users/:id/', () => {
     it('When an existing user is requested, the server responds with the user', async () => {
       const testUser = makeTestUser();
       prismaMock.user.findUnique.mockResolvedValue(testUser);
       await supertest(app)
-        .get(`/users/${testUser.id}/`)
+        .get(`/api/users/${testUser.id}/`)
         .expect(200)
         .then(({ body }) => {
           expect(body).toBeTruthy();
@@ -40,7 +40,7 @@ describe('Users API', () => {
     it('When an user that does not exist is requested, the response code is 404', async () => {
       prismaMock.user.findUnique.mockResolvedValue(null);
       await supertest(app)
-        .get(`/users/${faker.datatype.number(9999999)}/`)
+        .get(`/api/users/${faker.datatype.number(9999999)}/`)
         .expect(404);
     });
     it('When an id that is a floating point is requested, the response code is 400', async () => {
@@ -48,13 +48,13 @@ describe('Users API', () => {
       // @TODO: Add more robust randomization of float numbers
       const positiveFloat = faker.datatype.float({ min: 0, precision: 0.001, max: 9999999 });
       const negativeFloat = faker.datatype.float({ max: -1, precision: 0.001, min: -9999999 });
-      await supertest(app).get(`/users/${positiveFloat}/`).expect(400);
-      await supertest(app).get(`/users/${negativeFloat}/`).expect(400);
+      await supertest(app).get(`/api/users/${positiveFloat}/`).expect(400);
+      await supertest(app).get(`/api/users/${negativeFloat}/`).expect(400);
     });
     it('When an id that is a negative integer is requested, the response code is 400', async () => {
       prismaMock.user.findUnique.mockResolvedValue(null);
       await supertest(app)
-        .get(`/users/${faker.datatype.number({ max: -1, min: -999999 })}/`)
+        .get(`/api/users/${faker.datatype.number({ max: -1, min: -999999 })}/`)
         .expect(400);
     });
     it('When an id that contains letters is requested, the response code is 400', async () => {
@@ -62,9 +62,9 @@ describe('Users API', () => {
       const letterInMiddle =
         faker.datatype.number({ min: 0 }) + faker.random.alpha({ count: 1 }) + faker.datatype.number({ min: 0 });
       const letterAtBeginning = faker.random.alpha({ count: 1 }) + faker.datatype.number({ min: 0 });
-      await supertest(app).get(`/users/${letterAtEnd}/`).expect(400);
-      await supertest(app).get(`/users/${letterAtBeginning}/`).expect(400);
-      await supertest(app).get(`/users/${letterInMiddle}/`).expect(400);
+      await supertest(app).get(`/api/users/${letterAtEnd}/`).expect(400);
+      await supertest(app).get(`/api/users/${letterAtBeginning}/`).expect(400);
+      await supertest(app).get(`/api/users/${letterInMiddle}/`).expect(400);
     });
   });
 });

@@ -11,10 +11,6 @@ const router = Router();
 router.post('/refresh/cookie/', refreshController.validateRefreshTokenCookie);
 
 /** Use standard token header with the refresh token to generate a new access token */
-router.post(
-  '/refresh/header/',
-  passport.authenticate('jwt', { session: false }),
-  refreshController.generateNewAccessToken,
-);
+router.post('/refresh/', passport.authenticate('jwt', { session: false }), refreshController.generateNewAccessToken);
 
 export default router;
