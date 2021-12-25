@@ -8,13 +8,14 @@ import pinohttp from 'pino-http';
 import { logger } from '@/loaders/logging';
 import { app } from './loaders';
 
-/** Make sure environment variables are loaded */
-config();
+config(); // Make sure environment variables are loaded
 
 /** Main method to start the server. */
 async function startServer() {
-  /** Start listening on port */
+  // Prioritize Environment PORT variable over the default port `8000`
   const PORT = Number(process.env.PORT) || 8000;
+
+  // Start listening on port
   app.listen(PORT, () =>
     logger.info(`
     Server ready at: http://localhost:${PORT}/api/ 
