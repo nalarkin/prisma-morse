@@ -52,14 +52,14 @@ export async function verifyPassword(hashed: string, pw: string) {
 }
 
 export type JWTData = {
-  sub: number;
+  sub: User['id'];
   role: User['role'];
 };
 
 /**
  * @param {*} user - The user object.  We need this to set the JWT `sub` payload property to the MySQL user ID
  */
-export function issueJWT(user: User, expiresIn: SignOptions['expiresIn']) {
+export function issueJWT(user: Pick<User, 'id' | 'role'>, expiresIn: SignOptions['expiresIn']) {
   const { id, role } = user;
 
   // this gets stored in jwt, store id to query database for role on each request
