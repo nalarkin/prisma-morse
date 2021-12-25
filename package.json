@@ -11,7 +11,11 @@
     "migrate": "prisma migrate dev",
     "lint": "eslint src/**/*.ts",
     "format": "eslint src/**/*.ts --fix",
-    "test": "jest -i --verbose"
+    "test": "jest -i --verbose",
+    "profile": "nodemon -r ts-node/register/transpile-only -r tsconfig-paths/register --prof dist/app.js",
+    "production": "nodemon -r ts-node/register/transpile-only -r tsconfig-paths/register dist/app.js",
+    "build": "tsc --build",
+    "clean": "tsc --build --clean"
   },
   "dependencies": {
     "@prisma/client": "^3.7.0",

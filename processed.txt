@@ -1,0 +1,133 @@
+yarn node v1.22.15
+Statistical profiling result from isolate-0000017962FF2520-21080-v8.log, (2272 ticks, 1 unaccounted, 0 excluded).
+
+ [Shared libraries]:
+   ticks  total  nonlib   name
+   1342   59.1%          C:\Program Files\nodejs\node.exe
+    918   40.4%          C:\WINDOWS\SYSTEM32\ntdll.dll
+      1    0.0%          C:\WINDOWS\System32\KERNELBASE.dll
+
+ [JavaScript]:
+   ticks  total  nonlib   name
+      2    0.1%   18.2%  LazyCompile: *hidden internal/errors.js:306:25
+      1    0.0%    9.1%  LazyCompile: *syncExports internal/bootstrap/loaders.js:261:14
+      1    0.0%    9.1%  LazyCompile: *resolve path.js:153:10
+      1    0.0%    9.1%  LazyCompile: *nextTick internal/process/task_queues.js:103:18
+      1    0.0%    9.1%  LazyCompile: *next C:\Users\Nathan\Documents\React\rest-express\node_modules\express\lib\router\index.js:176:16
+      1    0.0%    9.1%  LazyCompile: *m.init C:\Users\Nathan\Documents\React\rest-express\node_modules\dayjs\dayjs.min.js:1:2351
+      1    0.0%    9.1%  LazyCompile: *isPathSeparator path.js:45:25
+      1    0.0%    9.1%  LazyCompile: *end _http_outgoing.js:795:45
+      1    0.0%    9.1%  LazyCompile: *emit domain.js:459:44
+
+ [C++]:
+   ticks  total  nonlib   name
+
+ [Summary]:
+   ticks  total  nonlib   name
+     10    0.4%   90.9%  JavaScript
+      0    0.0%    0.0%  C++
+     12    0.5%  109.1%  GC
+   2261   99.5%          Shared libraries
+      1    0.0%          Unaccounted
+
+ [C++ entry points]:
+   ticks    cpp   total   name
+
+ [Bottom up (heavy) profile]:
+  Note: percentage shows a share of a particular caller in the total
+  amount of its parent calls.
+  Callers occupying less than 1.0% are not shown.
+
+   ticks parent  name
+   1342   59.1%  C:\Program Files\nodejs\node.exe
+   1216   90.6%    C:\Program Files\nodejs\node.exe
+   1029   84.6%      LazyCompile: ~sign internal/crypto/sig.js:97:36
+    717   69.7%        LazyCompile: *module.exports C:\Users\Nathan\Documents\React\rest-express\node_modules\jsonwebtoken\sign.js:82:27
+    717  100.0%          LazyCompile: ~issueJWT C:\Users\Nathan\Documents\React\rest-express\src\auth\utils.ts:54:18
+    717  100.0%            LazyCompile: ~createLoginResponseContent C:\Users\Nathan\Documents\React\rest-express\src\auth\login\loginService.ts:41:36
+    312   30.3%        LazyCompile: ~sign C:\Users\Nathan\Documents\React\rest-express\node_modules\jwa\index.js:146:22
+    312  100.0%          LazyCompile: ~jwsSign C:\Users\Nathan\Documents\React\rest-express\node_modules\jws\lib\sign-stream.js:25:17
+    312  100.0%            LazyCompile: ~module.exports C:\Users\Nathan\Documents\React\rest-express\node_modules\jsonwebtoken\sign.js:82:27
+     26    2.1%      LazyCompile: ~wrapSafe internal/modules/cjs/loader.js:973:18
+     26  100.0%        LazyCompile: ~Module._compile internal/modules/cjs/loader.js:1026:37
+     26  100.0%          LazyCompile: ~Module._extensions..js internal/modules/cjs/loader.js:1081:37
+     24   92.3%            LazyCompile: ~Module.load internal/modules/cjs/loader.js:925:33
+      2    7.7%            LazyCompile: *Module._load internal/modules/cjs/loader.js:724:24
+     22    1.8%      LazyCompile: ~realpathSync fs.js:1718:22
+     12   54.5%        LazyCompile: ~findSync C:\Users\Nathan\Documents\React\rest-express\node_modules\@prisma\client\runtime\index.js:40074:18
+     12  100.0%          LazyCompile: ~findSync C:\Users\Nathan\Documents\React\rest-express\node_modules\@prisma\client\runtime\index.js:40074:18
+     12  100.0%            LazyCompile: ~findSync C:\Users\Nathan\Documents\React\rest-express\node_modules\@prisma\client\runtime\index.js:40074:18
+      5   22.7%        LazyCompile: ~toRealPath internal/modules/cjs/loader.js:360:20
+      5  100.0%          LazyCompile: ~tryFile internal/modules/cjs/loader.js:351:17
+      4   80.0%            LazyCompile: ~tryExtensions internal/modules/cjs/loader.js:367:23
+      1   20.0%            LazyCompile: ~tryPackage internal/modules/cjs/loader.js:305:20
+      5   22.7%        LazyCompile: *Module._findPath internal/modules/cjs/loader.js:461:28
+      5  100.0%          LazyCompile: ~Module._resolveFilename internal/modules/cjs/loader.js:804:35
+      5  100.0%            LazyCompile: ~Module._resolveFilename.sharedData.moduleResolveFilenameHook.installedValue C:\Users\Nathan\Documents\React\rest-express\node_modules\@cspotcode\source-map-support\source-map-support.js:660:96
+
+    918   40.4%  C:\WINDOWS\SYSTEM32\ntdll.dll
+     17    1.9%    C:\Program Files\nodejs\node.exe
+      3   17.6%      C:\Program Files\nodejs\node.exe
+      1   33.3%        LazyCompile: ~wrapSafe internal/modules/cjs/loader.js:973:18
+      1  100.0%          LazyCompile: ~Module._compile internal/modules/cjs/loader.js:1026:37
+      1  100.0%            LazyCompile: ~Module._extensions..js internal/modules/cjs/loader.js:1081:37
+      1   33.3%        LazyCompile: ~serialize C:\Users\Nathan\Documents\React\rest-express\node_modules\cookie\index.js:101:19
+      1  100.0%          LazyCompile: ~res.cookie C:\Users\Nathan\Documents\React\rest-express\node_modules\express\lib\response.js:831:23
+      1  100.0%            LazyCompile: ~attachRefreshTokenCookie C:\Users\Nathan\Documents\React\rest-express\src\auth\login\loginController.ts:33:34
+      1   33.3%        Eval: ~<anonymous> C:\Users\Nathan\Documents\React\rest-express\node_modules\npmlog\lib\log.js:1:1
+      1  100.0%          LazyCompile: ~Module._compile internal/modules/cjs/loader.js:1026:37
+      1  100.0%            LazyCompile: ~Module._extensions..js internal/modules/cjs/loader.js:1081:37
+      2   11.8%      LazyCompile: ~handleErrorFromBinding internal/fs/utils.js:310:32
+      2  100.0%        LazyCompile: ~statSync fs.js:1119:18
+      2  100.0%          LazyCompile: ~fileExistsSync C:\Users\Nathan\Documents\React\rest-express\node_modules\tsconfig-paths\lib\filesystem.js:4:24
+      2  100.0%            LazyCompile: ~findFirstExistingPath C:\Users\Nathan\Documents\React\rest-express\node_modules\tsconfig-paths\lib\match-path-sync.js:59:31
+      1    5.9%      LazyCompile: ~wrapSafe internal/modules/cjs/loader.js:973:18
+      1  100.0%        LazyCompile: ~Module._compile internal/modules/cjs/loader.js:1026:37
+      1  100.0%          LazyCompile: ~m._compile C:\Users\Nathan\Documents\React\rest-express\node_modules\ts-node\dist\index.js:732:31
+      1  100.0%            LazyCompile: ~Module._extensions..js internal/modules/cjs/loader.js:1081:37
+      1    5.9%      LazyCompile: ~parse url.js:169:37
+      1  100.0%        LazyCompile: ~urlParse url.js:153:18
+      1  100.0%          LazyCompile: ~validate_config C:\Users\Nathan\Documents\React\rest-express\node_modules\@mapbox\node-pre-gyp\lib\util\versioning.js:195:25
+      1  100.0%            LazyCompile: ~exports.find C:\Users\Nathan\Documents\React\rest-express\node_modules\@mapbox\node-pre-gyp\lib\pre-binding.js:17:24
+      1    5.9%      LazyCompile: ~module.exports C:\Users\Nathan\Documents\React\rest-express\node_modules\jsonwebtoken\sign.js:82:27
+      1  100.0%        LazyCompile: ~issueJWT C:\Users\Nathan\Documents\React\rest-express\src\auth\utils.ts:54:18
+      1  100.0%          LazyCompile: ~createLoginResponseContent C:\Users\Nathan\Documents\React\rest-express\src\auth\login\loginService.ts:41:36
+      1  100.0%            LazyCompile: ~createResponse C:\Users\Nathan\Documents\React\rest-express\src\auth\login\loginController.ts:43:24
+      1    5.9%      LazyCompile: ~issueJWT C:\Users\Nathan\Documents\React\rest-express\src\auth\utils.ts:54:18
+      1  100.0%        LazyCompile: ~createLoginResponseContent C:\Users\Nathan\Documents\React\rest-express\src\auth\login\loginService.ts:41:36
+      1  100.0%          LazyCompile: ~createResponse C:\Users\Nathan\Documents\React\rest-express\src\auth\login\loginController.ts:43:24
+      1  100.0%            LazyCompile: ~login C:\Users\Nathan\Documents\React\rest-express\src\auth\login\loginController.ts:49:15
+      1    5.9%      LazyCompile: ~handle C:\Users\Nathan\Documents\React\rest-express\node_modules\express\lib\router\layer.js:86:49
+      1  100.0%        LazyCompile: ~trim_prefix C:\Users\Nathan\Documents\React\rest-express\node_modules\express\lib\router\index.js:288:23
+      1  100.0%          LazyCompile: ~<anonymous> C:\Users\Nathan\Documents\React\rest-express\node_modules\express\lib\router\index.js:275:64
+      1  100.0%            LazyCompile: ~process_params C:\Users\Nathan\Documents\React\rest-express\node_modules\express\lib\router\index.js:327:47
+      1    5.9%      LazyCompile: ~emitTrailingComment C:\Users\Nathan\Documents\React\rest-express\node_modules\typescript\lib\typescript.js:112214:37
+      1  100.0%        LazyCompile: *iterateCommentRanges C:\Users\Nathan\Documents\React\rest-express\node_modules\typescript\lib\typescript.js:10445:34
+      1  100.0%          LazyCompile: ~forEachTrailingCommentRange C:\Users\Nathan\Documents\React\rest-express\node_modules\typescript\lib\typescript.js:10546:41
+      1  100.0%            LazyCompile: ~forEachTrailingCommentToEmit C:\Users\Nathan\Documents\React\rest-express\node_modules\typescript\lib\typescript.js:112268:46
+      1    5.9%      LazyCompile: ~createTextWriter C:\Users\Nathan\Documents\React\rest-express\node_modules\typescript\lib\typescript.js:17901:30
+      1  100.0%        LazyCompile: ~emitFiles C:\Users\Nathan\Documents\React\rest-express\node_modules\typescript\lib\typescript.js:107603:23
+      1  100.0%          LazyCompile: ~emitWorker C:\Users\Nathan\Documents\React\rest-express\node_modules\typescript\lib\typescript.js:114590:28
+      1  100.0%            LazyCompile: ~<anonymous> C:\Users\Nathan\Documents\React\rest-express\node_modules\typescript\lib\typescript.js:114583:60
+      1    5.9%      LazyCompile: ~checkPropertyAccessExpressionOrQualifiedName C:\Users\Nathan\Documents\React\rest-express\node_modules\typescript\lib\typescript.js:72648:62
+      1  100.0%        LazyCompile: ~checkPropertyAccessExpression C:\Users\Nathan\Documents\React\rest-express\node_modules\typescript\lib\typescript.js:72544:47
+      1  100.0%          LazyCompile: ~checkExpressionWorker C:\Users\Nathan\Documents\React\rest-express\node_modules\typescript\lib\typescript.js:77803:39
+      1  100.0%            LazyCompile: ~checkExpression C:\Users\Nathan\Documents\React\rest-express\node_modules\typescript\lib\typescript.js:77761:33
+      1    5.9%      LazyCompile: ~bindWorker C:\Users\Nathan\Documents\React\rest-express\node_modules\typescript\lib\typescript.js:45521:28
+      1  100.0%        LazyCompile: ~bind C:\Users\Nathan\Documents\React\rest-express\node_modules\typescript\lib\typescript.js:45431:22
+      1  100.0%          LazyCompile: ~doWithConditionalBranches C:\Users\Nathan\Documents\React\rest-express\node_modules\typescript\lib\typescript.js:44233:43
+      1  100.0%            LazyCompile: ~bindCondition C:\Users\Nathan\Documents\React\rest-express\node_modules\typescript\lib\typescript.js:44242:31
+      1    5.9%      LazyCompile: ~bindParameter C:\Users\Nathan\Documents\React\rest-express\node_modules\typescript\lib\typescript.js:46279:31
+      1  100.0%        LazyCompile: *bindWorker C:\Users\Nathan\Documents\React\rest-express\node_modules\typescript\lib\typescript.js:45521:28
+      1  100.0%          LazyCompile: *bind C:\Users\Nathan\Documents\React\rest-express\node_modules\typescript\lib\typescript.js:45431:22
+      1  100.0%            LazyCompile: *forEach C:\Users\Nathan\Documents\React\rest-express\node_modules\typescript\lib\typescript.js:388:21
+      1    5.9%      LazyCompile: ~Module._load internal/modules/cjs/loader.js:724:24
+      1  100.0%        LazyCompile: ~Module.require internal/modules/cjs/loader.js:953:36
+      1  100.0%          LazyCompile: ~require internal/modules/cjs/helpers.js:91:31
+      1  100.0%            Eval: ~<anonymous> C:\Users\Nathan\Documents\React\rest-express\node_modules\finalhandler\node_modules\debug\src\index.js:1:1
+      1    5.9%      LazyCompile: *toString buffer.js:775:46
+      1  100.0%        LazyCompile: ~sign internal/crypto/sig.js:97:36
+      1  100.0%          LazyCompile: *module.exports C:\Users\Nathan\Documents\React\rest-express\node_modules\jsonwebtoken\sign.js:82:27
+      1  100.0%            LazyCompile: ~issueJWT C:\Users\Nathan\Documents\React\rest-express\src\auth\utils.ts:54:18
+
+Done in 0.34s.
