@@ -1,4 +1,10 @@
-import { Serializable } from '@prisma/client';
+/**
+ * Alternative way of creating json validators (that are less customizable but easier to create).
+ *
+ * Will probably remove in the future.
+ */
+
+import type { Serializable } from '@prisma/client';
 import { JTDSchemaType } from 'ajv/dist/core';
 export const serializableTypeSchema: JTDSchemaType<Serializable> = {
   properties: {

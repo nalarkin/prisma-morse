@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-namespace */
-import { app } from '@/loaders';
+import faker from 'faker';
 import supertest from 'supertest';
+import { app } from '@/loaders';
 import { prismaMock } from '@/loaders/singleton';
 import { makeTestUser } from '@/testing';
-import faker from 'faker';
 
 describe('Users API', () => {
   describe('GET /api/users/', () => {

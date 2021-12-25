@@ -1,6 +1,6 @@
-import * as serializablesDAL from './serializablesDAL';
 import createError from 'http-errors';
-import { SerializableJson } from '../common/schema/schema_serializable';
+import * as serializablesDAL from './serializablesDAL';
+import type { SerializableJson } from '../common/schema/schema_serializable';
 
 export async function getAll() {
   return serializablesDAL.getAll();

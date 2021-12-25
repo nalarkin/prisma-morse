@@ -1,6 +1,6 @@
+import createError from 'http-errors';
 import * as usersDAL from '@/users/usersDAL';
 import { verifyPassword } from '../utils';
-import createError from 'http-errors';
 
 export async function getSingleUser(email: string) {
   const user = await usersDAL.prismaGetUser({ email });

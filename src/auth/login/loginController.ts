@@ -1,10 +1,10 @@
-import { ajv, LoginForm, SCHEMA } from '@/common';
+import dayjs from 'dayjs';
+import createError from 'http-errors';
+import { ajv, SCHEMA } from '@/common';
+import type { LoginForm } from '@/common';
 import { RequestHandler } from 'express';
 import { ACCESS_JWT_EXPIRE, issueJWT, REFRESH_JWT_EXPIRE } from '@/auth/utils';
 import * as loginService from './loginService';
-import dayjs from 'dayjs';
-import createError from 'http-errors';
-import { logger } from '@/loaders/logging';
 
 function validateLoginForm(body: unknown) {
   const validator = ajv.getSchema<LoginForm>(SCHEMA.LOGIN);
@@ -19,10 +19,12 @@ function validateLoginForm(body: unknown) {
 
 export const login: RequestHandler = async (req, res, next) => {
   try {
-    logger.info('attempting to login a user...');
-    const { password, email } = validateLoginForm(req.body); // must be validated because previous middleware
+    // ensure request body matches expected format
+    const { password, email } = validateLoginForm(req.body);
+
     // search for user in database
     const userResult = await loginService.getSingleUser(email);
+
     // verify password matches hashed password
     const isAuthenticated = await loginService.verifyProvidedPassword(userResult.password, password);
     if (!isAuthenticated) {
@@ -39,10 +41,11 @@ export const login: RequestHandler = async (req, res, next) => {
 
     // attach refresh_token to cookie
     res.cookie('refresh_token', refresh_token, {
-      secure: process.env.NODE_ENV !== 'development',
+      // @TODO: during first deployment, you will need to remove the line below, because we wont have https yet
+      secure: process.env.NODE_ENV !== 'development', // if secure it can only be sent over https
       httpOnly: true, // prevents improved security against cross site scripting attacks
       expires: dayjs().add(7, 'days').toDate(), // note, this should line up with REFRESH_JWT_EXIPIRE time
-      path: '/auth/token/refresh/', // only gets sent on requests to this path
+      path: '/api/auth/token/refresh/', // only gets sent on requests to this path
     });
     return res.json(payload);
   } catch (e) {

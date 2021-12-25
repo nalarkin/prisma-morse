@@ -1,4 +1,4 @@
-import { UserEdit } from '@/common/schema/schema_user';
+import type { UserEdit } from '@/common/schema/';
 import prisma from '@/loaders/database';
 
 /**

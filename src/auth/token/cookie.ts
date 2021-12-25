@@ -2,8 +2,8 @@
  * This module is used for debugging/development purposes.
  */
 
-import { Router } from 'express';
 import dayjs from 'dayjs';
+import { Router } from 'express';
 import { logger } from '@/loaders/logging';
 
 const router = Router();

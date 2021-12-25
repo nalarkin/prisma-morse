@@ -12,16 +12,23 @@
  */
 
 import Ajv from 'ajv';
-import { schema_login } from './schema/schema_login';
-import { schema_register, schema_password_reset } from './schema/schema_register';
-import { schema_consumable, schema_take_consumable, schema_consumable_update } from './schema/schema_consumable';
-import { schema_serializable } from './schema';
-import { schema_refresh_token } from './schema/schema_token';
-import { schema_user, schema_user_id } from './schema/schema_user';
-import addFormats from 'ajv-formats';
-import { schema_item_id } from './schema/schema_cuid';
-import { schema_jwt, JWTPayloadRequest } from './schema/schema_jwt';
 import createError from 'http-errors';
+import addFormats from 'ajv-formats';
+import {
+  schema_serializable,
+  schema_register,
+  schema_password_reset,
+  schema_consumable,
+  schema_take_consumable,
+  schema_consumable_update,
+  schema_refresh_token,
+  schema_user,
+  schema_user_id,
+  schema_item_id,
+  schema_jwt,
+  schema_login,
+} from './schema';
+import type { JWTPayloadRequest } from './schema/';
 /**
  * Validates and type creates type guards. Makes it great to do all
  * validation when first receiving json request

@@ -2,9 +2,9 @@
  * File contains express middleware that is used throughout many parts of the application.
  */
 
-import { RequestHandler } from 'express';
-import { ajv, SCHEMA, validateJWTFormat } from '@/common';
 import createError from 'http-errors';
+import { ajv, SCHEMA, validateJWTFormat } from '@/common';
+import type { RequestHandler } from 'express';
 
 const DEFAULT_MESSAGE = 'You do not have sufficient permissions.';
 

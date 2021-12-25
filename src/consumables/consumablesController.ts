@@ -1,7 +1,8 @@
-import { ajv, ConsumableJson, NewConsumable, SCHEMA, TakeConsumable, validateJWTFormat } from '@/common';
-import { RequestHandler } from 'express';
-import * as consumableService from './consumableService';
 import createError from 'http-errors';
+import type { RequestHandler } from 'express';
+import * as consumableService from './consumableService';
+import { ajv, SCHEMA, validateJWTFormat } from '@/common';
+import type { ConsumableJson, NewConsumable, TakeConsumable } from '@/common';
 export const getConsumable: RequestHandler = async (req, res, next) => {
   try {
     const { id } = req.params;

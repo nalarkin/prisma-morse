@@ -1,8 +1,8 @@
-import { RequestHandler } from 'express';
+import createError from 'http-errors';
+import type { RequestHandler } from 'express';
 import * as serializablesService from './serializablesService';
 import { ajv, SCHEMA, validateJWTFormat } from '@/common';
-import createError from 'http-errors';
-import { SerializableJson } from '@/common/schema';
+import type { SerializableJson } from '@/common/schema';
 
 /** Get all serializables */
 export const getAll: RequestHandler = async (req, res, next) => {

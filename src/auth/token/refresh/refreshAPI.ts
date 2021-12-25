@@ -1,3 +1,8 @@
+/**
+ * API Endpoints to allow users to get a new short-lived JWT access token by providing
+ * their longer lived JWT refresh token.
+ */
+
 import { Router } from 'express';
 import * as refreshController from './refreshController';
 import passport from 'passport';

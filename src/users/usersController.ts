@@ -1,14 +1,24 @@
-import { RequestHandler } from 'express';
-import { UserEdit } from '@/common/schema';
+import createError from 'http-errors';
+import type { RequestHandler } from 'express';
+import type { UserEdit } from '@/common/schema';
 import * as usersService from './usersService';
 import { ajv, SCHEMA } from '@/common';
-import createError from 'http-errors';
+import type { JWTPayloadRequest } from '../loaders/passport';
 
 /** Gets a specific user when provided the id through the url */
 export const getUser: RequestHandler = async (req, res, next) => {
   try {
     const { id } = req.params;
     const userId = Number(id); // we know it's valid because it passed through validation middleware
+    return res.json(await usersService.getUser(userId));
+  } catch (e) {
+    next(e);
+  }
+};
+
+export const getCurrentUser: RequestHandler = async (req, res, next) => {
+  try {
+    const { sub: userId } = validateJWTPayload(req.user);
     return res.json(await usersService.getUser(userId));
   } catch (e) {
     next(e);
@@ -81,19 +91,14 @@ export const validateUserIDParam: RequestHandler = (req, res, next) => {
   }
 };
 
-// /**
-//  * Helper function that validates that the user id is a valid format.
-//  * Performs more robust checks and is quicker and less repetitive than a
-//  * manual implementation.
-//  */
-// function getUserId(id: string) {
-//   const userId = Number(id);
-//   const validateId = ajv.getSchema<number>(SCHEMA.USER_ID);
-//   if (validateId === undefined) {
-//     throw createError(500, 'Could not find JSON validator');
-//   }
-//   if (!validateId(userId)) {
-//     throw createError(400, ajv.errorsText(validateId.errors));
-//   }
-//   return userId;
-// }
+function validateJWTPayload(user: unknown) {
+  const validator = ajv.getSchema<JWTPayloadRequest>(SCHEMA.JWT_REQUEST);
+
+  if (validator === undefined) {
+    throw createError(500, 'Could not find JSON validator');
+  }
+  if (!validator(user)) {
+    throw createError(400, ajv.errorsText(validator.errors));
+  }
+  return user;
+}

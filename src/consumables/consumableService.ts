@@ -1,6 +1,6 @@
-import * as consumableDAL from './consumablesDAL';
 import createError from 'http-errors';
-import { ConsumableJson, NewConsumable } from '@/common';
+import * as consumableDAL from './consumablesDAL';
+import type { ConsumableJson, NewConsumable } from '@/common';
 
 export async function getConsumable(id: string) {
   const consumable = await consumableDAL.getConsumable(id);

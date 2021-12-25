@@ -1,3 +1,7 @@
+/**
+ * API Endpoints for user registration.
+ */
+
 import { Router } from 'express';
 import * as registerController from './registerController';
 

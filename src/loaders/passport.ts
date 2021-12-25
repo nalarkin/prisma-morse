@@ -6,7 +6,8 @@
  */
 import fs from 'fs';
 import path from 'path';
-import { Strategy as JwtStrategy, ExtractJwt, StrategyOptions, VerifiedCallback } from 'passport-jwt';
+import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
+import type { StrategyOptions, VerifiedCallback } from 'passport-jwt';
 import { JWTData } from '@/auth/utils';
 import { logger } from './logging';
 

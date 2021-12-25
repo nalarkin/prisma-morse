@@ -1,3 +1,6 @@
+/**
+ * API Endpoints that enable users to update their own password.
+ */
 import { Router } from 'express';
 import passport from 'passport';
 import * as resetController from './resetController';

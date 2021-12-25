@@ -1,6 +1,6 @@
-import { Transaction } from '@prisma/client';
 import prisma from '@/loaders/database';
-import { SerializableUpdate } from '@/common/schema';
+import type { Transaction } from '@prisma/client';
+import type { SerializableUpdate } from '@/common/schema';
 
 export async function getAll() {
   return prisma.serializable.findMany();

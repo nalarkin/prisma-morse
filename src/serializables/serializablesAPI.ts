@@ -9,9 +9,9 @@
  * router.use(exampleAPI);
  * // or you could add a URI prefix: router.use('/prefix-example', exampleAPI);
  */
+import passport from 'passport';
 import { getRequireAdminMiddleware, verifyCUIDMiddleware } from '@/common';
 import { Router } from 'express';
-import passport from 'passport';
 import * as serializablesController from './serializablesController';
 
 const router = Router();

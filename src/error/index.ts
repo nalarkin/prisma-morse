@@ -3,8 +3,8 @@
  * These routes will not be used in the production application.
  */
 
-import { Router } from 'express';
 import createError from 'http-errors';
+import { Router } from 'express';
 
 const router = Router();
 

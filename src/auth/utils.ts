@@ -1,10 +1,21 @@
-import { argon2id, Options, hash, verify } from 'argon2';
-import { SignOptions, sign, verify as verifyJWT } from 'jsonwebtoken';
+/**
+ * Provides utility functions for authentication.
+ *
+ * As of now, this includes password hashing + validation and JWT creation + validation.
+ * While there is a validation function in this module, the majority of JWT validation
+ * is done using the Passport library.
+ */
+
 import path from 'path';
 import fs from 'fs';
-import { User } from '@prisma/client';
 import dayjs from 'dayjs';
+import { argon2id, hash, verify } from 'argon2';
+import type { Options } from 'argon2';
+import { sign, verify as verifyJWT } from 'jsonwebtoken';
+import type { SignOptions } from 'jsonwebtoken';
+import type { User } from '@prisma/client';
 
+// numeric value = seconds
 export const ACCESS_JWT_EXPIRE: SignOptions['expiresIn'] = 15;
 export const REFRESH_JWT_EXPIRE: SignOptions['expiresIn'] = '7d';
 
@@ -12,9 +23,9 @@ const pathToPrivateKey = path.join(__dirname, 'token', 'id_rsa_priv.pem');
 // eslint-disable-next-line security/detect-non-literal-fs-filename
 const PRIV_KEY = fs.readFileSync(pathToPrivateKey, 'utf8');
 
-/** Recomendations listed here:
+/**
+ * ecomendations listed here:
  * https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html#argon2id
- *
  */
 export const hashOptions: Options & { raw: false } = {
   type: argon2id,

@@ -1,5 +1,5 @@
-import { Router } from 'express';
 import passport from 'passport';
+import { Router } from 'express';
 import { verifyCUIDMiddleware, getRequireAdminMiddleware } from '@/common';
 import prisma from '@/loaders/database';
 import * as consumablesController from './consumablesController';
