@@ -1,6 +1,6 @@
 # Morse Lab API Example
 
-## [Link To Design DOC](/DESIGN-DOC)
+## [Design DOC](DESIGN-DOC.md)
 
 ## Requirements
 
@@ -34,16 +34,16 @@
    ```bash
    # install all dependencies
    yarn
-   
+
    # create the tabels in your connected MySQL database and create generated TypeScript types (that will be used for TS in express server)
    npx prisma generate
-   
+
    # might run this automatically, but if it doesn't you can use this command.  populate the database with a small amount of randomly generated data
    yarn seed
-   
+
    # start the server
    yarn dev
-   
+
    ```
 
 Other Useful Commands
@@ -74,7 +74,7 @@ yarn seed
 
 ## TODO
 
-1. Implement CRSF protection, see [express CSURF](https://github.com/expressjs/csurf) and  [React CSRF protection guide](https://www.stackhawk.com/blog/react-csrf-protection-guide-examples-and-how-to-enable-it/)
+1. Implement CRSF protection, see [express CSURF](https://github.com/expressjs/csurf) and [React CSRF protection guide](https://www.stackhawk.com/blog/react-csrf-protection-guide-examples-and-how-to-enable-it/)
    1. [Fairly detailed guide on Cross Site Request Forgery](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html)
    2. [JSON web token security guide for Java](https://cheatsheetseries.owasp.org/cheatsheets/JSON_Web_Token_for_Java_Cheat_Sheet.html)
    3. Other option: https://datatracker.ietf.org/doc/rfc8725/
@@ -85,6 +85,7 @@ yarn seed
 1. Add additional column to transactions (can use this as a tutorial for Prisma with teammates) to track potential quantity change
 
    1. Can also possibly add a date returned? Should the processing be done on server or client side?
+
 2. Create API endpoint to get all serializable and consumables in 1 request?
 3. Search feature
    1. [example of searching using express and prisma](https://github.com/prisma/prisma-examples/blob/latest/typescript/rest-nextjs-express/backend/src/index.ts)
