@@ -44,6 +44,8 @@ export function makeTestSerializable(userId: number | null = null): Serializable
     version: faker.datatype.number(99999),
   };
 }
+
+/** Make a serializable with randomized data, and optional quantity */
 export function makeTestConsumable(count: number = faker.datatype.number(99999)): Consumable {
   const updatedAt = faker.date.past();
   return {
