@@ -12,7 +12,7 @@ export interface RegisterForm {
  * Includes confirmed_password matching using the $data directive
  * https://ajv.js.org/guide/combining-schemas.html#data-reference *
  */
-//@ts-expect-error $data directive doesn't agree with type inference of TS
+// @ts-expect-error $data directive doesn't agree with type inference of TS
 export const schema_register: JSONSchemaType<RegisterForm> = {
   $id: '/schemas/register',
   type: 'object',
@@ -25,4 +25,22 @@ export const schema_register: JSONSchemaType<RegisterForm> = {
   },
   required: ['email', 'password', 'firstName', 'lastName', 'confirmPassword'],
   additionalProperties: false,
+};
+
+export type PasswordResetForm = {
+  password: string;
+  newPassword: string;
+  confirmNewPassword: string;
+};
+
+/** Must provide current password, and matching pair of new passwords */
+// @ts-expect-error $data directive doesn't agree with type inference of TS
+export const schema_password_reset: JSONSchemaType<PasswordResetForm> = {
+  type: 'object',
+  properties: {
+    password: { type: 'string' },
+    newPassword: { type: 'string' },
+    confirmNewPassword: { type: 'string', pattern: { $data: '1/newPassword' } },
+  },
+  required: ['password', 'newPassword', 'confirmNewPassword'],
 };

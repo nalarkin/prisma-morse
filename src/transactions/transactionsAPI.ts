@@ -1,6 +1,5 @@
 import passport from 'passport';
 import { Router } from 'express';
-import { createResponse } from '@/common/response';
 import prisma from '@/loaders/database';
 
 const router = Router();
@@ -21,7 +20,7 @@ router.get('/', async function (req, res, next) {
         serializable: true,
       },
     });
-    return res.json(createResponse({ data: transactions }));
+    return res.json(transactions);
   } catch (e) {
     next(e);
   }
@@ -31,7 +30,7 @@ router.get('/', async function (req, res, next) {
 router.delete('/', passport.authenticate('jwt', { session: false }), async (req, res, next) => {
   try {
     const transactions = await prisma.transaction.deleteMany();
-    return res.json(createResponse({ data: transactions }));
+    return res.json(transactions);
   } catch (e) {
     next(e);
   }

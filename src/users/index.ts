@@ -1,1 +1,1 @@
-export * from './usersAPI';
+export { default as usersAPI } from './usersAPI';

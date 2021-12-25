@@ -1,15 +1,15 @@
-import { UserEdit } from '@/common/schema/schema_user';
+import type { UserEdit } from '@/common/schema/';
 import prisma from '@/loaders/database';
 
 /**
  * Make calls do database in here
  */
 export async function prismaGetAllUsers() {
-  return await prisma.user.findMany();
+  return prisma.user.findMany();
 }
 
 export async function prismaDeleteUser(id: number) {
-  return await prisma.user.delete({
+  return prisma.user.delete({
     where: {
       id,
     },
@@ -30,7 +30,7 @@ export async function prismaGetUser(res: GetUserByEmail | GetUserByID, options?:
   const serializables = options?.serializables;
   if ('id' in res) {
     const { id } = res;
-    return await prisma.user.findUnique({
+    return prisma.user.findUnique({
       where: {
         id,
       },
@@ -40,7 +40,7 @@ export async function prismaGetUser(res: GetUserByEmail | GetUserByID, options?:
     });
   }
   const { email } = res;
-  return await prisma.user.findUnique({
+  return prisma.user.findUnique({
     where: {
       email,
     },
@@ -51,7 +51,7 @@ export async function prismaGetUser(res: GetUserByEmail | GetUserByID, options?:
 }
 
 export async function prismaUpdateUser(id: number, userChange: UserEdit) {
-  return await prisma.user.update({
+  return prisma.user.update({
     where: {
       id,
     },
@@ -60,5 +60,3 @@ export async function prismaUpdateUser(id: number, userChange: UserEdit) {
     },
   });
 }
-
-// export const usersDAL = { prismaGetAllUsers, prismaDeleteUser, prismaGetUser, prismaUpdateUser };

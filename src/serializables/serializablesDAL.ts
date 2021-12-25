@@ -1,14 +1,15 @@
-import { Transaction } from '@prisma/client';
 import prisma from '@/loaders/database';
+import type { Transaction } from '@prisma/client';
+import type { SerializableUpdate } from '@/common/schema';
+
 export async function getAll() {
-  return await prisma.serializable.findMany();
+  return prisma.serializable.findMany();
 }
 
 export async function getSingle(id: string, includeRenter = true) {
-  return await prisma.serializable.findUnique({
+  return prisma.serializable.findUnique({
     where: {
       id: id,
-      // id: id,
     },
     include: {
       renter: includeRenter,
@@ -17,21 +18,12 @@ export async function getSingle(id: string, includeRenter = true) {
 }
 
 export async function deleteItem(id: string) {
-  return await prisma.serializable.delete({
+  return prisma.serializable.delete({
     where: {
       id: id,
     },
   });
 }
-
-// export async findAvailableItem(id: string) {
-//   const serializable = await prisma.serializable.findFirst({
-//     where: {
-//       id,
-//       userId: null,
-//     },
-//   });
-// }
 
 export async function attemptCheckout(id: string, userId: number, version: number) {
   // uses version matcher to gaurantee that another renter hasn't checked out the item during the data race
@@ -56,7 +48,7 @@ export async function attemptCheckout(id: string, userId: number, version: numbe
 }
 
 export async function completeCheckoutTransaction(id: string, userId: number) {
-  return await createTransaction(id, userId, 'CHECKOUT');
+  return createTransaction(id, userId, 'CHECKOUT');
 }
 
 export async function returnItem(id: string, userId: number) {
@@ -72,6 +64,10 @@ export async function returnItem(id: string, userId: number) {
   const recordAction = createTransaction(id, userId, 'RETURN');
   const [actionResult] = await prisma.$transaction([updateAction, recordAction]);
   return actionResult;
+}
+
+export async function updateItem(id: string, item: SerializableUpdate) {
+  return prisma.serializable.update({ where: { id }, data: { ...item } });
 }
 
 /** Helper function to create a transaction */

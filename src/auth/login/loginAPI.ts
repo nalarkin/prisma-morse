@@ -1,3 +1,7 @@
+/**
+ * API Endpoints for user initial login authentication.
+ */
+
 import { Router } from 'express';
 import * as loginController from './loginController';
 

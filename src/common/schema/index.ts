@@ -4,3 +4,5 @@ export * from './schema_register';
 export * from './schema_token';
 export * from './schema_user';
 export * from './schema_cuid';
+export * from './schema_serializable';
+export * from './schema_jwt';

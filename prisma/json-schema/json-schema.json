@@ -50,6 +50,12 @@
           "items": {
             "$ref": "#/definitions/Transaction"
           }
+        },
+        "refreshTokens": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RefreshToken"
+          }
         }
       }
     },
@@ -195,6 +201,27 @@
         }
       }
     },
+    "RefreshToken": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "token": {
+          "type": "string"
+        },
+        "user": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/User"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
     "Transaction": {
       "type": "object",
       "properties": {
@@ -262,6 +289,9 @@
     },
     "serializable": {
       "$ref": "#/definitions/Serializable"
+    },
+    "refreshToken": {
+      "$ref": "#/definitions/RefreshToken"
     },
     "transaction": {
       "$ref": "#/definitions/Transaction"

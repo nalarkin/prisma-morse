@@ -2,6 +2,10 @@
 import crypto from 'crypto';
 import fs from 'fs';
 
+/**
+ * Convenience function to quikcly generate a public/private key pair that can be used to
+ * perform asymetric encryption on the JWTs
+ */
 function genKeyPair() {
   // Generates an object where the keys are stored in properties `privateKey` and `publicKey`
   const keyPair = crypto.generateKeyPairSync('rsa', {
@@ -11,7 +15,7 @@ function genKeyPair() {
       format: 'pem', // Most common formatting choice
     },
     privateKeyEncoding: {
-      type: 'pkcs8', // "Public Key Cryptography Standards 1"
+      type: 'pkcs8',
       format: 'pem', // Most common formatting choice
     },
   });
