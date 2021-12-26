@@ -3,7 +3,7 @@
  */
 
 import createError from 'http-errors';
-import { ajv, SCHEMA, validateJWTFormat } from '@/common';
+import { ajv, SCHEMA, getValidJWTPayload } from '@/common';
 import type { RequestHandler } from 'express';
 
 const DEFAULT_MESSAGE = 'You do not have sufficient permissions.';
@@ -17,7 +17,7 @@ const DEFAULT_MESSAGE = 'You do not have sufficient permissions.';
 export const getRequireAdminMiddleware = (customMessage = DEFAULT_MESSAGE): RequestHandler => {
   const requireAdminMiddleware: RequestHandler = (req, res, next) => {
     try {
-      const { role } = validateJWTFormat(req.user);
+      const { role } = getValidJWTPayload(req.user);
       if (role !== 'ADMIN') {
         // not authorized
         throw createError(403, customMessage);
@@ -58,3 +58,19 @@ export const verifyCUIDMiddleware: RequestHandler = async (req, res, next) => {
     next(e);
   }
 };
+
+export function getValidCUID(id: unknown) {
+  const validator = getCUIDValidator();
+  if (!validator(id)) {
+    throw createError(400, 'Invalid ID format.');
+  }
+  return id;
+}
+
+function getCUIDValidator() {
+  const validator = ajv.getSchema<string>(SCHEMA.CUID);
+  if (validator === undefined) {
+    throw createError(500, 'Could not locate json validator');
+  }
+  return validator;
+}

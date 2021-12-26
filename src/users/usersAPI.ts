@@ -11,8 +11,8 @@ router.get('/', usersController.getAllUsers);
 /** Get the current user info using the validated JWT to perform a lookup*/
 router.get('/profile/', passport.authenticate('jwt', { session: false }), usersController.getCurrentUser);
 
-/** This middleware gets used on all routes that match this form */
-router.use('/:id/', usersController.validateUserIDParam);
+// /** This middleware gets used on all routes that match this form */
+// router.use('/:id/', usersController.validateUserIDParam);
 
 /** Delete specified user */
 router.delete('/:id/', usersController.deleteUser);

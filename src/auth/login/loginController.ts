@@ -1,8 +1,9 @@
 import dayjs from 'dayjs';
 import createError from 'http-errors';
-import { RequestHandler, Response } from 'express';
+import type { RequestHandler, Response } from 'express';
 import * as loginService from './loginService';
 import type { User } from '@prisma/client';
+import { ajv, LoginForm, SCHEMA } from '@/common';
 
 function setResponseHeaders(res: Response) {
   res.setHeader('Cache-Control', 'no-store'); // recommended by spec here: https://bit.ly/3srGCkw
@@ -29,7 +30,7 @@ function createResponse(res: Response, user: Pick<User, 'id' | 'role'>) {
 
 export const login: RequestHandler = async (req, res, next) => {
   try {
-    const { password: providedPassword, email } = loginService.validateLoginForm(req.body);
+    const { password: providedPassword, email } = validateLoginForm(req.body);
     const userInDatabase = await loginService.getLoginInfoFromDatabase(email);
 
     if (await loginService.isAuthenticated(userInDatabase.password, providedPassword)) {
@@ -41,3 +42,20 @@ export const login: RequestHandler = async (req, res, next) => {
     next(e);
   }
 };
+
+/** Ensure that provided body meets expected format for login */
+export function validateLoginForm(body: unknown) {
+  const validator = getLoginFormValidator();
+  if (!validator(body)) {
+    throw createError(400, ajv.errorsText(validator.errors));
+  }
+  return body;
+}
+
+function getLoginFormValidator() {
+  const validator = ajv.getSchema<LoginForm>(SCHEMA.LOGIN);
+  if (validator === undefined) {
+    throw createError(500, 'Unable to retrieve validator for login');
+  }
+  return validator;
+}

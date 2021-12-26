@@ -112,7 +112,7 @@ export const SCHEMA = {
   JWT_REQUEST,
 };
 
-export function validateJWTFormat(payload: unknown) {
+export function getValidJWTPayload(payload: unknown) {
   const validator = ajv.getSchema<JWTPayloadRequest>(JWT_REQUEST);
   if (validator === undefined) {
     throw createError(500, 'Unable to find JSON validator');

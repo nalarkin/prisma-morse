@@ -18,12 +18,6 @@ export async function getAllConsumables() {
   return prisma.consumable.findMany();
 }
 
-// export async function createConsumnable(consumable: NewConsumable) {
-//   return prisma.consumable.create({
-//     data: { ...consumable },
-//   });
-// }
-
 export async function createConsumable(consumable: NewConsumable, userId: number) {
   return prisma.consumable.create({
     data: Prisma.validator<Prisma.ConsumableCreateInput>()({
