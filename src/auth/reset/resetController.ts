@@ -1,11 +1,10 @@
 import createError from 'http-errors';
-import * as usersService from '@/users/usersService';
+import * as usersService from '../../users/usersService';
 import * as resetService from './resetService';
-import { ajv, SCHEMA } from '@/common';
+import { ajv, SCHEMA, getValidJWTPayload } from '../../common';
 import { verifyPassword } from '../utils';
-import { validateJWTFormat } from '../../common/validation';
 import type { RequestHandler } from 'express';
-import type { PasswordResetForm } from '@/common/schema';
+import type { PasswordResetForm } from '../../common/schema';
 
 export const passwordReset: RequestHandler = async (req, res, next) => {
   try {
@@ -13,7 +12,7 @@ export const passwordReset: RequestHandler = async (req, res, next) => {
     const passwordResetForm = validatePasswordResetForm(req.body);
 
     // validate that data within JWT follows expected properties
-    const { sub: userId } = validateJWTFormat(req.user);
+    const { sub: userId } = getValidJWTPayload(req.user);
 
     const user = await usersService.getUser(userId);
 

@@ -1,16 +1,14 @@
 import createError from 'http-errors';
 import type { RequestHandler } from 'express';
-import type { UserEdit } from '@/common/schema';
+import type { UserEdit } from '../common/schema';
 import * as usersService from './usersService';
-import { ajv, SCHEMA } from '@/common';
+import { ajv, SCHEMA } from '../common';
 import type { JWTPayloadRequest } from '../loaders/passport';
 
 /** Gets a specific user when provided the id through the url */
 export const getUser: RequestHandler = async (req, res, next) => {
   try {
-    const { id } = req.params;
-    const userId = Number(id); // we know it's valid because it passed through validation middleware
-    return res.json(await usersService.getUser(userId));
+    return res.json(await usersService.getUser(getValidatedUserId(req.params.id)));
   } catch (e) {
     next(e);
   }
@@ -18,8 +16,7 @@ export const getUser: RequestHandler = async (req, res, next) => {
 
 export const getCurrentUser: RequestHandler = async (req, res, next) => {
   try {
-    const { sub: userId } = validateJWTPayload(req.user);
-    return res.json(await usersService.getUser(userId));
+    return res.json(await usersService.getUser(getValidatedJWTPayload(req.user).sub));
   } catch (e) {
     next(e);
   }
@@ -28,9 +25,7 @@ export const getCurrentUser: RequestHandler = async (req, res, next) => {
 /** Delete the user */
 export const deleteUser: RequestHandler = async (req, res, next) => {
   try {
-    const { id } = req.params;
-    const userId = Number(id); // we know it's valid because it passed through validation middleware
-    return res.json(await usersService.deleteUser(userId));
+    return res.json(await usersService.deleteUser(getValidatedUserId(req.params.id)));
   } catch (e) {
     next(e);
   }
@@ -39,26 +34,11 @@ export const deleteUser: RequestHandler = async (req, res, next) => {
 /** Update a user only if the requester has admin permissions. */
 export const updateUser: RequestHandler = async (req, res, next) => {
   try {
-    const { id } = req.params;
-    const userId = Number(id); // we know it's valid because it passed through validation middleware
-    const body = validateUserEdit(req.body);
-    return res.json(await usersService.updateUser(userId, body));
+    return res.json(await usersService.updateUser(getValidatedUserId(req.params.id), getValidatedUserEdit(req.body)));
   } catch (e) {
     next(e);
   }
 };
-
-function validateUserEdit(body: unknown) {
-  const validator = ajv.getSchema<UserEdit>(SCHEMA.USER_EDIT);
-  if (validator === undefined) {
-    throw createError(500, 'Could not find JSON validator');
-  }
-  if (!validator(body)) {
-    // if data in request body is invalid
-    throw createError(400, ajv.errorsText(validator.errors));
-  }
-  return body;
-}
 
 /** Gets all users in the database */
 export const getAllUsers: RequestHandler = async (req, res, next) => {
@@ -69,36 +49,56 @@ export const getAllUsers: RequestHandler = async (req, res, next) => {
   }
 };
 
-/**
- * Middleware which ensures the id parameter meets the expected format.
- * If invalid, it returns a status 400 and prevents further middlewares from processing.
- * If valid, then it will continue onto the next middleware called.
- */
-export const validateUserIDParam: RequestHandler = (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const userId = Number(id);
-    const validateId = ajv.getSchema<number>(SCHEMA.USER_ID);
-    if (validateId === undefined) {
-      throw createError(500, 'Could not find JSON validator');
-    }
-    if (!validateId(userId)) {
-      throw createError(400, ajv.errorsText(validateId.errors));
-    }
-    next();
-  } catch (e) {
-    next(e);
+function getValidatedUserEdit(body: unknown) {
+  const validator = getUserEditValidator();
+  if (!validator(body)) {
+    throw createError(400, ajv.errorsText(validator.errors));
   }
-};
+  return body;
+}
 
-function validateJWTPayload(user: unknown) {
-  const validator = ajv.getSchema<JWTPayloadRequest>(SCHEMA.JWT_REQUEST);
-
+function getUserEditValidator() {
+  const validator = ajv.getSchema<UserEdit>(SCHEMA.USER_EDIT);
   if (validator === undefined) {
     throw createError(500, 'Could not find JSON validator');
   }
+  return validator;
+}
+
+/**
+ * Ensures the id parameter meets the expected format.
+ * If invalid, it throws a status 400
+ * If unable to find validator, throws status 500
+ */
+function getValidatedUserId(id: unknown) {
+  const userId = Number(id);
+  const validator = getIDValidator();
+  if (validator(userId)) {
+    return userId;
+  }
+  throw createError(400, ajv.errorsText(validator.errors));
+}
+
+function getIDValidator() {
+  const validator = ajv.getSchema<number>(SCHEMA.USER_ID);
+  if (validator === undefined) {
+    throw createError(500, 'Could not find JSON validator');
+  }
+  return validator;
+}
+
+function getValidatedJWTPayload(user: unknown) {
+  const validator = getJWTPayloadValidator();
   if (!validator(user)) {
     throw createError(400, ajv.errorsText(validator.errors));
   }
   return user;
+}
+
+function getJWTPayloadValidator() {
+  const validator = ajv.getSchema<JWTPayloadRequest>(SCHEMA.JWT_REQUEST);
+  if (validator === undefined) {
+    throw createError(500, 'Could not find JSON validator');
+  }
+  return validator;
 }

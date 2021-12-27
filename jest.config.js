@@ -8,6 +8,8 @@ module.exports = {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
+  testMatch: [ "**/__tests__/**/*.ts?(x)", "**/?(*.)+(spec|test).ts?(x)" ],
+  
   // NOTE: the below line makes all prisma calls get mocked during jest testing, 
   // so you will need to import `prismaMock` from `singleton.ts` and provide 
   // the expected values that would get returned from client. 

@@ -1,7 +1,7 @@
-import { app } from '@/loaders';
+import { app } from '../../loaders';
 import supertest from 'supertest';
-import { prismaMock } from '@/loaders/singleton';
-import { makeTestUser } from '@/testing';
+import { prismaMock } from '../../loaders/singleton';
+import { makeTestUser } from '../../testing';
 import faker from 'faker';
 
 describe('Login API', () => {

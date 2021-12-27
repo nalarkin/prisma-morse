@@ -1,6 +1,7 @@
-import prisma from '@/loaders/database';
+import prisma from '../loaders/database';
 import type { Transaction } from '@prisma/client';
-import type { SerializableUpdate } from '@/common/schema';
+import type { SerializableUpdate } from '../common/schema';
+import createError from 'http-errors';
 
 export async function getAll() {
   return prisma.serializable.findMany();
@@ -41,7 +42,7 @@ export async function attemptCheckout(id: string, userId: number, version: numbe
   });
 
   if (checkoutAction.count === 0) {
-    throw new Error(`This item was already checked out. Please try again.`);
+    throw createError(400, `This item was already checked out. Please try again.`);
   }
   // record the successful transaciton
   return checkoutAction;

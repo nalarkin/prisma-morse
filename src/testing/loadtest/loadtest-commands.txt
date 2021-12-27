@@ -1,0 +1,217 @@
+# Loadtest Commands
+
+Purpose: Used for stress testing server
+
+Commands assume global installation of loadtest and currently have terminal open in this directory
+if not installed, you can run command
+
+```bash
+npm install -g loadtest
+```
+
+## Commands
+
+### login with correct credentials
+
+```bash
+loadtest http://localhost:8000/api/auth/login -t 20 -c 10 -k -T 'application/json' -p ./login.json
+```
+
+Result
+
+```bash
+ INFO Requests: 0, requests per second: 0, mean latency: 0 ms
+ INFO Requests: 443, requests per second: 89, mean latency: 111.6 ms
+ INFO Requests: 899, requests per second: 91, mean latency: 109.8 ms
+ INFO Requests: 1364, requests per second: 93, mean latency: 107.4 ms
+ INFO
+ INFO Target URL:          http://localhost:8000/api/auth/login
+ INFO Max time (s):        20
+ INFO Concurrency level:   10
+ INFO Agent:               keepalive
+ INFO
+ INFO Completed requests:  1825
+ INFO Total errors:        0
+ INFO Total time:          20.0011708 s
+ INFO Requests per second: 91
+ INFO Mean latency:        109.2 ms
+ INFO
+ INFO Percentage of the requests served within a certain time
+ INFO   50%      109 ms
+ INFO   90%      124 ms
+ INFO   95%      128 ms
+ INFO   99%      140 ms
+ INFO  100%      156 ms (longest request)
+```
+
+### get all users, no auth needed
+
+```bash
+loadtest http://localhost:8000/api/users/ -t 20 -c 10 -k
+```
+
+Result
+
+```bash
+ INFO Requests: 0, requests per second: 0, mean latency: 0 ms
+ INFO Requests: 16447, requests per second: 3291, mean latency: 3 ms
+ INFO Requests: 33576, requests per second: 3426, mean latency: 2.9 ms
+ INFO Requests: 50447, requests per second: 3374, mean latency: 3 ms
+ INFO
+ INFO Target URL:          http://localhost:8000/api/users/
+ INFO Max time (s):        20
+ INFO Concurrency level:   10
+ INFO Agent:               keepalive
+ INFO
+ INFO Completed requests:  67298
+ INFO Total errors:        0
+ INFO Total time:          20.0003618 s
+ INFO Requests per second: 3365
+ INFO Mean latency:        3 ms
+ INFO
+ INFO Percentage of the requests served within a certain time
+ INFO   50%      2 ms
+ INFO   90%      3 ms
+ INFO   95%      4 ms
+ INFO   99%      5 ms
+ INFO  100%      33 ms (longest request)
+```
+
+### get all serializables
+
+loadtest http://localhost:8000/api/serializables/ -t 20 -c 10 -k -H "Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInJvbGUiOiJBRE1JTiIsImlhdCI6MTY0MDE5NjU1MSwiZXhwIjoxNjQwODAxMzUxfQ.ytlMTj5qY_gO1nm1IjIKcTM7KCxyiIeZSxvORNhbDTh7jTT4aBGTCR-eJZoM-4TN8jyP9uwmzJVYSUsceTPeMF6wk1iozlpZu8EIY5xR0h9Xm3HVtgfC4yse8UP4_oaMMryGKWBajywEUgRab5sZ7mjytnPwIIKw-0HAVeR8FzSpq0EHzf745suv5ABSAM5YnPwxVDUmQvRSTQdn9PD6I0n8X4-dQogSjI5_tlU6oQQC2ixLWu_HYJnVzJHE3L79G9W-kP3HWGmQVjdji8nn8XgQ7Ncb0aaJSuZ7fnBNuZWlba_1nV1KmOyJXkCTmzgC_e5WSZvb1vcpOo73XeHxtEe_v-HejH1XM4_7tYsFcwyxEE0mpI6mx5h3uCYec2VLa21-lpxR1mgqVf79pSeLpckjIPn0zm_KUcJP0fCMdePcM1uikan1hdFAY2qwacKmGJYB1-M1zhFZQZ-ujPnLDiI_rQKON_axuJpW9hWu41jSa_MxspX8VHizKh8ZdvgMt8acO9y3O8lVtI__8q_cHFeBxB6WfXO8KGSekujXCHKvOakv-Xk-jgFzAGzgDYDfxLaa9csZufCjoC_AzRWt2FSrK_dzE5qyzg9pCUAd7TSOoIOcKpKfoVO-JJSQGF6MHUwCAVJJ7adEkAgHn3K8K8XYJaKSmLs5_zvpLunnZSA"
+
+Result
+
+```
+INFO Requests: 0, requests per second: 0, mean latency: 0 ms
+INFO Requests: 9352, requests per second: 1871, mean latency: 5.3 ms
+INFO Requests: 18999, requests per second: 1929, mean latency: 5.2 ms
+INFO Requests: 28556, requests per second: 1912, mean latency: 5.2 ms
+INFO 
+INFO Target URL:          http://localhost:8000/api/serializables/
+INFO Max time (s):        20
+INFO Concurrency level:   10
+INFO Agent:               keepalive
+INFO 
+INFO Completed requests:  38161
+INFO Total errors:        0
+INFO Total time:          20.0003809 s
+INFO Requests per second: 1908
+INFO Mean latency:        5.2 ms
+INFO 
+INFO Percentage of the requests served within a certain time
+INFO   50%      5 ms
+INFO   90%      5 ms
+INFO   95%      6 ms
+INFO   99%      7 ms
+INFO  100%      28 ms (longest request)
+```
+
+### get all consumables
+
+loadtest http://localhost:8000/api/consumables/ -t 20 -c 10 -k -H "Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInJvbGUiOiJBRE1JTiIsImlhdCI6MTY0MDE5NjU1MSwiZXhwIjoxNjQwODAxMzUxfQ.ytlMTj5qY_gO1nm1IjIKcTM7KCxyiIeZSxvORNhbDTh7jTT4aBGTCR-eJZoM-4TN8jyP9uwmzJVYSUsceTPeMF6wk1iozlpZu8EIY5xR0h9Xm3HVtgfC4yse8UP4_oaMMryGKWBajywEUgRab5sZ7mjytnPwIIKw-0HAVeR8FzSpq0EHzf745suv5ABSAM5YnPwxVDUmQvRSTQdn9PD6I0n8X4-dQogSjI5_tlU6oQQC2ixLWu_HYJnVzJHE3L79G9W-kP3HWGmQVjdji8nn8XgQ7Ncb0aaJSuZ7fnBNuZWlba_1nV1KmOyJXkCTmzgC_e5WSZvb1vcpOo73XeHxtEe_v-HejH1XM4_7tYsFcwyxEE0mpI6mx5h3uCYec2VLa21-lpxR1mgqVf79pSeLpckjIPn0zm_KUcJP0fCMdePcM1uikan1hdFAY2qwacKmGJYB1-M1zhFZQZ-ujPnLDiI_rQKON_axuJpW9hWu41jSa_MxspX8VHizKh8ZdvgMt8acO9y3O8lVtI__8q_cHFeBxB6WfXO8KGSekujXCHKvOakv-Xk-jgFzAGzgDYDfxLaa9csZufCjoC_AzRWt2FSrK_dzE5qyzg9pCUAd7TSOoIOcKpKfoVO-JJSQGF6MHUwCAVJJ7adEkAgHn3K8K8XYJaKSmLs5_zvpLunnZSA"
+
+```
+INFO Requests: 0, requests per second: 0, mean latency: 0 ms
+INFO Requests: 9210, requests per second: 1843, mean latency: 5.4 ms
+INFO Requests: 19319, requests per second: 2023, mean latency: 4.9 ms
+INFO Requests: 29281, requests per second: 1992, mean latency: 5 ms
+INFO 
+INFO Target URL:          http://localhost:8000/api/consumables/
+INFO Max time (s):        20
+INFO Concurrency level:   10
+INFO Agent:               keepalive
+INFO 
+INFO Completed requests:  39231
+INFO Total errors:        0
+INFO Total time:          20.000585899999997 s
+INFO Requests per second: 1961
+INFO Mean latency:        5.1 ms
+INFO 
+INFO Percentage of the requests served within a certain time
+INFO   50%      4 ms
+INFO   90%      6 ms
+INFO   95%      6 ms
+INFO   99%      8 ms
+INFO  100%      34 ms (longest request)
+```
+
+```shell
+loadtest http://localhost:8000/api/consumables/ -t 20 -c 10 -k -H "Authorization:Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInJvbGUiOiJBRE1JTiIsImlhdCI6MTY0MDQ2NjI3NCwiZXhwIjoxNjQxMDcxMDc0fQ.NCqQ8wMsx2A9XMJ4QRLRikrw8c014mUGeGIsZqEcrCb1croinRifCCc1fzeUrGAVsroF8nD9fH_lp1IRWSYJOPKaNrXx8TGA4lg4hKCfO2BuxIb85pO2C0M_k8AHFiKN2khSCyORaz6kKgniO0LNZXl1I8chJLID2JWoKGfB4vxKbgsUilIvAV3MDnaYCbSSd-3leh_dIn_gSNMSf-PC2zb81RfEuEHado1iIoYvYKmu6MVevoSBen-wJM6inTVX8u5QsWLV05njfocqHcKafIa3_iPsyfEaoaLHtu9zJdfb7ziHvg8lDqqi26fm6sdo4qSsEmgDKzK-F0GsGCzDKXFhifqdBtTe5fn9SAvWpL2TrUdtxCKBjEuOycJ0KZ5n3oc5N577lZWmgnbMlwXZjzWq2ieTOHiASLyyF-J3CocxK4APeeRI2SxnoAtap24XQJsXl4TrgkuJbdBHl3bmP2ftB_dy7-V8NJrNNfOM877yjm3pvCDEw3TMJ_NvsWLYER2P1yAD0q6orYrre63dQl0yfue-7mlV2SKOh0c5ZxhU5Ze9OJbUU-9i138PWrKNdbF9e15AVY3Avo6vsku6MlBZo453C2JKX-spz5eWQsZDIqxsmfOVilDpMg1gfzApbrrGG0CWMYDZsvoSaJqjVA8lkFG1QscixWgeuvXdIyQ"
+```
+
+### get current user
+
+```bash
+loadtest http://localhost:8000/api/users/profile/ -t 20 -c 10 -k -H "Authorization:Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInJvbGUiOiJBRE1JTiIsImlhdCI6MTY0MDE5NjU1MSwiZXhwIjoxNjQwODAxMzUxfQ.ytlMTj5qY_gO1nm1IjIKcTM7KCxyiIeZSxvORNhbDTh7jTT4aBGTCR-eJZoM-4TN8jyP9uwmzJVYSUsceTPeMF6wk1iozlpZu8EIY5xR0h9Xm3HVtgfC4yse8UP4_oaMMryGKWBajywEUgRab5sZ7mjytnPwIIKw-0HAVeR8FzSpq0EHzf745suv5ABSAM5YnPwxVDUmQvRSTQdn9PD6I0n8X4-dQogSjI5_tlU6oQQC2ixLWu_HYJnVzJHE3L79G9W-kP3HWGmQVjdji8nn8XgQ7Ncb0aaJSuZ7fnBNuZWlba_1nV1KmOyJXkCTmzgC_e5WSZvb1vcpOo73XeHxtEe_v-HejH1XM4_7tYsFcwyxEE0mpI6mx5h3uCYec2VLa21-lpxR1mgqVf79pSeLpckjIPn0zm_KUcJP0fCMdePcM1uikan1hdFAY2qwacKmGJYB1-M1zhFZQZ-ujPnLDiI_rQKON_axuJpW9hWu41jSa_MxspX8VHizKh8ZdvgMt8acO9y3O8lVtI__8q_cHFeBxB6WfXO8KGSekujXCHKvOakv-Xk-jgFzAGzgDYDfxLaa9csZufCjoC_AzRWt2FSrK_dzE5qyzg9pCUAd7TSOoIOcKpKfoVO-JJSQGF6MHUwCAVJJ7adEkAgHn3K8K8XYJaKSmLs5_zvpLunnZSA"
+```
+
+INFO Requests: 0, requests per second: 0, mean latency: 0 ms
+INFO Requests: 10398, requests per second: 2081, mean latency: 4.8 ms
+INFO Requests: 20942, requests per second: 2109, mean latency: 4.7 ms
+INFO Requests: 31288, requests per second: 2069, mean latency: 4.8 ms
+INFO 
+INFO Target URL:          http://localhost:8000/api/users/profile/
+INFO Max time (s):        20
+INFO Concurrency level:   10
+INFO Agent:               keepalive
+INFO 
+INFO Completed requests:  41642
+INFO Total errors:        0
+INFO Total time:          20.0005071 s
+INFO Requests per second: 2082
+INFO Mean latency:        4.8 ms
+INFO 
+INFO Percentage of the requests served within a certain time
+INFO   50%      4 ms
+INFO   90%      5 ms
+INFO   95%      6 ms
+INFO   99%      7 ms
+INFO  100%      28 ms (longest request)
+
+
+
+### get via cookie
+
+```bash
+loadtest http://localhost:8000/api/auth/token/refresh/cookie -t 20 -c 10 -k -m POST -C refresh_token=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInJvbGUiOiJBRE1JTiIsImlhdCI6MTY0MDE5NjU1MSwiZXhwIjoxNjQwODAxMzUxfQ.ytlMTj5qY_gO1nm1IjIKcTM7KCxyiIeZSxvORNhbDTh7jTT4aBGTCR-eJZoM-4TN8jyP9uwmzJVYSUsceTPeMF6wk1iozlpZu8EIY5xR0h9Xm3HVtgfC4yse8UP4_oaMMryGKWBajywEUgRab5sZ7mjytnPwIIKw-0HAVeR8FzSpq0EHzf745suv5ABSAM5YnPwxVDUmQvRSTQdn9PD6I0n8X4-dQogSjI5_tlU6oQQC2ixLWu_HYJnVzJHE3L79G9W-kP3HWGmQVjdji8nn8XgQ7Ncb0aaJSuZ7fnBNuZWlba_1nV1KmOyJXkCTmzgC_e5WSZvb1vcpOo73XeHxtEe_v-HejH1XM4_7tYsFcwyxEE0mpI6mx5h3uCYec2VLa21-lpxR1mgqVf79pSeLpckjIPn0zm_KUcJP0fCMdePcM1uikan1hdFAY2qwacKmGJYB1-M1zhFZQZ-ujPnLDiI_rQKON_axuJpW9hWu41jSa_MxspX8VHizKh8ZdvgMt8acO9y3O8lVtI__8q_cHFeBxB6WfXO8KGSekujXCHKvOakv-Xk-jgFzAGzgDYDfxLaa9csZufCjoC_AzRWt2FSrK_dzE5qyzg9pCUAd7TSOoIOcKpKfoVO-JJSQGF6MHUwCAVJJ7adEkAgHn3K8K8XYJaKSmLs5_zvpLunnZSA
+```
+
+INFO Requests: 0, requests per second: 0, mean latency: 0 ms
+INFO Requests: 1014, requests per second: 203, mean latency: 49.1 ms
+INFO Requests: 2060, requests per second: 209, mean latency: 47.8 ms
+INFO Requests: 3108, requests per second: 210, mean latency: 47.7 ms
+INFO 
+INFO Target URL:          http://localhost:8000/api/auth/token/refresh/cookie
+INFO Max time (s):        20
+INFO Concurrency level:   10
+INFO Agent:               keepalive
+INFO 
+INFO Completed requests:  4160
+INFO Total errors:        0
+INFO Total time:          20.0036619 s
+INFO Requests per second: 208
+INFO Mean latency:        48 ms
+INFO 
+INFO Percentage of the requests served within a certain time
+INFO   50%      47 ms
+INFO   90%      50 ms
+INFO   95%      50 ms
+INFO   99%      54 ms
+INFO  100%      67 ms (longest request)
+
+
+```bash
+loadtest http://localhost:8000/api/auth/token/refresh/cookie -t 20 -c 50 -k -m POST --rps 200 -C refresh_token=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInJvbGUiOiJBRE1JTiIsImlhdCI6MTY0MDE5NjU1MSwiZXhwIjoxNjQwODAxMzUxfQ.ytlMTj5qY_gO1nm1IjIKcTM7KCxyiIeZSxvORNhbDTh7jTT4aBGTCR-eJZoM-4TN8jyP9uwmzJVYSUsceTPeMF6wk1iozlpZu8EIY5xR0h9Xm3HVtgfC4yse8UP4_oaMMryGKWBajywEUgRab5sZ7mjytnPwIIKw-0HAVeR8FzSpq0EHzf745suv5ABSAM5YnPwxVDUmQvRSTQdn9PD6I0n8X4-dQogSjI5_tlU6oQQC2ixLWu_HYJnVzJHE3L79G9W-kP3HWGmQVjdji8nn8XgQ7Ncb0aaJSuZ7fnBNuZWlba_1nV1KmOyJXkCTmzgC_e5WSZvb1vcpOo73XeHxtEe_v-HejH1XM4_7tYsFcwyxEE0mpI6mx5h3uCYec2VLa21-lpxR1mgqVf79pSeLpckjIPn0zm_KUcJP0fCMdePcM1uikan1hdFAY2qwacKmGJYB1-M1zhFZQZ-ujPnLDiI_rQKON_axuJpW9hWu41jSa_MxspX8VHizKh8ZdvgMt8acO9y3O8lVtI__8q_cHFeBxB6WfXO8KGSekujXCHKvOakv-Xk-jgFzAGzgDYDfxLaa9csZufCjoC_AzRWt2FSrK_dzE5qyzg9pCUAd7TSOoIOcKpKfoVO-JJSQGF6MHUwCAVJJ7adEkAgHn3K8K8XYJaKSmLs5_zvpLunnZSA
+```
+
+### get via auth header
+
+```bash
+loadtest http://localhost:8000/api/auth/token/refresh -t 20 -c 10 -k -m POST -H "Authorization:Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInJvbGUiOiJBRE1JTiIsImlhdCI6MTY0MDE5NjU1MSwiZXhwIjoxNjQwODAxMzUxfQ.ytlMTj5qY_gO1nm1IjIKcTM7KCxyiIeZSxvORNhbDTh7jTT4aBGTCR-eJZoM-4TN8jyP9uwmzJVYSUsceTPeMF6wk1iozlpZu8EIY5xR0h9Xm3HVtgfC4yse8UP4_oaMMryGKWBajywEUgRab5sZ7mjytnPwIIKw-0HAVeR8FzSpq0EHzf745suv5ABSAM5YnPwxVDUmQvRSTQdn9PD6I0n8X4-dQogSjI5_tlU6oQQC2ixLWu_HYJnVzJHE3L79G9W-kP3HWGmQVjdji8nn8XgQ7Ncb0aaJSuZ7fnBNuZWlba_1nV1KmOyJXkCTmzgC_e5WSZvb1vcpOo73XeHxtEe_v-HejH1XM4_7tYsFcwyxEE0mpI6mx5h3uCYec2VLa21-lpxR1mgqVf79pSeLpckjIPn0zm_KUcJP0fCMdePcM1uikan1hdFAY2qwacKmGJYB1-M1zhFZQZ-ujPnLDiI_rQKON_axuJpW9hWu41jSa_MxspX8VHizKh8ZdvgMt8acO9y3O8lVtI__8q_cHFeBxB6WfXO8KGSekujXCHKvOakv-Xk-jgFzAGzgDYDfxLaa9csZufCjoC_AzRWt2FSrK_dzE5qyzg9pCUAd7TSOoIOcKpKfoVO-JJSQGF6MHUwCAVJJ7adEkAgHn3K8K8XYJaKSmLs5_zvpLunnZSA"
+```
+
+```bash
+loadtest http://localhost:8000/api/auth/token/refresh -t 20 -c 50 -k -m POST --rps 200 -H "Authorization:Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInJvbGUiOiJBRE1JTiIsImlhdCI6MTY0MDE5NjU1MSwiZXhwIjoxNjQwODAxMzUxfQ.ytlMTj5qY_gO1nm1IjIKcTM7KCxyiIeZSxvORNhbDTh7jTT4aBGTCR-eJZoM-4TN8jyP9uwmzJVYSUsceTPeMF6wk1iozlpZu8EIY5xR0h9Xm3HVtgfC4yse8UP4_oaMMryGKWBajywEUgRab5sZ7mjytnPwIIKw-0HAVeR8FzSpq0EHzf745suv5ABSAM5YnPwxVDUmQvRSTQdn9PD6I0n8X4-dQogSjI5_tlU6oQQC2ixLWu_HYJnVzJHE3L79G9W-kP3HWGmQVjdji8nn8XgQ7Ncb0aaJSuZ7fnBNuZWlba_1nV1KmOyJXkCTmzgC_e5WSZvb1vcpOo73XeHxtEe_v-HejH1XM4_7tYsFcwyxEE0mpI6mx5h3uCYec2VLa21-lpxR1mgqVf79pSeLpckjIPn0zm_KUcJP0fCMdePcM1uikan1hdFAY2qwacKmGJYB1-M1zhFZQZ-ujPnLDiI_rQKON_axuJpW9hWu41jSa_MxspX8VHizKh8ZdvgMt8acO9y3O8lVtI__8q_cHFeBxB6WfXO8KGSekujXCHKvOakv-Xk-jgFzAGzgDYDfxLaa9csZufCjoC_AzRWt2FSrK_dzE5qyzg9pCUAd7TSOoIOcKpKfoVO-JJSQGF6MHUwCAVJJ7adEkAgHn3K8K8XYJaKSmLs5_zvpLunnZSA"
+```

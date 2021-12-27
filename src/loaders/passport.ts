@@ -8,7 +8,7 @@ import fs from 'fs';
 import path from 'path';
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 import type { StrategyOptions, VerifiedCallback } from 'passport-jwt';
-import { JWTData } from '@/auth/utils';
+import { JWTData } from '../auth/utils';
 import { logger } from './logging';
 
 const pathToKey = path.join(__dirname, '..', 'auth', 'token', 'id_rsa_pub.pem');
