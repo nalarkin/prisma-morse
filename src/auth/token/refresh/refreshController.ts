@@ -1,8 +1,8 @@
-import { ACCESS_JWT_EXPIRE, issueJWT } from '@/auth/utils';
+import { ACCESS_JWT_EXPIRE, issueJWT } from '../../../auth/utils';
 import type { RequestHandler } from 'express';
 import * as refreshService from './refreshService';
-import * as usersService from '@/users/usersService';
-import { getValidJWTPayload } from '@/common';
+import * as usersService from '../../../users/usersService';
+import { getValidJWTPayload } from '../../../common';
 
 /**
  * Returns a response with a new valid short-lived acccess token if the cookies in the request

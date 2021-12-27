@@ -1,5 +1,5 @@
-import type { UserEdit } from '@/common/schema/';
-import prisma from '@/loaders/database';
+import type { UserEdit } from '../common/schema/';
+import prisma from '../loaders/database';
 
 /**
  * Make calls do database in here

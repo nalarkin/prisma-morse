@@ -1,4 +1,4 @@
-import prisma from '@/loaders/database';
+import prisma from '../../loaders/database';
 import type { User } from '@prisma/client';
 
 export type NewUser = Pick<User, 'firstName' | 'lastName' | 'email' | 'password' | 'unsafePassword'>;

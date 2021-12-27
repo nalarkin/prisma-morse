@@ -1,6 +1,6 @@
 import createError from 'http-errors';
-import { validateJWT } from '@/auth/utils';
-import type { JWTPayloadRequest } from '@/loaders/passport';
+import { validateJWT } from '../../../auth/utils';
+import type { JWTPayloadRequest } from '../../../loaders/passport';
 
 export async function validateRefreshToken(token?: string) {
   // eslint-disable-next-line security/detect-possible-timing-attacks

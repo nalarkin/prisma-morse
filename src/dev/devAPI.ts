@@ -5,7 +5,7 @@
 
 import { Router } from 'express';
 import listEndpoints from 'express-list-endpoints';
-import { app } from '@/loaders';
+import { app } from '../loaders';
 
 const router = Router();
 

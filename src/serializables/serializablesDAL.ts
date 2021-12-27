@@ -1,6 +1,6 @@
-import prisma from '@/loaders/database';
+import prisma from '../loaders/database';
 import type { Transaction } from '@prisma/client';
-import type { SerializableUpdate } from '@/common/schema';
+import type { SerializableUpdate } from '../common/schema';
 import createError from 'http-errors';
 
 export async function getAll() {

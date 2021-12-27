@@ -1,7 +1,7 @@
 import faker from 'faker';
 import supertest from 'supertest';
-import { app } from '@/loaders';
-import { RegisterForm } from '@/common';
+import { app } from '../../loaders';
+import { RegisterForm } from '../../common';
 
 describe('Register API', () => {
   describe('POST /api/auth/register/', () => {

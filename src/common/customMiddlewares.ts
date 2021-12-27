@@ -3,7 +3,7 @@
  */
 
 import createError from 'http-errors';
-import { ajv, SCHEMA, getValidJWTPayload } from '@/common';
+import { ajv, SCHEMA, getValidJWTPayload } from '../common';
 import type { RequestHandler } from 'express';
 
 const DEFAULT_MESSAGE = 'You do not have sufficient permissions.';

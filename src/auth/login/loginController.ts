@@ -3,7 +3,7 @@ import createError from 'http-errors';
 import type { RequestHandler, Response } from 'express';
 import * as loginService from './loginService';
 import type { User } from '@prisma/client';
-import { ajv, LoginForm, SCHEMA } from '@/common';
+import { ajv, LoginForm, SCHEMA } from '../../common';
 
 function setResponseHeaders(res: Response) {
   res.setHeader('Cache-Control', 'no-store'); // recommended by spec here: https://bit.ly/3srGCkw

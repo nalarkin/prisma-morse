@@ -1,8 +1,8 @@
 import createError from 'http-errors';
 import type { RequestHandler } from 'express';
 import * as serializablesService from './serializablesService';
-import { ajv, getValidCUID, SCHEMA, getValidJWTPayload } from '@/common';
-import type { SerializableJson } from '@/common/schema';
+import { ajv, getValidCUID, SCHEMA, getValidJWTPayload } from '../common';
+import type { SerializableJson } from '../common/schema';
 
 /** Get all serializables */
 export const getAll: RequestHandler = async (req, res, next) => {

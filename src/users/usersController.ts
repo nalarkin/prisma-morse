@@ -1,8 +1,8 @@
 import createError from 'http-errors';
 import type { RequestHandler } from 'express';
-import type { UserEdit } from '@/common/schema';
+import type { UserEdit } from '../common/schema';
 import * as usersService from './usersService';
-import { ajv, SCHEMA } from '@/common';
+import { ajv, SCHEMA } from '../common';
 import type { JWTPayloadRequest } from '../loaders/passport';
 
 /** Gets a specific user when provided the id through the url */
