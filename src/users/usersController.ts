@@ -1,9 +1,9 @@
-import createError from 'http-errors';
 import type { RequestHandler } from 'express';
-import type { UserEdit } from '../common/schema';
-import * as usersService from './usersService';
+import createError from 'http-errors';
 import { ajv, SCHEMA } from '../common';
+import type { UserEdit } from '../common/schema';
 import type { JWTPayloadRequest } from '../loaders/passport';
+import * as usersService from './usersService';
 
 /** Gets a specific user when provided the id through the url */
 export const getUser: RequestHandler = async (req, res, next) => {

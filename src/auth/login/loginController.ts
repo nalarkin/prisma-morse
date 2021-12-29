@@ -1,9 +1,9 @@
-import dayjs from 'dayjs';
-import createError from 'http-errors';
-import type { RequestHandler, Response } from 'express';
-import * as loginService from './loginService';
 import type { User } from '@prisma/client';
+import dayjs from 'dayjs';
+import type { RequestHandler, Response } from 'express';
+import createError from 'http-errors';
 import { ajv, LoginForm, SCHEMA } from '../../common';
+import * as loginService from './loginService';
 
 function setResponseHeaders(res: Response) {
   res.setHeader('Cache-Control', 'no-store'); // recommended by spec here: https://bit.ly/3srGCkw

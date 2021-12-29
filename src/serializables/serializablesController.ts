@@ -1,8 +1,8 @@
-import createError from 'http-errors';
 import type { RequestHandler } from 'express';
-import * as serializablesService from './serializablesService';
-import { ajv, getValidCUID, SCHEMA, getValidJWTPayload } from '../common';
+import createError from 'http-errors';
+import { ajv, getValidCUID, getValidJWTPayload, SCHEMA } from '../common';
 import type { SerializableJson } from '../common/schema';
+import * as serializablesService from './serializablesService';
 
 /** Get all serializables */
 export const getAll: RequestHandler = async (req, res, next) => {
@@ -41,6 +41,17 @@ export const returnItem: RequestHandler = async ({ params, user }, res, next) =>
     const { sub: userId } = getValidJWTPayload(user);
     /** Insert logic to check if request id requesting change is the same as the current renter */
     return res.json(await serializablesService.returnItem(getValidCUID(params.id), userId));
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const createItem: RequestHandler = async ({ params, user }, res, next) => {
+  try {
+    const { sub: userId } = getValidJWTPayload(user);
+    /** Insert logic to check if request id requesting change is the same as the current renter */
+    return res.send('debug');
+    // return res.json(await serializablesService.createItem(getValidCUID(params.id), userId));
   } catch (err) {
     next(err);
   }
@@ -89,3 +100,7 @@ function getUpdateFormValidator() {
   }
   return validator;
 }
+
+// function getValidSerializableForm(body: unknown) {
+//   const validator = ajv.getSchema(SCHEMA.)
+// }

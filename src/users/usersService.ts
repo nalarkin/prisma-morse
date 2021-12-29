@@ -1,7 +1,7 @@
 import createError from 'http-errors';
-import * as usersDAL from './usersDAL';
-import { logger } from '../loaders/logging';
 import type { UserEdit } from '../common/schema/';
+import { logger } from '../loaders/logging';
+import * as usersDAL from './usersDAL';
 
 /**
  * Calls external apis and interal DB api

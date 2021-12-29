@@ -9,9 +9,9 @@
  * router.use(exampleAPI);
  * // or you could add a URI prefix: router.use('/prefix-example', exampleAPI);
  */
+import { Router } from 'express';
 import passport from 'passport';
 import { getRequireAdminMiddleware, verifyCUIDMiddleware } from '../common';
-import { Router } from 'express';
 import * as serializablesController from './serializablesController';
 
 const router = Router();
@@ -23,7 +23,7 @@ router.use(passport.authenticate('jwt', { session: false }));
 
 router.get('/', serializablesController.getAll);
 
-router.use('/:id/', verifyCUIDMiddleware); // ensure that ID is a valid CUID pattern
+router.post('/', getRequireAdminMiddleware(), serializablesController.createItem);
 
 /** Delete serializable if user is Admin */
 router.delete('/:id/', getRequireAdminMiddleware(), serializablesController.deleteItem);

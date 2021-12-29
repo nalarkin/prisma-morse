@@ -4,8 +4,8 @@
  */
 
 import { Router } from 'express';
-import * as refreshController from './refreshController';
 import passport from 'passport';
+import * as refreshController from './refreshController';
 
 const router = Router();
 

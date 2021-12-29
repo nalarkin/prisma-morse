@@ -1,8 +1,8 @@
-import createError from 'http-errors';
-import * as registerService from './registerService';
-import { ajv, SCHEMA } from '../../common';
-import type { RegisterForm } from '../../common';
 import type { RequestHandler } from 'express';
+import createError from 'http-errors';
+import type { RegisterForm } from '../../common';
+import { ajv, SCHEMA } from '../../common';
+import * as registerService from './registerService';
 
 function validateRegistrationForm(body: unknown) {
   const validate = ajv.getSchema<RegisterForm>(SCHEMA.REGISTER);

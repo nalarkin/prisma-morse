@@ -1,9 +1,9 @@
-import createError from 'http-errors';
 import type { RequestHandler } from 'express';
-import * as consumableService from './consumableService';
-import { ajv, SCHEMA, getValidJWTPayload } from '../common';
+import createError from 'http-errors';
 import type { ConsumableJson, NewConsumable, TakeConsumable } from '../common';
+import { ajv, getValidJWTPayload, SCHEMA } from '../common';
 import { getValidCUID } from '../common/customMiddlewares';
+import * as consumableService from './consumableService';
 export const getConsumable: RequestHandler = async (req, res, next) => {
   try {
     const { id } = req.params;

@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import passport from 'passport';
-import * as usersController from './usersController';
 import { getRequireAdminMiddleware } from '../common';
+import * as usersController from './usersController';
 
 const router = Router();
 

@@ -6,13 +6,13 @@
  * is done using the Passport library.
  */
 
-import path from 'path';
-import fs from 'fs';
-import { argon2id, hash, verify } from 'argon2';
-import type { Options } from 'argon2';
-import { sign, verify as verifyJWT } from 'jsonwebtoken';
-import type { SignOptions } from 'jsonwebtoken';
 import type { User } from '@prisma/client';
+import type { Options } from 'argon2';
+import { argon2id, hash, verify } from 'argon2';
+import fs from 'fs';
+import type { SignOptions } from 'jsonwebtoken';
+import { sign, verify as verifyJWT } from 'jsonwebtoken';
+import path from 'path';
 
 // numeric value = seconds
 export const ACCESS_JWT_EXPIRE: SignOptions['expiresIn'] = 15;
@@ -87,4 +87,3 @@ export function validateJWT(token: string) {
 // export function tokenIsExpired(expireDate: number) {
 //   return dayjs().isAfter(dayjs(expireDate * 1000));
 // }
-

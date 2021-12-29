@@ -1,10 +1,10 @@
-import createError from 'http-errors';
-import * as usersService from '../../users/usersService';
-import * as resetService from './resetService';
-import { ajv, SCHEMA, getValidJWTPayload } from '../../common';
-import { verifyPassword } from '../utils';
 import type { RequestHandler } from 'express';
+import createError from 'http-errors';
+import { ajv, getValidJWTPayload, SCHEMA } from '../../common';
 import type { PasswordResetForm } from '../../common/schema';
+import * as usersService from '../../users/usersService';
+import { verifyPassword } from '../utils';
+import * as resetService from './resetService';
 
 export const passwordReset: RequestHandler = async (req, res, next) => {
   try {

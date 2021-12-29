@@ -5,9 +5,9 @@
  * apply `JSON.parse(JSON.stringify(responseData))` Otherwise, certain
  * types (like Date) don't will cause a failed test case despite matching stringified data..
  */
+import type { Consumable, Serializable, User } from '@prisma/client';
 import cuid from 'cuid';
 import faker from 'faker';
-import type { Consumable, Serializable, User } from '@prisma/client';
 
 /** Make a user with randomized data */
 export function makeTestUser(): User {

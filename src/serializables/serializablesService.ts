@@ -1,7 +1,7 @@
-import createError from 'http-errors';
-import * as serializablesDAL from './serializablesDAL';
-import type { SerializableJson } from '../common/schema/schema_serializable';
 import { Serializable } from '@prisma/client';
+import createError from 'http-errors';
+import type { SerializableJson } from '../common/schema/schema_serializable';
+import * as serializablesDAL from './serializablesDAL';
 
 export async function getAll() {
   return serializablesDAL.getAll();
@@ -61,7 +61,12 @@ export async function deleteItem(id: string) {
 }
 
 export async function updateItem(serializable: SerializableJson) {
+  const { id, item } = serializableWithoutProtectedValues(serializable); // remove unnecessary properties
+  return serializablesDAL.updateItem(id, item);
+}
+
+function serializableWithoutProtectedValues(serializable: SerializableJson) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { id, createdAt, updatedAt, version, ...updatedItem } = serializable; // remove unnecessary properties
-  return serializablesDAL.updateItem(id, updatedItem);
+  const { id, createdAt, updatedAt, version, renter, ...item } = serializable;
+  return { id, item };
 }

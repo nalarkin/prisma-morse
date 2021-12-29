@@ -1,7 +1,7 @@
-import { Prisma } from '@prisma/client';
-import prisma from '../loaders/database';
 import type { Transaction } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import type { ConsumableUpdate, NewConsumable } from '../common';
+import prisma from '../loaders/database';
 
 export async function getConsumable(id: string, includeTransactions = true) {
   return prisma.consumable.findUnique({

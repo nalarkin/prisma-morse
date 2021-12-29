@@ -12,21 +12,21 @@
  */
 
 import Ajv from 'ajv';
-import createError from 'http-errors';
 import addFormats from 'ajv-formats';
+import createError from 'http-errors';
 import {
-  schema_serializable,
-  schema_register,
-  schema_password_reset,
   schema_consumable,
-  schema_take_consumable,
   schema_consumable_update,
-  schema_refresh_token,
-  schema_user,
-  schema_user_id,
   schema_item_id,
   schema_jwt,
   schema_login,
+  schema_password_reset,
+  schema_refresh_token,
+  schema_register,
+  schema_serializable,
+  schema_take_consumable,
+  schema_user,
+  schema_user_id,
 } from './schema';
 import type { JWTPayloadRequest } from './schema/';
 /**
@@ -60,8 +60,9 @@ import type { JWTPayloadRequest } from './schema/';
  *  console.log('Invalid data');
  * }
  */
-export const ajv = new Ajv({ $data: true, allErrors: true });
 
+// @TODO remove allErrors in production
+export const ajv = new Ajv({ $data: true, allErrors: true, removeAdditional: true });
 // used to validate email format during user registration
 addFormats(ajv, ['email', 'date-time', 'date']);
 
@@ -122,3 +123,21 @@ export function getValidJWTPayload(payload: unknown) {
   }
   return payload;
 }
+
+// export const ajv = new Ajv({ strictTypes: false, $data: true });
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+// export const isSchemaSecure = ajv.compile(require('ajv/lib/refs/json-schema-secure.json'));
+
+// export const schemaSecurity = {
+//   LOGIN: isSchemaSecure(LOGIN),
+//   REGISTER: isSchemaSecure(REGISTER),
+//   CONSUMABLE_NEW: isSchemaSecure(CONSUMABLE_NEW),
+//   CONSUMABLE_TAKE: isSchemaSecure(CONSUMABLE_TAKE),
+//   TOKEN_REFRESH: isSchemaSecure(TOKEN_REFRESH),
+//   USER_EDIT: isSchemaSecure(USER_EDIT),
+//   CUID: isSchemaSecure(CUID),
+//   SERIALIZABLE_UPDATE: isSchemaSecure(SERIALIZABLE_UPDATE),
+//   CONSUMABLE_UPDATE: isSchemaSecure(CONSUMABLE_UPDATE),
+//   PASSWORD_RESET: isSchemaSecure(PASSWORD_RESET),
+//   JWT_REQUEST: isSchemaSecure(JWT_REQUEST),
+// };

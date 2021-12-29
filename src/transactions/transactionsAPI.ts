@@ -1,5 +1,5 @@
-import passport from 'passport';
 import { Router } from 'express';
+import passport from 'passport';
 import prisma from '../loaders/database';
 
 const router = Router();

@@ -1,7 +1,7 @@
+import type { User } from '@prisma/client';
 import createError from 'http-errors';
 import * as usersDAL from '../../users/usersDAL';
 import { ACCESS_JWT_EXPIRE, issueJWT, REFRESH_JWT_EXPIRE, verifyPassword } from '../utils';
-import type { User } from '@prisma/client';
 
 export async function isAuthenticated(hashedPassword: string, providedPassword: string) {
   return verifyPassword(hashedPassword, providedPassword);
