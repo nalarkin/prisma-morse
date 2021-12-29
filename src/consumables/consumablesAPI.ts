@@ -1,7 +1,7 @@
-import passport from 'passport';
 import { Router } from 'express';
-import { verifyCUIDMiddleware, getRequireAdminMiddleware } from '@/common';
-import prisma from '@/loaders/database';
+import passport from 'passport';
+import { getRequireAdminMiddleware } from '../common';
+import prisma from '../loaders/database';
 import * as consumablesController from './consumablesController';
 
 const router = Router();
@@ -26,7 +26,7 @@ router.post(
 );
 
 /** Use item id verification for every request that provides an id param */
-router.use('/:id/', verifyCUIDMiddleware);
+// router.use('/:id/', verifyCUIDMiddleware);
 
 /**
  * Delete a consumable. Need to decide on deletion tracking method. Cascade delete

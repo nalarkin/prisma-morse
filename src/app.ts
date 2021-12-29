@@ -3,10 +3,8 @@
  */
 
 import { config } from 'dotenv';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import pinohttp from 'pino-http';
-import { logger } from '@/loaders/logging';
 import { app } from './loaders';
+import { logger } from './loaders/logging';
 
 config(); // Make sure environment variables are loaded
 

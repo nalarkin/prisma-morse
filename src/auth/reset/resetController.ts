@@ -1,11 +1,11 @@
-import createError from 'http-errors';
-import * as usersService from '@/users/usersService';
-import * as resetService from './resetService';
-import { ajv, SCHEMA } from '@/common';
-import { verifyPassword } from '../utils';
-import { validateJWTFormat } from '../../common/validation';
 import type { RequestHandler } from 'express';
-import type { PasswordResetForm } from '@/common/schema';
+import createError from 'http-errors';
+import { ajv, getValidJWTPayload, SCHEMA } from '../../common';
+import type { PasswordResetForm } from '../../common/schema';
+import * as usersService from '../../users/usersService';
+import { verifyPassword } from '../utils';
+import * as resetService from './resetService';
+import { getValidator } from '../../common/validation';
 
 export const passwordReset: RequestHandler = async (req, res, next) => {
   try {
@@ -13,7 +13,7 @@ export const passwordReset: RequestHandler = async (req, res, next) => {
     const passwordResetForm = validatePasswordResetForm(req.body);
 
     // validate that data within JWT follows expected properties
-    const { sub: userId } = validateJWTFormat(req.user);
+    const { sub: userId } = getValidJWTPayload(req.user);
 
     const user = await usersService.getUser(userId);
 
@@ -28,10 +28,7 @@ export const passwordReset: RequestHandler = async (req, res, next) => {
 };
 
 function validatePasswordResetForm(body: unknown) {
-  const validator = ajv.getSchema<PasswordResetForm>(SCHEMA.PASSWORD_RESET);
-  if (validator === undefined) {
-    throw createError(500, 'Could not locate JSON validator');
-  }
+  const validator = getValidator<PasswordResetForm>(SCHEMA.PASSWORD_RESET);
   if (!validator(body)) {
     throw createError(400, ajv.errorsText(validator.errors));
   }

@@ -1,7 +1,7 @@
 import faker from 'faker';
 import supertest from 'supertest';
-import { app } from '@/loaders';
-import { RegisterForm } from '@/common';
+import { RegisterForm } from '../../common';
+import { app } from '../../loaders';
 
 describe('Register API', () => {
   describe('POST /api/auth/register/', () => {
@@ -57,7 +57,7 @@ describe('Register API', () => {
       };
       await supertest(app).post('/api/auth/register/').send(form).expect(400);
     });
-    it('When the registration form has additional properties, the response code is 400', async () => {
+    it('When the registration form has additional properties in addition to the required, the response code is 200', async () => {
       const password = faker.internet.password();
 
       const form: RegisterForm & { random: string } = {
@@ -68,7 +68,7 @@ describe('Register API', () => {
         email: faker.internet.email(),
         random: faker.random.word(),
       };
-      await supertest(app).post('/api/auth/register/').send(form).expect(400);
+      await supertest(app).post('/api/auth/register/').send(form).expect(200);
     });
   });
 });

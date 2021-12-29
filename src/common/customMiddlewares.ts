@@ -2,9 +2,9 @@
  * File contains express middleware that is used throughout many parts of the application.
  */
 
-import createError from 'http-errors';
-import { ajv, SCHEMA, validateJWTFormat } from '@/common';
 import type { RequestHandler } from 'express';
+import createError from 'http-errors';
+import { ajv, getValidator, getValidJWTPayload, SCHEMA } from '../common';
 
 const DEFAULT_MESSAGE = 'You do not have sufficient permissions.';
 
@@ -17,7 +17,7 @@ const DEFAULT_MESSAGE = 'You do not have sufficient permissions.';
 export const getRequireAdminMiddleware = (customMessage = DEFAULT_MESSAGE): RequestHandler => {
   const requireAdminMiddleware: RequestHandler = (req, res, next) => {
     try {
-      const { role } = validateJWTFormat(req.user);
+      const { role } = getValidJWTPayload(req.user);
       if (role !== 'ADMIN') {
         // not authorized
         throw createError(403, customMessage);
@@ -46,10 +46,7 @@ export const getRequireAdminMiddleware = (customMessage = DEFAULT_MESSAGE): Requ
 export const verifyCUIDMiddleware: RequestHandler = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const validator = ajv.getSchema<string>(SCHEMA.CUID);
-    if (validator === undefined) {
-      throw createError(500, 'Could not locate json validator');
-    }
+    const validator = getValidator<string>(SCHEMA.CUID);
     if (!validator(id)) {
       throw createError(400, 'Invalid ID format.');
     }
@@ -58,3 +55,11 @@ export const verifyCUIDMiddleware: RequestHandler = async (req, res, next) => {
     next(e);
   }
 };
+
+export function getValidCUID(id: unknown) {
+  const validator = getValidator<string>(SCHEMA.CUID);
+  if (!validator(id)) {
+    throw createError(400, 'Invalid ID format.');
+  }
+  return id;
+}

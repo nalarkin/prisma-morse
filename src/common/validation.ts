@@ -12,21 +12,22 @@
  */
 
 import Ajv from 'ajv';
-import createError from 'http-errors';
 import addFormats from 'ajv-formats';
+import createError from 'http-errors';
 import {
-  schema_serializable,
-  schema_register,
-  schema_password_reset,
   schema_consumable,
-  schema_take_consumable,
   schema_consumable_update,
-  schema_refresh_token,
-  schema_user,
-  schema_user_id,
   schema_item_id,
   schema_jwt,
   schema_login,
+  schema_password_reset,
+  schema_refresh_token,
+  schema_register,
+  schema_serializable,
+  schema_take_consumable,
+  schema_user,
+  schema_user_id,
+  schema_serializable_new,
 } from './schema';
 import type { JWTPayloadRequest } from './schema/';
 /**
@@ -60,8 +61,9 @@ import type { JWTPayloadRequest } from './schema/';
  *  console.log('Invalid data');
  * }
  */
-export const ajv = new Ajv({ $data: true, allErrors: true });
 
+// @TODO remove allErrors in production
+export const ajv = new Ajv({ $data: true, allErrors: true, removeAdditional: true });
 // used to validate email format during user registration
 addFormats(ajv, ['email', 'date-time', 'date']);
 
@@ -74,6 +76,7 @@ const CONSUMABLE_NEW = 'consumableNew';
 const CONSUMABLE_TAKE = 'consumableTake';
 const CONSUMABLE_UPDATE = 'consumableUpdate';
 const SERIALIZABLE_UPDATE = 'serializableUpdate';
+const SERIALIZABLE_NEW = 'serializableNew';
 const TOKEN_REFRESH = 'refreshToken';
 const USER_EDIT = 'userEdit';
 const USER_ID = 'userId';
@@ -95,6 +98,7 @@ ajv.addSchema(schema_serializable, SERIALIZABLE_UPDATE);
 ajv.addSchema(schema_consumable_update, CONSUMABLE_UPDATE);
 ajv.addSchema(schema_password_reset, PASSWORD_RESET);
 ajv.addSchema(schema_jwt, JWT_REQUEST);
+ajv.addSchema(schema_serializable_new, SERIALIZABLE_NEW);
 
 /** Exported constants improve schema retrieval reliability and provide autocomplete feature */
 export const SCHEMA = {
@@ -110,15 +114,45 @@ export const SCHEMA = {
   CONSUMABLE_UPDATE,
   PASSWORD_RESET,
   JWT_REQUEST,
+  SERIALIZABLE_NEW,
 };
 
-export function validateJWTFormat(payload: unknown) {
-  const validator = ajv.getSchema<JWTPayloadRequest>(JWT_REQUEST);
+/**
+ * Generic validator getter that is used to retrieve the schema that is used for validation of requests from users.
+ *
+ * This component simplifies the use and throws a 500 HTTP error if there is no validator foudn that matches
+ * the schema name provided. .
+ */
+export function getValidator<T>(schemaName: string) {
+  const validator = ajv.getSchema<T>(schemaName);
   if (validator === undefined) {
-    throw createError(500, 'Unable to find JSON validator');
+    throw createError(500, `Unable to get JSON validator for schema: '${schemaName}'`);
   }
+  return validator;
+}
+
+export function getValidJWTPayload(payload: unknown) {
+  const validator = getValidator<JWTPayloadRequest>(JWT_REQUEST);
   if (!validator(payload)) {
     throw createError(400, 'JWT Payload has invalid format, please login in again');
   }
   return payload;
 }
+
+// export const ajv = new Ajv({ strictTypes: false, $data: true });
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+// export const isSchemaSecure = ajv.compile(require('ajv/lib/refs/json-schema-secure.json'));
+
+// export const schemaSecurity = {
+//   LOGIN: isSchemaSecure(LOGIN),
+//   REGISTER: isSchemaSecure(REGISTER),
+//   CONSUMABLE_NEW: isSchemaSecure(CONSUMABLE_NEW),
+//   CONSUMABLE_TAKE: isSchemaSecure(CONSUMABLE_TAKE),
+//   TOKEN_REFRESH: isSchemaSecure(TOKEN_REFRESH),
+//   USER_EDIT: isSchemaSecure(USER_EDIT),
+//   CUID: isSchemaSecure(CUID),
+//   SERIALIZABLE_UPDATE: isSchemaSecure(SERIALIZABLE_UPDATE),
+//   CONSUMABLE_UPDATE: isSchemaSecure(CONSUMABLE_UPDATE),
+//   PASSWORD_RESET: isSchemaSecure(PASSWORD_RESET),
+//   JWT_REQUEST: isSchemaSecure(JWT_REQUEST),
+// };

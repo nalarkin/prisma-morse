@@ -2,6 +2,8 @@
 
 ## [Design DOC](DESIGN-DOC.md)
 
+---
+
 ## Requirements
 
 1. have Node.js installed
@@ -13,6 +15,8 @@
    ```
 
 3. Must use MySQL, as the schema includes enum. (Can't use sqlite)
+
+---
 
 ## Quick Start
 
@@ -46,7 +50,9 @@
 
    ```
 
-Other Useful Commands
+---
+
+## Other Useful Commands
 
 ```bash
 # r for the API
@@ -72,6 +78,8 @@ yarn keypair
 yarn seed
 ```
 
+---
+
 ## TODO
 
 1. Implement CRSF protection, see [express CSURF](https://github.com/expressjs/csurf) and [React CSRF protection guide](https://www.stackhawk.com/blog/react-csrf-protection-guide-examples-and-how-to-enable-it/)
@@ -79,6 +87,8 @@ yarn seed
    2. [JSON web token security guide for Java](https://cheatsheetseries.owasp.org/cheatsheets/JSON_Web_Token_for_Java_Cheat_Sheet.html)
    3. Other option: https://datatracker.ietf.org/doc/rfc8725/
    4. Best option might be to only use local storage, because supposedly this will only be an issue if using CDN, and that is not a requirement of this project
+
+---
 
 ## Missing features and future improvements
 
@@ -103,6 +113,8 @@ yarn seed
    2. [This could be useful for creating documentation](https://www.npmjs.com/package/swagger-ui-express)
 7. Create link that can give users who signup with it admin permissions
 8. Add OAuth2.0 sign in options (google, outlook, github, etc)
+
+---
 
 ## Do this before deploying
 

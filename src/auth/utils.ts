@@ -6,14 +6,16 @@
  * is done using the Passport library.
  */
 
-import path from 'path';
-import fs from 'fs';
-import dayjs from 'dayjs';
-import { argon2id, hash, verify } from 'argon2';
-import type { Options } from 'argon2';
-import { sign, verify as verifyJWT } from 'jsonwebtoken';
-import type { SignOptions } from 'jsonwebtoken';
 import type { User } from '@prisma/client';
+import type { Options } from 'argon2';
+import { argon2id, hash, verify } from 'argon2';
+import fs from 'fs';
+import createError from 'http-errors';
+import type { SignOptions } from 'jsonwebtoken';
+import { sign, verify as verifyJWT } from 'jsonwebtoken';
+import path from 'path';
+import { JWTPayloadRequest } from '../common/schema/schema_jwt';
+import { getValidator, SCHEMA } from '../common/validation';
 
 // numeric value = seconds
 export const ACCESS_JWT_EXPIRE: SignOptions['expiresIn'] = 15;
@@ -52,25 +54,13 @@ export async function verifyPassword(hashed: string, pw: string) {
 }
 
 export type JWTData = {
-  sub: number;
+  sub: User['id'];
   role: User['role'];
 };
 
-/**
- * @param {*} user - The user object.  We need this to set the JWT `sub` payload property to the MySQL user ID
- */
-export function issueJWT(user: User, expiresIn: SignOptions['expiresIn']) {
-  const { id, role } = user;
-
-  // this gets stored in jwt, store id to query database for role on each request
-  // store the role so the front end UI can display the proper UI
-  const payload: JWTData = {
-    sub: id,
-    role: role,
-  };
-
-  // works for keys with ao passphrase and keys with passphrase if .env variable matches correctly
-  const signedToken = sign(
+function signToken(payload: JWTData, expiresIn: SignOptions['expiresIn']) {
+  // works for keys with no passphrase and keys with passphrase if .env variable matches correctly
+  return sign(
     payload,
     { key: PRIV_KEY, passphrase: process.env.RSA_PASSPHRASE ?? '' },
     {
@@ -78,16 +68,30 @@ export function issueJWT(user: User, expiresIn: SignOptions['expiresIn']) {
       algorithm: 'RS256',
     },
   );
+}
 
-  return `${signedToken}`;
+function createPayload({ id, role }: Pick<User, 'id' | 'role'>) {
+  return { sub: id, role };
+}
+
+/**
+ * @param {*} user - The user object.  We need this to set the JWT `sub` payload property to the MySQL user ID
+ */
+export function issueJWT(user: Pick<User, 'id' | 'role'>, expiresIn: SignOptions['expiresIn']) {
+  // this gets stored in jwt, store id to query database for role on each request
+  // store the role so the front end UI can display the proper UI
+  return `${signToken(createPayload(user), expiresIn)}`;
 }
 
 export function validateJWT(token: string) {
-  return verifyJWT(token, PRIV_KEY, { algorithms: ['RS256'] });
+  const validator = getValidator<JWTPayloadRequest>(SCHEMA.JWT_REQUEST);
+  const result = verifyJWT(token, PRIV_KEY, { algorithms: ['RS256'] });
+  if (validator(result)) {
+    return result;
+  }
+  throw createError(400, 'Invalid JWT Format was provided');
 }
 
-export function tokenIsExpired(expireDate: number) {
-  return dayjs().isAfter(dayjs(expireDate * 1000));
-}
-
-// export function tokenIsExpired(token: string) {}
+// export function tokenIsExpired(expireDate: number) {
+//   return dayjs().isAfter(dayjs(expireDate * 1000));
+// }

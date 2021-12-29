@@ -1,4 +1,4 @@
-import { Serializable } from '@prisma/client';
+import { Serializable, User } from '@prisma/client';
 import { JSONSchemaType } from 'ajv';
 
 type UpdatableValues = Omit<Serializable, 'id' | 'createdAt' | 'updatedAt' | 'version'>;
@@ -7,6 +7,20 @@ export type SerializableUpdate = Partial<UpdatableValues>;
 export type SerializableJson = Omit<Serializable, 'createdAt' | 'updatedAt'> & {
   createdAt: string;
   updatedAt: string;
+  renter?: RenterJson;
+};
+
+export type RenterJson = Pick<User, 'firstName' | 'lastName' | 'id'> | null;
+
+export const schemaRenter: JSONSchemaType<RenterJson> = {
+  type: 'object',
+  nullable: true,
+  properties: {
+    id: { type: 'integer' },
+    firstName: { type: 'string' },
+    lastName: { type: 'string' },
+  },
+  required: ['id', 'firstName', 'lastName'],
 };
 
 export const schema_serializable: JSONSchemaType<SerializableJson> = {
@@ -39,7 +53,7 @@ export const schema_serializable: JSONSchemaType<SerializableJson> = {
     },
     type: {
       type: 'string',
-      enum: ['TOOL', 'DEVICE', 'CONSUMABLE'],
+      enum: ['TOOL', 'DEVICE'],
     },
     project: {
       type: 'string',
@@ -64,6 +78,16 @@ export const schema_serializable: JSONSchemaType<SerializableJson> = {
       type: 'string',
       nullable: true,
     },
+    renter: {
+      type: 'object',
+      nullable: true,
+      properties: {
+        id: { type: 'integer' },
+        firstName: { type: 'string' },
+        lastName: { type: 'string' },
+      },
+      required: ['id', 'firstName', 'lastName'],
+    },
   },
   required: [
     'id',
@@ -80,61 +104,48 @@ export const schema_serializable: JSONSchemaType<SerializableJson> = {
   ],
   additionalProperties: false,
 };
-// // type SerializableUpdate = Omit<Serializable, 'createdAt' | 'updatedAt'>
-// export const schema_serializable_update: JSONSchemaType<SerializableUpdate> = {
-//   type: 'object',
-//   properties: {
-//     name: {
-//       type: 'string',
-//       nullable: true,
-//     },
-//     serial_number: {
-//       type: 'string',
-//       nullable: true,
-//     },
-//     brand: {
-//       type: 'string',
-//       nullable: true,
-//     },
-//     status: {
-//       type: 'string',
-//       enum: ['BROKEN', 'USABLE', 'SCRAP', 'IN_REPAIR'],
-//     },
-//     type: {
-//       type: 'string',
-//       enum: ['TOOL', 'DEVICE', 'CONSUMABLE'],
-//     },
-//     project: {
-//       type: 'string',
-//       nullable: true,
-//     },
-//     description: {
-//       type: 'string',
-//       nullable: true,
-//     },
-//     guide: {
-//       type: 'string',
-//       nullable: true,
-//     },
-//     userId: {
-//       type: 'integer',
-//       nullable: true,
-//     },
-//     photo: {
-//       type: 'string',
-//       nullable: true,
-//     },
-//   },
-//   minProperties: 1,
-//   additionalProperties: false,
-// };
 
-// /** Validates number provided is integer and positive number.  */
-// export const schema_take_consumable: JSONSchemaType<SerializableUpdate> = {
-//   type: 'object',
-//   properties: {
-//     count: { type: 'integer', minimum: 1 },
-//   },
-//   required: ['count'],
-//   additionalProperties: false,
-// };
+export type SerializableNew = Pick<Serializable, 'name' | 'serial_number' | 'type' | 'status'> &
+  Partial<Pick<Serializable, 'brand' | 'photo' | 'project' | 'guide' | 'description'>>;
+
+export const schema_serializable_new: JSONSchemaType<SerializableNew> = {
+  type: 'object',
+  properties: {
+    name: {
+      type: 'string',
+    },
+    serial_number: {
+      type: 'string',
+    },
+    brand: {
+      type: 'string',
+      nullable: true,
+    },
+    status: {
+      type: 'string',
+      enum: ['BROKEN', 'USABLE', 'SCRAP', 'IN_REPAIR'],
+    },
+    type: {
+      type: 'string',
+      enum: ['TOOL', 'DEVICE'],
+    },
+    project: {
+      type: 'string',
+      nullable: true,
+    },
+    description: {
+      type: 'string',
+      nullable: true,
+    },
+    guide: {
+      type: 'string',
+      nullable: true,
+    },
+    photo: {
+      type: 'string',
+      nullable: true,
+    },
+  },
+  required: ['type', 'name', 'serial_number'],
+  additionalProperties: false,
+};

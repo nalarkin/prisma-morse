@@ -13,9 +13,9 @@ export const schema_consumable: JSONSchemaType<NewConsumable> = {
   properties: {
     name: { type: 'string' },
     count: { type: 'integer' },
-    description: { type: 'string' },
-    guide: { type: 'string' },
-    photo: { type: 'string' },
+    description: { type: 'string', nullable: true },
+    guide: { type: 'string', nullable: true },
+    photo: { type: 'string', nullable: true },
   },
   required: ['name', 'count'],
   additionalProperties: false,

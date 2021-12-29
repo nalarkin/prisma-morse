@@ -5,7 +5,8 @@
  */
 
 import { Router } from 'express';
-import { makeTestUser, makeTestConsumable, makeTestSerializable } from './utils';
+// import { schemaSecurity } from '../common';
+import { makeTestConsumable, makeTestSerializable, makeTestUser } from './utils';
 
 const router = Router();
 const DATA_SAMPLE_SIZE = 5; // change value here to change the quantity of generated sample data
@@ -21,5 +22,13 @@ router.get('/', async function (req, res, next) {
     next(e);
   }
 });
+
+// router.get('/security', async (req, res, next) => {
+//   try {
+//     return res.json(schemaSecurity);
+//   } catch (e) {
+//     next(e);
+//   }
+// });
 
 export default router;

@@ -4,7 +4,7 @@
 
 import dayjs from 'dayjs';
 import { Router } from 'express';
-import { logger } from '@/loaders/logging';
+import { logger } from '../../loaders/logging';
 
 const router = Router();
 

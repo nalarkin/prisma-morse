@@ -1,7 +1,7 @@
-import { Prisma } from '@prisma/client';
-import prisma from '@/loaders/database';
 import type { Transaction } from '@prisma/client';
-import type { ConsumableUpdate, NewConsumable } from '@/common';
+import { Prisma } from '@prisma/client';
+import type { ConsumableUpdate, NewConsumable } from '../common';
+import prisma from '../loaders/database';
 
 export async function getConsumable(id: string, includeTransactions = true) {
   return prisma.consumable.findUnique({
@@ -17,12 +17,6 @@ export async function getConsumable(id: string, includeTransactions = true) {
 export async function getAllConsumables() {
   return prisma.consumable.findMany();
 }
-
-// export async function createConsumnable(consumable: NewConsumable) {
-//   return prisma.consumable.create({
-//     data: { ...consumable },
-//   });
-// }
 
 export async function createConsumable(consumable: NewConsumable, userId: number) {
   return prisma.consumable.create({

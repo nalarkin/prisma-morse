@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import passport from 'passport';
-import { getRequireAdminMiddleware } from '@/common';
+import { getRequireAdminMiddleware } from '../../common';
 
 const router = Router();
 

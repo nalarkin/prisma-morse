@@ -3,15 +3,18 @@
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon -r tsconfig-paths/register src/app.ts", 
-    "pino": "nodemon -r tsconfig-paths/register src/app.ts | pino-pretty",
-    "keypair": "ts-node -r tsconfig-paths/register src/auth/generateKeyPair.ts",
+    "dev": "cross-env NODE_ENV=development nodemon src/app.ts",
+    "pino": "cross-env NODE_ENV=development LOGGER=PINO nodemon src/app.ts | pino-pretty",
+    "keypair": "ts-node src/auth/generateKeyPair.ts",
     "seed": "prisma db seed",
     "studio": "prisma studio",
     "migrate": "prisma migrate dev",
     "lint": "eslint src/**/*.ts",
     "format": "eslint src/**/*.ts --fix",
-    "test": "jest -i --verbose"
+    "test": "jest -i --verbose",
+    "prod": "node dist/app.js",
+    "build": "tsc --build",
+    "clean": "tsc --build --clean"  
   },
   "dependencies": {
     "@prisma/client": "^3.7.0",
@@ -20,6 +23,7 @@
     "ajv-formats": "^2.1.1",
     "argon2": "^0.28.3",
     "cookie-parser": "^1.4.6",
+    "cross-env": "^7.0.3",
     "dayjs": "^1.10.7",
     "dotenv": "^10.0.0",
     "express": "4.17.1",
@@ -65,7 +69,6 @@
     "supertest": "^6.1.6",
     "ts-jest": "^27.1.1",
     "ts-node": "10.4.0",
-    "tsconfig-paths": "^3.12.0",
     "typescript": "^4.5.2"
   },
   "prisma": {

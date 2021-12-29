@@ -3,24 +3,18 @@
   "compilerOptions": {
     "sourceMap": true,
     "outDir": "dist",
-    "strict": true,
-    "lib": ["esnext"],
-    "esModuleInterop": true,
     "types": ["node", "jest"],
     "baseUrl": "./",
     "pretty": true,
-    "paths": {
-      "@/*": [ "src/*"],
-    },
     "typeRoots": [
       "./node_modules/.prisma/client/index.d.ts",
       "./node_modules/@types"    
     ]
   },
-    "include": [
-      "./src/**/*.ts"
-    ],
-    "exclude": [
-      "node_modules"
-    ]
+  "include": [
+    "./src/**/*.ts",
+  "./src/**/*.pem"  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
