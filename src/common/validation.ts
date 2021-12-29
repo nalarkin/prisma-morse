@@ -27,6 +27,7 @@ import {
   schema_take_consumable,
   schema_user,
   schema_user_id,
+  schema_serializable_new,
 } from './schema';
 import type { JWTPayloadRequest } from './schema/';
 /**
@@ -75,6 +76,7 @@ const CONSUMABLE_NEW = 'consumableNew';
 const CONSUMABLE_TAKE = 'consumableTake';
 const CONSUMABLE_UPDATE = 'consumableUpdate';
 const SERIALIZABLE_UPDATE = 'serializableUpdate';
+const SERIALIZABLE_NEW = 'serializableNew';
 const TOKEN_REFRESH = 'refreshToken';
 const USER_EDIT = 'userEdit';
 const USER_ID = 'userId';
@@ -96,6 +98,7 @@ ajv.addSchema(schema_serializable, SERIALIZABLE_UPDATE);
 ajv.addSchema(schema_consumable_update, CONSUMABLE_UPDATE);
 ajv.addSchema(schema_password_reset, PASSWORD_RESET);
 ajv.addSchema(schema_jwt, JWT_REQUEST);
+ajv.addSchema(schema_serializable_new, SERIALIZABLE_NEW);
 
 /** Exported constants improve schema retrieval reliability and provide autocomplete feature */
 export const SCHEMA = {
@@ -111,6 +114,7 @@ export const SCHEMA = {
   CONSUMABLE_UPDATE,
   PASSWORD_RESET,
   JWT_REQUEST,
+  SERIALIZABLE_NEW,
 };
 
 export function getValidJWTPayload(payload: unknown) {

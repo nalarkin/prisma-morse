@@ -1,6 +1,7 @@
 import { Serializable } from '@prisma/client';
 import createError from 'http-errors';
 import type { SerializableJson } from '../common/schema/schema_serializable';
+import { SerializableNew } from '../common/schema/schema_serializable';
 import * as serializablesDAL from './serializablesDAL';
 
 export async function getAll() {
@@ -57,12 +58,19 @@ async function getSerializable(id: string) {
 }
 
 export async function deleteItem(id: string) {
+  const item = await serializablesDAL.getSingle(id);
+  if (item === null) {
+    throw createError(404, 'Item does not exist');
+  }
   return serializablesDAL.deleteItem(id);
 }
 
 export async function updateItem(serializable: SerializableJson) {
   const { id, item } = serializableWithoutProtectedValues(serializable); // remove unnecessary properties
   return serializablesDAL.updateItem(id, item);
+}
+export async function createItem(serializable: SerializableNew, userId: number) {
+  return serializablesDAL.createItem(serializable, userId);
 }
 
 function serializableWithoutProtectedValues(serializable: SerializableJson) {

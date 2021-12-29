@@ -1,6 +1,7 @@
 import type { Transaction } from '@prisma/client';
 import createError from 'http-errors';
 import type { SerializableUpdate } from '../common/schema';
+import { SerializableNew } from '../common/schema/schema_serializable';
 import prisma from '../loaders/database';
 
 export async function getAll() {
@@ -80,4 +81,13 @@ function createTransaction(serializableId: string, userId: number, type: Transac
       type,
     },
   });
+}
+
+/** @TODO Make the transaction atomic */
+export async function createItem(data: SerializableNew, userId: number) {
+  const item = await prisma.serializable.create({
+    data,
+  });
+  const transaction = await createTransaction(item.id, userId, 'CREATE');
+  return { item, transaction };
 }

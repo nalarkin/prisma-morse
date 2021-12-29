@@ -2,6 +2,7 @@ import type { RequestHandler } from 'express';
 import createError from 'http-errors';
 import { ajv, getValidCUID, getValidJWTPayload, SCHEMA } from '../common';
 import type { SerializableJson } from '../common/schema';
+import { SerializableNew } from '../common/schema/schema_serializable';
 import * as serializablesService from './serializablesService';
 
 /** Get all serializables */
@@ -46,12 +47,10 @@ export const returnItem: RequestHandler = async ({ params, user }, res, next) =>
   }
 };
 
-export const createItem: RequestHandler = async ({ params, user }, res, next) => {
+export const createItem: RequestHandler = async ({ user, body }, res, next) => {
   try {
     const { sub: userId } = getValidJWTPayload(user);
-    /** Insert logic to check if request id requesting change is the same as the current renter */
-    return res.send('debug');
-    // return res.json(await serializablesService.createItem(getValidCUID(params.id), userId));
+    return res.json(await serializablesService.createItem(getValidSerializableNewForm(body), userId));
   } catch (err) {
     next(err);
   }
@@ -101,6 +100,17 @@ function getUpdateFormValidator() {
   return validator;
 }
 
-// function getValidSerializableForm(body: unknown) {
-//   const validator = ajv.getSchema(SCHEMA.)
-// }
+function getValidSerializableNewForm(body: unknown) {
+  const validator = getSerializableNewValidator();
+  if (!validator(body)) {
+    throw createError(400, ajv.errorsText(validator.errors));
+  }
+  return body;
+}
+function getSerializableNewValidator() {
+  const validator = ajv.getSchema<SerializableNew>(SCHEMA.SERIALIZABLE_NEW);
+  if (validator === undefined) {
+    throw createError(500, 'Unable to get JSON validator');
+  }
+  return validator;
+}

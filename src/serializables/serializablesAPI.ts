@@ -23,6 +23,7 @@ router.use(passport.authenticate('jwt', { session: false }));
 
 router.get('/', serializablesController.getAll);
 
+/** Create a serializable */
 router.post('/', getRequireAdminMiddleware(), serializablesController.createItem);
 
 /** Delete serializable if user is Admin */
