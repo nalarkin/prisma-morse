@@ -5,6 +5,7 @@ import type { PasswordResetForm } from '../../common/schema';
 import * as usersService from '../../users/usersService';
 import { verifyPassword } from '../utils';
 import * as resetService from './resetService';
+import { getValidator } from '../../common/validation';
 
 export const passwordReset: RequestHandler = async (req, res, next) => {
   try {
@@ -27,10 +28,7 @@ export const passwordReset: RequestHandler = async (req, res, next) => {
 };
 
 function validatePasswordResetForm(body: unknown) {
-  const validator = ajv.getSchema<PasswordResetForm>(SCHEMA.PASSWORD_RESET);
-  if (validator === undefined) {
-    throw createError(500, 'Could not locate JSON validator');
-  }
+  const validator = getValidator<PasswordResetForm>(SCHEMA.PASSWORD_RESET);
   if (!validator(body)) {
     throw createError(400, ajv.errorsText(validator.errors));
   }

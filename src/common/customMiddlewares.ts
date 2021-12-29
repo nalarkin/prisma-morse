@@ -4,7 +4,7 @@
 
 import type { RequestHandler } from 'express';
 import createError from 'http-errors';
-import { ajv, getValidJWTPayload, SCHEMA } from '../common';
+import { ajv, getValidator, getValidJWTPayload, SCHEMA } from '../common';
 
 const DEFAULT_MESSAGE = 'You do not have sufficient permissions.';
 
@@ -46,10 +46,7 @@ export const getRequireAdminMiddleware = (customMessage = DEFAULT_MESSAGE): Requ
 export const verifyCUIDMiddleware: RequestHandler = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const validator = ajv.getSchema<string>(SCHEMA.CUID);
-    if (validator === undefined) {
-      throw createError(500, 'Could not locate json validator');
-    }
+    const validator = getValidator<string>(SCHEMA.CUID);
     if (!validator(id)) {
       throw createError(400, 'Invalid ID format.');
     }
@@ -60,17 +57,9 @@ export const verifyCUIDMiddleware: RequestHandler = async (req, res, next) => {
 };
 
 export function getValidCUID(id: unknown) {
-  const validator = getCUIDValidator();
+  const validator = getValidator<string>(SCHEMA.CUID);
   if (!validator(id)) {
     throw createError(400, 'Invalid ID format.');
   }
   return id;
-}
-
-function getCUIDValidator() {
-  const validator = ajv.getSchema<string>(SCHEMA.CUID);
-  if (validator === undefined) {
-    throw createError(500, 'Could not locate json validator');
-  }
-  return validator;
 }

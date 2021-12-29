@@ -117,11 +117,22 @@ export const SCHEMA = {
   SERIALIZABLE_NEW,
 };
 
-export function getValidJWTPayload(payload: unknown) {
-  const validator = ajv.getSchema<JWTPayloadRequest>(JWT_REQUEST);
+/**
+ * Generic validator getter that is used to retrieve the schema that is used for validation of requests from users.
+ *
+ * This component simplifies the use and throws a 500 HTTP error if there is no validator foudn that matches
+ * the schema name provided. .
+ */
+export function getValidator<T>(schemaName: string) {
+  const validator = ajv.getSchema<T>(schemaName);
   if (validator === undefined) {
-    throw createError(500, 'Unable to find JSON validator');
+    throw createError(500, `Unable to get JSON validator for schema: '${schemaName}'`);
   }
+  return validator;
+}
+
+export function getValidJWTPayload(payload: unknown) {
+  const validator = getValidator<JWTPayloadRequest>(JWT_REQUEST);
   if (!validator(payload)) {
     throw createError(400, 'JWT Payload has invalid format, please login in again');
   }

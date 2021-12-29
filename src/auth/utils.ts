@@ -10,9 +10,12 @@ import type { User } from '@prisma/client';
 import type { Options } from 'argon2';
 import { argon2id, hash, verify } from 'argon2';
 import fs from 'fs';
+import createError from 'http-errors';
 import type { SignOptions } from 'jsonwebtoken';
 import { sign, verify as verifyJWT } from 'jsonwebtoken';
 import path from 'path';
+import { JWTPayloadRequest } from '../common/schema/schema_jwt';
+import { getValidator, SCHEMA } from '../common/validation';
 
 // numeric value = seconds
 export const ACCESS_JWT_EXPIRE: SignOptions['expiresIn'] = 15;
@@ -81,7 +84,12 @@ export function issueJWT(user: Pick<User, 'id' | 'role'>, expiresIn: SignOptions
 }
 
 export function validateJWT(token: string) {
-  return verifyJWT(token, PRIV_KEY, { algorithms: ['RS256'] });
+  const validator = getValidator<JWTPayloadRequest>(SCHEMA.JWT_REQUEST);
+  const result = verifyJWT(token, PRIV_KEY, { algorithms: ['RS256'] });
+  if (validator(result)) {
+    return result;
+  }
+  throw createError(400, 'Invalid JWT Format was provided');
 }
 
 // export function tokenIsExpired(expireDate: number) {

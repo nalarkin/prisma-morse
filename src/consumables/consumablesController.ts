@@ -1,6 +1,6 @@
 import type { RequestHandler } from 'express';
 import createError from 'http-errors';
-import type { ConsumableJson, NewConsumable, TakeConsumable } from '../common';
+import { ConsumableJson, getValidator, NewConsumable, TakeConsumable } from '../common';
 import { ajv, getValidJWTPayload, SCHEMA } from '../common';
 import { getValidCUID } from '../common/customMiddlewares';
 import * as consumableService from './consumableService';
@@ -25,7 +25,7 @@ export const takeConsumable: RequestHandler = async ({ params, user, body }, res
 };
 
 function getValidConsumableCount(body: unknown): TakeConsumable {
-  const validator = getCountValidator();
+  const validator = getValidator<TakeConsumable>(SCHEMA.CONSUMABLE_TAKE);
   if (!validator(body)) {
     throw createError(400, ajv.errorsText(validator.errors));
   }
@@ -41,19 +41,8 @@ export const createConsumable: RequestHandler = async ({ user, body }, res, next
   }
 };
 
-function getCountValidator() {
-  const validator = ajv.getSchema<TakeConsumable>(SCHEMA.CONSUMABLE_TAKE);
-  if (validator === undefined) {
-    throw createError(500, 'Unable to get validator to parse json');
-  }
-  return validator;
-}
-
 function getValidCreateForm(body: unknown) {
-  const validator = ajv.getSchema<NewConsumable>(SCHEMA.CONSUMABLE_NEW);
-  if (validator === undefined) {
-    throw createError(500, 'Unable to get json validator');
-  }
+  const validator = getValidator<NewConsumable>(SCHEMA.CONSUMABLE_NEW);
   if (!validator(body)) {
     throw createError(400, ajv.errorsText(validator.errors));
   }
@@ -62,7 +51,7 @@ function getValidCreateForm(body: unknown) {
 
 /** Ensure that a complete item is provided for the update */
 function getValidUpdateForm(id: string, body: unknown): ConsumableJson {
-  const validator = getUpdateFormValidator();
+  const validator = getValidator<ConsumableJson>(SCHEMA.CONSUMABLE_UPDATE);
   if (!validator(body)) {
     throw createError(400, ajv.errorsText(validator.errors));
   }
@@ -82,10 +71,3 @@ export const updateConsumable: RequestHandler = async ({ params, body }, res, ne
     next(err);
   }
 };
-function getUpdateFormValidator() {
-  const validator = ajv.getSchema<ConsumableJson>(SCHEMA.CONSUMABLE_UPDATE);
-  if (validator === undefined) {
-    throw createError(500, 'Unable to get JSON validator');
-  }
-  return validator;
-}

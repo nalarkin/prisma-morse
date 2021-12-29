@@ -1,6 +1,6 @@
 import type { RequestHandler } from 'express';
 import createError from 'http-errors';
-import { ajv, getValidCUID, getValidJWTPayload, SCHEMA } from '../common';
+import { ajv, getValidator, getValidCUID, getValidJWTPayload, SCHEMA } from '../common';
 import type { SerializableJson } from '../common/schema';
 import { SerializableNew } from '../common/schema/schema_serializable';
 import * as serializablesService from './serializablesService';
@@ -68,7 +68,6 @@ export const deleteItem: RequestHandler = async ({ params }, res, next) => {
 /** Update serializable if user is admin */
 export const updateItem: RequestHandler = async ({ params, body }, res, next) => {
   try {
-    // @TODO: Add error handling when deleting item
     return res.json(await serializablesService.updateItem(getValidUpdateForm(params.id, body)));
   } catch (err) {
     next(err);
@@ -81,7 +80,8 @@ function getValidUpdateForm(id: unknown, body: unknown) {
 
 /** Ensure that a complete item is provided for the update */
 function validateUpdateForm(id: string, body: unknown) {
-  const validator = getUpdateFormValidator();
+  // const validator = getUpdateFormValidator();
+  const validator = getValidator<SerializableJson>(SCHEMA.SERIALIZABLE_UPDATE);
   if (!validator(body)) {
     throw createError(400, ajv.errorsText(validator.errors));
   }
@@ -92,25 +92,10 @@ function validateUpdateForm(id: string, body: unknown) {
   return body;
 }
 
-function getUpdateFormValidator() {
-  const validator = ajv.getSchema<SerializableJson>(SCHEMA.SERIALIZABLE_UPDATE);
-  if (validator === undefined) {
-    throw createError(500, 'Unable to get JSON validator');
-  }
-  return validator;
-}
-
 function getValidSerializableNewForm(body: unknown) {
-  const validator = getSerializableNewValidator();
+  const validator = getValidator<SerializableNew>(SCHEMA.SERIALIZABLE_NEW);
   if (!validator(body)) {
     throw createError(400, ajv.errorsText(validator.errors));
   }
   return body;
-}
-function getSerializableNewValidator() {
-  const validator = ajv.getSchema<SerializableNew>(SCHEMA.SERIALIZABLE_NEW);
-  if (validator === undefined) {
-    throw createError(500, 'Unable to get JSON validator');
-  }
-  return validator;
 }

@@ -2,6 +2,7 @@ import type { RequestHandler } from 'express';
 import createError from 'http-errors';
 import { ajv, SCHEMA } from '../common';
 import type { UserEdit } from '../common/schema';
+import { getValidator } from '../common/validation';
 import type { JWTPayloadRequest } from '../loaders/passport';
 import * as usersService from './usersService';
 
@@ -50,19 +51,11 @@ export const getAllUsers: RequestHandler = async (req, res, next) => {
 };
 
 function getValidatedUserEdit(body: unknown) {
-  const validator = getUserEditValidator();
+  const validator = getValidator<UserEdit>(SCHEMA.USER_EDIT);
   if (!validator(body)) {
     throw createError(400, ajv.errorsText(validator.errors));
   }
   return body;
-}
-
-function getUserEditValidator() {
-  const validator = ajv.getSchema<UserEdit>(SCHEMA.USER_EDIT);
-  if (validator === undefined) {
-    throw createError(500, 'Could not find JSON validator');
-  }
-  return validator;
 }
 
 /**
@@ -72,33 +65,17 @@ function getUserEditValidator() {
  */
 function getValidatedUserId(id: unknown) {
   const userId = Number(id);
-  const validator = getIDValidator();
+  const validator = getValidator<number>(SCHEMA.USER_ID);
   if (validator(userId)) {
     return userId;
   }
   throw createError(400, ajv.errorsText(validator.errors));
 }
 
-function getIDValidator() {
-  const validator = ajv.getSchema<number>(SCHEMA.USER_ID);
-  if (validator === undefined) {
-    throw createError(500, 'Could not find JSON validator');
-  }
-  return validator;
-}
-
 function getValidatedJWTPayload(user: unknown) {
-  const validator = getJWTPayloadValidator();
+  const validator = getValidator<JWTPayloadRequest>(SCHEMA.JWT_REQUEST);
   if (!validator(user)) {
     throw createError(400, ajv.errorsText(validator.errors));
   }
   return user;
-}
-
-function getJWTPayloadValidator() {
-  const validator = ajv.getSchema<JWTPayloadRequest>(SCHEMA.JWT_REQUEST);
-  if (validator === undefined) {
-    throw createError(500, 'Could not find JSON validator');
-  }
-  return validator;
 }

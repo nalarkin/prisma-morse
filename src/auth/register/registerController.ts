@@ -3,12 +3,10 @@ import createError from 'http-errors';
 import type { RegisterForm } from '../../common';
 import { ajv, SCHEMA } from '../../common';
 import * as registerService from './registerService';
+import { getValidator } from '../../common/validation';
 
 function validateRegistrationForm(body: unknown) {
-  const validate = ajv.getSchema<RegisterForm>(SCHEMA.REGISTER);
-  if (validate === undefined) {
-    throw createError(500, 'Unable to get json validator');
-  }
+  const validate = getValidator<RegisterForm>(SCHEMA.REGISTER);
   if (!validate(body)) {
     throw createError(400, ajv.errorsText(validate.errors));
   }
