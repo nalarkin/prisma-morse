@@ -10,7 +10,7 @@ import * as refreshController from './refreshController';
 const router = Router();
 
 /**
- * Use HTTPS cookies to generate a new access token.
+ * Use HTTPS cookies to generate a new access token. Does not require valid Bearer token.
  * Should I give them updated refresh token as well?
  */
 router.post('/refresh/cookie/', refreshController.validateRefreshTokenCookie);

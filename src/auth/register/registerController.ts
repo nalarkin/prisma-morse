@@ -1,5 +1,4 @@
 import type { RequestHandler } from 'express';
-import createError from 'http-errors';
 import type { RegisterForm } from '../../common';
 import { ajv, SCHEMA, getValidated } from '../../common';
 import * as registerService from './registerService';

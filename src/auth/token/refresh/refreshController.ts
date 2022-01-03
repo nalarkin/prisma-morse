@@ -12,6 +12,7 @@ export const validateRefreshTokenCookie: RequestHandler = async (req, res, next)
   try {
     const { refresh_token } = req.cookies;
     // @TODO: Add validation to this JWT
+    // @TODO: Verify I don't need to use await/async here.
     const retrievedToken = await refreshService.validateRefreshToken(refresh_token);
     const user = await usersService.getUser(retrievedToken.sub);
     const access_token = issueJWT(user, ACCESS_JWT_EXPIRE); // new valid short-lived access token

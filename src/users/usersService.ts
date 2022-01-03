@@ -9,6 +9,7 @@ import * as usersDAL from './usersDAL';
 export async function getAllUsers() {
   return usersDAL.prismaGetAllUsers();
 }
+
 export async function getUser(id: number) {
   try {
     const user = await usersDAL.prismaGetUser({ id });
@@ -25,6 +26,7 @@ export async function getUser(id: number) {
   }
 }
 
+// @TODO: Add check to verify user exists in database before attempting delete
 export async function deleteUser(id: number) {
   try {
     return await usersDAL.prismaDeleteUser(id);
@@ -34,6 +36,7 @@ export async function deleteUser(id: number) {
   }
 }
 
+// @TODO: Add check to verify user exists in database before attempting update
 export async function updateUser(id: number, userChange: UserEdit) {
   try {
     return await usersDAL.prismaUpdateUser(id, userChange);

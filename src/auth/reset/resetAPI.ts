@@ -7,6 +7,7 @@ import * as resetController from './resetController';
 
 const router = Router();
 
+/** Require that users who reset the password be authenticated */
 router.use(passport.authenticate('jwt', { session: false }));
 
 router.post('/password', resetController.passwordReset);

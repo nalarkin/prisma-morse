@@ -1,5 +1,4 @@
 import type { RequestHandler } from 'express';
-import createError from 'http-errors';
 import { ajv, SCHEMA, getValidated } from '../common';
 import type { UserEdit } from '../common/schema';
 import type { JWTPayloadRequest } from '../loaders/passport';
@@ -51,12 +50,6 @@ export const getAllUsers: RequestHandler = async (req, res, next) => {
 
 function getValidatedUserEdit(body: unknown) {
   return getValidated<UserEdit>(SCHEMA.USER_EDIT, body);
-
-  // const validator = getValidator<UserEdit>(SCHEMA.USER_EDIT);
-  // if (!validator(body)) {
-  //   throw createError(400, ajv.errorsText(validator.errors));
-  // }
-  // return body;
 }
 
 /**
@@ -67,20 +60,8 @@ function getValidatedUserEdit(body: unknown) {
 function getValidatedUserId(id: unknown) {
   const userId = Number(id);
   return getValidated<number>(SCHEMA.USER_ID, userId);
-
-  // const validator = getValidator<number>(SCHEMA.USER_ID);
-  // if (validator(userId)) {
-  //   return userId;
-  // }
-  // throw createError(400, ajv.errorsText(validator.errors));
 }
 
 function getValidatedJWTPayload(user: unknown) {
   return getValidated<JWTPayloadRequest>(SCHEMA.JWT_REQUEST, user);
-
-  // const validator = getValidator<JWTPayloadRequest>(SCHEMA.JWT_REQUEST);
-  // if (!validator(user)) {
-  //   throw createError(400, ajv.errorsText(validator.errors));
-  // }
-  // return user;
 }

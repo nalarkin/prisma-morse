@@ -14,6 +14,7 @@ export const passwordReset: RequestHandler = async (req, res, next) => {
     // validate that data within JWT follows expected properties
     const { sub: userId } = getValidJWTPayload(req.user);
 
+    // get the latest info on the user who is requesting the password reset
     const user = await usersService.getUser(userId);
 
     const matchesCurrentPassword = await verifyPassword(user.password, passwordResetForm.password);
@@ -28,9 +29,6 @@ export const passwordReset: RequestHandler = async (req, res, next) => {
 
 function validatePasswordResetForm(body: unknown) {
   const data = getValidated<PasswordResetForm>(SCHEMA.PASSWORD_RESET, body);
-  // if (!validator(body)) {
-  //   throw createError(400, ajv.errorsText(validator.errors));
-  // }
   if (data.newPassword === data.password) {
     throw createError(400, 'New password must be different from current password');
   }

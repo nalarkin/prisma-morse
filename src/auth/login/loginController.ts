@@ -28,6 +28,10 @@ function createResponse(res: Response, user: Pick<User, 'id' | 'role'>) {
   return res.json(responseContent);
 }
 
+/**
+ * Handles the login process, including password verification and issuing access and
+ * refersh tokens on successful login.
+ */
 export const login: RequestHandler = async (req, res, next) => {
   try {
     const { password: providedPassword, email } = validateLoginForm(req.body);

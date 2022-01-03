@@ -1,9 +1,6 @@
 import type { UserEdit } from '../common/schema/';
 import prisma from '../loaders/database';
 
-/**
- * Make calls do database in here
- */
 export async function prismaGetAllUsers() {
   return prisma.user.findMany();
 }
@@ -34,7 +31,7 @@ export async function prismaGetUser(res: GetUserByEmail | GetUserByID, options?:
   return getUserFromEmail(res.email, serializables);
 }
 
-function getUserFromEmail(email: string, serializables?: boolean) {
+async function getUserFromEmail(email: string, serializables?: boolean) {
   return prisma.user.findUnique({
     where: {
       email,
@@ -45,7 +42,7 @@ function getUserFromEmail(email: string, serializables?: boolean) {
   });
 }
 
-function getUserFromId(id: number, serializables?: boolean) {
+async function getUserFromId(id: number, serializables?: boolean) {
   return prisma.user.findUnique({
     where: {
       id,
