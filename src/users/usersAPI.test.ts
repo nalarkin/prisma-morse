@@ -1,16 +1,25 @@
 /* eslint-disable @typescript-eslint/no-namespace */
+import { User } from '@prisma/client';
 import faker from 'faker';
 import supertest from 'supertest';
 import { app } from '../loaders';
 import { prismaMock } from '../loaders/singleton';
 import { makeTestUser } from '../testing';
 
+let testUser: User;
+
+beforeEach(() => {
+  testUser = makeTestUser();
+  prismaMock.user.findMany.mockResolvedValue([testUser]);
+  prismaMock.user.findUnique.mockResolvedValue(testUser);
+});
+
 describe('Users API', () => {
   describe('GET /api/users/', () => {
     it('When all users are requested, the response is an array of users', async () => {
-      const testUser = makeTestUser();
+      // const testUser = makeTestUser();
 
-      prismaMock.user.findMany.mockResolvedValue([testUser]);
+      // prismaMock.user.findMany.mockResolvedValue([testUser]);
       await supertest(app)
         .get('/api/users/')
         .expect(200)
@@ -24,8 +33,8 @@ describe('Users API', () => {
   });
   describe('GET /api/users/:id/', () => {
     it('When an existing user is requested, the server responds with the user', async () => {
-      const testUser = makeTestUser();
-      prismaMock.user.findUnique.mockResolvedValue(testUser);
+      // const testUser = makeTestUser();
+      // prismaMock.user.findUnique.mockResolvedValue(testUser);
       await supertest(app)
         .get(`/api/users/${testUser.id}/`)
         .expect(200)
@@ -37,7 +46,7 @@ describe('Users API', () => {
           expect(body).toStrictEqual(JSON.parse(JSON.stringify(testUser)));
         });
     });
-    it('When an user that does not exist is requested, the response code is 404', async () => {
+    it('When a user that does not exist is requested, the response code is 404', async () => {
       prismaMock.user.findUnique.mockResolvedValue(null);
       await supertest(app)
         .get(`/api/users/${faker.datatype.number(9999999)}/`)

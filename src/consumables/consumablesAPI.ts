@@ -25,9 +25,6 @@ router.post(
   consumablesController.createConsumable,
 );
 
-/** Use item id verification for every request that provides an id param */
-// router.use('/:id/', verifyCUIDMiddleware);
-
 /**
  * Delete a consumable. Need to decide on deletion tracking method. Cascade delete
  * is necessary? Maybe move it into a new table?
