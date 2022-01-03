@@ -1,5 +1,5 @@
 import type { RequestHandler } from 'express';
-import { ajv, SCHEMA, getValidated } from '../common';
+import { getValidated, SCHEMA } from '../common';
 import type { UserEdit } from '../common/schema';
 import type { JWTPayloadRequest } from '../loaders/passport';
 import * as usersService from './usersService';

@@ -1,0 +1,124 @@
+swagger: '2.0'
+info:
+  description: 'This is a sample server.  An easy editor to create API documentation at [this link](https://editor.swagger.io/).     You can find out more about     Swagger at [http://swagger.io](http://swagger.io)'
+  version: '1.0.0'
+  title: 'Morse Inventory API'
+  termsOfService: 'http://swagger.io/terms/'
+  contact:
+    email: 'apiteam@swagger.io'
+  license:
+    name: 'Apache 2.0'
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+host: 'petstore.swagger.io'
+basePath: '/api/'
+tags:
+  - name: 'user'
+    description: 'Operations about user'
+    externalDocs:
+      description: 'Find out more about our store'
+      url: 'http://swagger.io'
+schemes:
+  - 'https'
+  - 'http'
+paths:
+  /auth/login:
+    post:
+      tags:
+        - 'user'
+      summary: 'Login user'
+      operationId: 'loginUser'
+      consumes:
+        - 'application/json'
+      produces:
+        - 'application/json'
+      parameters:
+        - in: 'body'
+          name: 'body'
+          description: 'Pet object that needs to be added to the store'
+          required: true
+          schema:
+            type: 'object'
+            required:
+              - 'email'
+              - 'password'
+            properties:
+              email:
+                type: 'string'
+                format: 'email'
+              password:
+                type: 'string'
+      responses:
+        '200':
+          description: 'Successful login'
+          schema:
+            $ref: '#/definitions/LoginSuccess'
+        '401':
+          description: 'Invalid Login'
+
+  /user/{id}:
+    get:
+      tags:
+        - 'user'
+      summary: 'Get user by user id'
+      description: ''
+      operationId: 'getUserById'
+      produces:
+        - 'application/json'
+      parameters:
+        - name: 'id'
+          in: 'path'
+          description: 'The id that needs to be fetched. Use user1 for testing. '
+          required: true
+          type: 'string'
+      responses:
+        '200':
+          description: 'successful operation'
+          schema:
+            $ref: '#/definitions/User'
+        '400':
+          description: 'Invalid username supplied'
+        '404':
+          description: 'User not found'
+definitions:
+  LoginSuccess:
+    type: 'object'
+    required:
+      - 'access_token'
+      - 'refresh_token'
+    properties:
+      access_token:
+        type: 'string'
+      refresh_token:
+        type: 'string'
+  User:
+    type: 'object'
+    required:
+      - 'id'
+      - 'email'
+      - 'role'
+    properties:
+      id:
+        type: 'integer'
+      createdAt:
+        type: 'string'
+        format: 'date-time'
+      email:
+        type: 'string'
+        format: 'email'
+      password:
+        type: 'string'
+      unsafePassword:
+        type: 'string'
+      firstName:
+        type: 'string'
+      lastName:
+        type: 'string'
+      role:
+        $ref: '#/definitions/Role'
+  Role:
+    type: 'string'
+    enum: ['ADMIN', 'USER']
+
+externalDocs:
+  description: 'Find out more about Swagger'
+  url: 'http://swagger.io'

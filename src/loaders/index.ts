@@ -10,3 +10,4 @@ const app = express();
 loadExpress({ app });
 
 export { app };
+export * from './swagger';
