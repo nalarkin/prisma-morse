@@ -1,6 +1,6 @@
 import type { RequestHandler } from 'express';
 import createError from 'http-errors';
-import { ajv, getValidator, getValidCUID, getValidJWTPayload, SCHEMA, getValidated } from '../common';
+import { getValidated, getValidCUID, getValidJWTPayload, SCHEMA } from '../common';
 import type { SerializableJson } from '../common/schema';
 import { SerializableNew } from '../common/schema/schema_serializable';
 import * as serializablesService from './serializablesService';
@@ -80,14 +80,7 @@ function getValidUpdateForm(id: unknown, body: unknown) {
 
 /** Ensure that a complete item is provided for the update */
 function validateUpdateForm(id: string, body: unknown) {
-  // const validator = getUpdateFormValidator();
-  // const validator = getValidator<SerializableJson>(SCHEMA.SERIALIZABLE_UPDATE);
   const data = getValidated<SerializableJson>(SCHEMA.SERIALIZABLE_UPDATE, body);
-
-  // if (!validator(body)) {
-  //   throw createError(400, ajv.errorsText(validator.errors));
-  // }
-
   if (id !== data.id) {
     throw createError(400, 'ID in URI must match the ID in HTTP request');
   }
@@ -96,9 +89,4 @@ function validateUpdateForm(id: string, body: unknown) {
 
 function getValidSerializableNewForm(body: unknown) {
   return getValidated<SerializableNew>(SCHEMA.SERIALIZABLE_NEW, body);
-  // const validator = getValidator<SerializableNew>(SCHEMA.SERIALIZABLE_NEW);
-  // if (!validator(body)) {
-  //   throw createError(400, ajv.errorsText(validator.errors));
-  // }
-  // return body;
 }

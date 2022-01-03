@@ -8,15 +8,13 @@ const router = Router();
 /** Get all users, currently doesn't require requester to be authenticated */
 router.get('/', usersController.getAllUsers);
 
-// @TODO: Ensure authentication requirement is properly applied below
-router.use('/', passport.authenticate('jwt', { session: false }));
-
 /** Get the current user info using the validated JWT to perform a lookup*/
 router.get('/profile/', usersController.getCurrentUser);
 
 /** Delete specified user */
 router.delete(
   '/:id/',
+  passport.authenticate('jwt', { session: false }),
   getRequireAdminMiddleware('You must be an admin to delete other users.'),
   usersController.deleteUser,
 );
@@ -25,6 +23,11 @@ router.delete(
 router.get('/:id/', usersController.getUser);
 
 /** Gives admins the power to update other users */
-router.put('/:id/', getRequireAdminMiddleware('You must be an admin to edit other users.'), usersController.updateUser);
+router.put(
+  '/:id/',
+  passport.authenticate('jwt', { session: false }),
+  getRequireAdminMiddleware('You must be an admin to edit other users.'),
+  usersController.updateUser,
+);
 
 export default router;

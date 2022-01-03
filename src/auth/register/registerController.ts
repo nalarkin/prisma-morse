@@ -1,16 +1,10 @@
 import type { RequestHandler } from 'express';
 import type { RegisterForm } from '../../common';
-import { ajv, SCHEMA, getValidated } from '../../common';
+import { getValidated, SCHEMA } from '../../common';
 import * as registerService from './registerService';
 
 function validateRegistrationForm(body: unknown) {
-  // const validate = getValidator<RegisterForm>(SCHEMA.REGISTER);
   return getValidated<RegisterForm>(SCHEMA.REGISTER, body);
-
-  // if (!validate(body)) {
-  //   throw createError(400, ajv.errorsText(validate.errors));
-  // }
-  // return body;
 }
 
 export const registerUser: RequestHandler = async (req, res, next) => {

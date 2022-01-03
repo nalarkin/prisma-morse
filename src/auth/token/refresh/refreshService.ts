@@ -12,7 +12,3 @@ export function validateRefreshToken(token?: string) {
     throw createError(400, 'Invalid JWT');
   }
 }
-
-// export async function createRefreshToken(token: string, userId: number) {
-//   return await refreshDAL.createRefreshToken(token, userId);
-// }

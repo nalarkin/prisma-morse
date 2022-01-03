@@ -49,6 +49,5 @@ export const login: RequestHandler = async (req, res, next) => {
 
 /** Ensure that provided body meets expected format for login */
 export function validateLoginForm(body: unknown) {
-  // const validator = getValidator<LoginForm>(SCHEMA.LOGIN);
   return getValidated<LoginForm>(SCHEMA.LOGIN, body);
 }

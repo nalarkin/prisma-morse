@@ -3,11 +3,6 @@
  *
  * To add the API route handlers to the express app, call the router.use() command and
  * provide the exported router from this module.
- *
- * @example
- * import exampleAPI from './exampleAPI';
- * router.use(exampleAPI);
- * // or you could add a URI prefix: router.use('/prefix-example', exampleAPI);
  */
 import { Router } from 'express';
 import passport from 'passport';

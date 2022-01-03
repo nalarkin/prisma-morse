@@ -91,7 +91,3 @@ export function validateJWT(token: string) {
   }
   throw createError(400, 'Invalid JWT Format was provided');
 }
-
-// export function tokenIsExpired(expireDate: number) {
-//   return dayjs().isAfter(dayjs(expireDate * 1000));
-// }

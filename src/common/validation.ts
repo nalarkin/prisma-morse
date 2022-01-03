@@ -13,7 +13,7 @@
 
 import Ajv from 'ajv';
 import addFormats from 'ajv-formats';
-import createError, { HttpError } from 'http-errors';
+import createError from 'http-errors';
 import {
   schema_consumable,
   schema_consumable_update,
@@ -24,10 +24,10 @@ import {
   schema_refresh_token,
   schema_register,
   schema_serializable,
+  schema_serializable_new,
   schema_take_consumable,
   schema_user,
   schema_user_id,
-  schema_serializable_new,
 } from './schema';
 import type { JWTPayloadRequest } from './schema/';
 /**
@@ -156,11 +156,6 @@ export function getValidated<T>(schemaName: string, data: unknown, errorMessage?
 
 export function getValidJWTPayload(payload: unknown) {
   return getValidated<JWTPayloadRequest>(JWT_REQUEST, payload, 'JWT Payload has invalid format, please login in again');
-  // const validator = getValidator<JWTPayloadRequest>(JWT_REQUEST);
-  // if (!validator(payload)) {
-  //   throw createError(400, 'JWT Payload has invalid format, please login in again');
-  // }
-  // return payload;
 }
 
 // export const ajv = new Ajv({ strictTypes: false, $data: true });

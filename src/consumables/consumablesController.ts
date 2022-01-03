@@ -1,7 +1,7 @@
 import type { RequestHandler } from 'express';
 import createError from 'http-errors';
 import type { ConsumableJson, NewConsumable, TakeConsumable } from '../common';
-import { ajv, getValidJWTPayload, SCHEMA, getValidated, getValidator } from '../common';
+import { getValidated, getValidJWTPayload, SCHEMA } from '../common';
 import { getValidCUID } from '../common/customMiddlewares';
 import * as consumableService from './consumableService';
 export const getConsumable: RequestHandler = async (req, res, next) => {
@@ -26,12 +26,6 @@ export const takeConsumable: RequestHandler = async ({ params, user, body }, res
 
 function getValidConsumableCount(body: unknown): TakeConsumable {
   return getValidated<TakeConsumable>(SCHEMA.CONSUMABLE_TAKE, body);
-  //   const validator = getValidator<TakeConsumable>(SCHEMA.CONSUMABLE_TAKE);
-
-  // if (!validator(body)) {
-  //   throw createError(400, ajv.errorsText(validator.errors));
-  // }
-  // return body;
 }
 
 export const createConsumable: RequestHandler = async ({ user, body }, res, next) => {
@@ -45,22 +39,12 @@ export const createConsumable: RequestHandler = async ({ user, body }, res, next
 
 function getValidCreateForm(body: unknown) {
   return getValidated<NewConsumable>(SCHEMA.CONSUMABLE_NEW, body);
-
-  // const validator = getValidator<NewConsumable>(SCHEMA.CONSUMABLE_NEW);
-  // if (!validator(body)) {
-  //   throw createError(400, ajv.errorsText(validator.errors));
-  // }
-  // return body;
 }
 
 /** Ensure that a complete item is provided for the update */
 function getValidUpdateForm(id: string, body: unknown): ConsumableJson {
   const data = getValidated<ConsumableJson>(SCHEMA.CONSUMABLE_UPDATE, body);
 
-  // const validator = getValidator<ConsumableJson>(SCHEMA.CONSUMABLE_UPDATE);
-  // if (!validator(body)) {
-  //   throw createError(400, ajv.errorsText(validator.errors));
-  // }
   if (id !== data.id) {
     throw createError(400, 'ID in URI must match the ID in HTTP request');
   }

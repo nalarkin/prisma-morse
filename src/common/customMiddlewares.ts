@@ -4,7 +4,7 @@
 
 import type { RequestHandler } from 'express';
 import createError from 'http-errors';
-import { ajv, getValidated, getValidator, getValidJWTPayload, SCHEMA } from '../common';
+import { getValidated, getValidator, getValidJWTPayload, SCHEMA } from '../common';
 
 const DEFAULT_MESSAGE = 'You do not have sufficient permissions.';
 

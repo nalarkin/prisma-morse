@@ -1,6 +1,6 @@
 import type { RequestHandler } from 'express';
 import createError from 'http-errors';
-import { ajv, getValidJWTPayload, SCHEMA, getValidated } from '../../common';
+import { getValidated, getValidJWTPayload, SCHEMA } from '../../common';
 import type { PasswordResetForm } from '../../common/schema';
 import * as usersService from '../../users/usersService';
 import { verifyPassword } from '../utils';
