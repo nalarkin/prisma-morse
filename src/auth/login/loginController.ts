@@ -2,7 +2,7 @@ import type { User } from '@prisma/client';
 import dayjs from 'dayjs';
 import type { RequestHandler, Response } from 'express';
 import createError from 'http-errors';
-import { ajv, getValidated, getValidator, LoginForm, SCHEMA } from '../../common';
+import { getValidated, LoginForm, SCHEMA } from '../../common';
 import * as loginService from './loginService';
 
 function setResponseHeaders(res: Response) {
