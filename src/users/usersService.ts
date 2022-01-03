@@ -1,4 +1,4 @@
-import createError from 'http-errors';
+import createError, { isHttpError } from 'http-errors';
 import type { UserEdit } from '../common/schema/';
 import { logger } from '../loaders/logging';
 import * as usersDAL from './usersDAL';
@@ -17,7 +17,7 @@ export async function getUser(id: number) {
     }
     return user;
   } catch (err) {
-    if (createError.isHttpError(err)) {
+    if (isHttpError(err)) {
       throw err;
     }
     logger.error('Error occurred when querying user info.');

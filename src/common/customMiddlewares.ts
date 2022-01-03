@@ -4,7 +4,7 @@
 
 import type { RequestHandler } from 'express';
 import createError from 'http-errors';
-import { ajv, getValidator, getValidJWTPayload, SCHEMA } from '../common';
+import { ajv, getValidated, getValidator, getValidJWTPayload, SCHEMA } from '../common';
 
 const DEFAULT_MESSAGE = 'You do not have sufficient permissions.';
 
@@ -57,9 +57,11 @@ export const verifyCUIDMiddleware: RequestHandler = async (req, res, next) => {
 };
 
 export function getValidCUID(id: unknown) {
-  const validator = getValidator<string>(SCHEMA.CUID);
-  if (!validator(id)) {
-    throw createError(400, 'Invalid ID format.');
-  }
-  return id;
+  // const validator = getValidator<string>(SCHEMA.CUID);
+  return getValidated<string>(SCHEMA.CUID, id, 'Invalid ID format.');
+
+  // if (!validator(id)) {
+  //   throw createError(400, 'Invalid ID format.');
+  // }
+  // return id;
 }

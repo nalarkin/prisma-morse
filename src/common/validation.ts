@@ -13,7 +13,7 @@
 
 import Ajv from 'ajv';
 import addFormats from 'ajv-formats';
-import createError from 'http-errors';
+import createError, { HttpError } from 'http-errors';
 import {
   schema_consumable,
   schema_consumable_update,
@@ -131,12 +131,36 @@ export function getValidator<T>(schemaName: string) {
   return validator;
 }
 
-export function getValidJWTPayload(payload: unknown) {
-  const validator = getValidator<JWTPayloadRequest>(JWT_REQUEST);
-  if (!validator(payload)) {
-    throw createError(400, 'JWT Payload has invalid format, please login in again');
+/**
+ * Generic utility function that retrieves the provided schema validator and then uses
+ * the validator to ensure the data matches the expected pattern.
+ *
+ * Throws {HttpError} if unable to find matching validator or the provided data does not
+ * pass validation.
+ *
+ * @param schemaName The name of the schema name that was used to store the desired ajv schema, found in /src/common/validation.ts
+ * @param data The data that will be validated to match the schema
+ * @param errorMessage Optional: String that will be displayed if a {HttpError} 400 status is thrown.
+ * @returns The data with matching the schema shape, and possibly with the additinoal properties removed depending on the schema declaration if additionalProperties is set to false.
+ *
+ * @throws {HttpError} 500: No corresponding schema is associated with the provided schemaName
+ * @throws {HttpError} 400: Data provided failed validation
+ */
+export function getValidated<T>(schemaName: string, data: unknown, errorMessage?: string) {
+  const validator = getValidator<T>(schemaName);
+  if (validator(data)) {
+    return data;
   }
-  return payload;
+  throw createError(400, errorMessage ?? ajv.errorsText(validator.errors));
+}
+
+export function getValidJWTPayload(payload: unknown) {
+  return getValidated<JWTPayloadRequest>(JWT_REQUEST, payload, 'JWT Payload has invalid format, please login in again');
+  // const validator = getValidator<JWTPayloadRequest>(JWT_REQUEST);
+  // if (!validator(payload)) {
+  //   throw createError(400, 'JWT Payload has invalid format, please login in again');
+  // }
+  // return payload;
 }
 
 // export const ajv = new Ajv({ strictTypes: false, $data: true });

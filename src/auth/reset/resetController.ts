@@ -1,11 +1,10 @@
 import type { RequestHandler } from 'express';
 import createError from 'http-errors';
-import { ajv, getValidJWTPayload, SCHEMA } from '../../common';
+import { ajv, getValidJWTPayload, SCHEMA, getValidated } from '../../common';
 import type { PasswordResetForm } from '../../common/schema';
 import * as usersService from '../../users/usersService';
 import { verifyPassword } from '../utils';
 import * as resetService from './resetService';
-import { getValidator } from '../../common/validation';
 
 export const passwordReset: RequestHandler = async (req, res, next) => {
   try {
@@ -28,12 +27,12 @@ export const passwordReset: RequestHandler = async (req, res, next) => {
 };
 
 function validatePasswordResetForm(body: unknown) {
-  const validator = getValidator<PasswordResetForm>(SCHEMA.PASSWORD_RESET);
-  if (!validator(body)) {
-    throw createError(400, ajv.errorsText(validator.errors));
-  }
-  if (body.newPassword === body.password) {
+  const data = getValidated<PasswordResetForm>(SCHEMA.PASSWORD_RESET, body);
+  // if (!validator(body)) {
+  //   throw createError(400, ajv.errorsText(validator.errors));
+  // }
+  if (data.newPassword === data.password) {
     throw createError(400, 'New password must be different from current password');
   }
-  return body;
+  return data;
 }

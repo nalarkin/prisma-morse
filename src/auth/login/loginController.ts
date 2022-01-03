@@ -2,7 +2,7 @@ import type { User } from '@prisma/client';
 import dayjs from 'dayjs';
 import type { RequestHandler, Response } from 'express';
 import createError from 'http-errors';
-import { ajv, getValidator, LoginForm, SCHEMA } from '../../common';
+import { ajv, getValidated, getValidator, LoginForm, SCHEMA } from '../../common';
 import * as loginService from './loginService';
 
 function setResponseHeaders(res: Response) {
@@ -45,9 +45,6 @@ export const login: RequestHandler = async (req, res, next) => {
 
 /** Ensure that provided body meets expected format for login */
 export function validateLoginForm(body: unknown) {
-  const validator = getValidator<LoginForm>(SCHEMA.LOGIN);
-  if (!validator(body)) {
-    throw createError(400, ajv.errorsText(validator.errors));
-  }
-  return body;
+  // const validator = getValidator<LoginForm>(SCHEMA.LOGIN);
+  return getValidated<LoginForm>(SCHEMA.LOGIN, body);
 }
