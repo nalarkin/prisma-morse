@@ -15,19 +15,19 @@ import Ajv from 'ajv';
 import addFormats from 'ajv-formats';
 import createError from 'http-errors';
 import {
-  schema_consumable,
-  schema_consumable_update,
-  schema_item_id,
-  schema_jwt,
-  schema_login,
-  schema_password_reset,
-  schema_refresh_token,
-  schema_register,
-  schema_serializable,
-  schema_serializable_new,
-  schema_take_consumable,
-  schema_user,
-  schema_user_id,
+  consumable,
+  consumableUpdate,
+  itemId,
+  jwt,
+  login,
+  password_reset,
+  tokenRefresh,
+  register,
+  serializable,
+  serializableNew,
+  consumableTake,
+  user,
+  userId,
 } from './schema';
 import type { JWTPayloadRequest } from './schema/';
 /**
@@ -86,19 +86,19 @@ const JWT_REQUEST = 'jwtRequest';
 // Add all the schema to this single instance. It will get cached so repeated schema validations are very quick.
 // If you want to use access schema in application, then you must add it here, then use the `ajv.getSchema()`
 // to access it within the app.
-ajv.addSchema(schema_login, LOGIN);
-ajv.addSchema(schema_register, REGISTER);
-ajv.addSchema(schema_consumable, CONSUMABLE_NEW);
-ajv.addSchema(schema_take_consumable, CONSUMABLE_TAKE);
-ajv.addSchema(schema_refresh_token, TOKEN_REFRESH);
-ajv.addSchema(schema_user, USER_EDIT);
-ajv.addSchema(schema_user_id, USER_ID);
-ajv.addSchema(schema_item_id, CUID);
-ajv.addSchema(schema_serializable, SERIALIZABLE_UPDATE);
-ajv.addSchema(schema_consumable_update, CONSUMABLE_UPDATE);
-ajv.addSchema(schema_password_reset, PASSWORD_RESET);
-ajv.addSchema(schema_jwt, JWT_REQUEST);
-ajv.addSchema(schema_serializable_new, SERIALIZABLE_NEW);
+ajv.addSchema(login, LOGIN);
+ajv.addSchema(register, REGISTER);
+ajv.addSchema(consumable, CONSUMABLE_NEW);
+ajv.addSchema(consumableTake, CONSUMABLE_TAKE);
+ajv.addSchema(tokenRefresh, TOKEN_REFRESH);
+ajv.addSchema(user, USER_EDIT);
+ajv.addSchema(userId, USER_ID);
+ajv.addSchema(itemId, CUID);
+ajv.addSchema(serializable, SERIALIZABLE_UPDATE);
+ajv.addSchema(consumableUpdate, CONSUMABLE_UPDATE);
+ajv.addSchema(password_reset, PASSWORD_RESET);
+ajv.addSchema(jwt, JWT_REQUEST);
+ajv.addSchema(serializableNew, SERIALIZABLE_NEW);
 
 /** Exported constants improve schema retrieval reliability and provide autocomplete feature */
 export const SCHEMA = {

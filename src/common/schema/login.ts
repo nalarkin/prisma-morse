@@ -5,7 +5,7 @@ export interface LoginForm {
   password: string;
 }
 
-export const schema_login: JSONSchemaType<LoginForm> = {
+export const login: JSONSchemaType<LoginForm> = {
   $id: 'login',
   type: 'object',
   properties: {

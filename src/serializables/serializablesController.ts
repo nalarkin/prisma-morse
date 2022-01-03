@@ -2,7 +2,7 @@ import type { RequestHandler } from 'express';
 import createError from 'http-errors';
 import { getValidated, getValidCUID, getValidJWTPayload, SCHEMA } from '../common';
 import type { SerializableJson } from '../common/schema';
-import { SerializableNew } from '../common/schema/schema_serializable';
+import { SerializableNew } from '../common/schema/serializable';
 import * as serializablesService from './serializablesService';
 
 /** Get all serializables */

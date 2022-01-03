@@ -14,7 +14,7 @@ import createError from 'http-errors';
 import type { SignOptions } from 'jsonwebtoken';
 import { sign, verify as verifyJWT } from 'jsonwebtoken';
 import path from 'path';
-import { JWTPayloadRequest } from '../common/schema/schema_jwt';
+import { JWTPayloadRequest } from '../common/schema/jwt';
 import { getValidator, SCHEMA } from '../common/validation';
 
 // numeric value = seconds

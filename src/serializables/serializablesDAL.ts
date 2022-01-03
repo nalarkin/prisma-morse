@@ -1,7 +1,7 @@
 import type { Transaction } from '@prisma/client';
 import createError from 'http-errors';
 import type { SerializableUpdate } from '../common/schema';
-import { SerializableNew } from '../common/schema/schema_serializable';
+import { SerializableNew } from '../common/schema/serializable';
 import prisma from '../loaders/database';
 
 export async function getAll() {

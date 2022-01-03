@@ -1,7 +1,7 @@
 import { Serializable } from '@prisma/client';
 import createError, { isHttpError } from 'http-errors';
-import type { SerializableJson } from '../common/schema/schema_serializable';
-import { SerializableNew } from '../common/schema/schema_serializable';
+import type { SerializableJson } from '../common/schema/serializable';
+import { SerializableNew } from '../common/schema/serializable';
 import * as serializablesDAL from './serializablesDAL';
 
 export async function getAll() {
