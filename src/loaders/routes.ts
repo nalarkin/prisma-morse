@@ -7,7 +7,7 @@
  */
 
 import { Router } from 'express';
-import { loginAPI, protectedAPI, refreshAPI, registerAPI, updateAPI } from '../auth';
+import { loginAPI, logoutAPI, protectedAPI, refreshAPI, registerAPI, updateAPI } from '../auth';
 import cookieAPI from '../auth/token/cookie';
 import { consumablesAPI } from '../consumables';
 import { devAPI } from '../dev';
@@ -29,6 +29,7 @@ export function loadRoutes() {
   router.use('/consumables', consumablesAPI);
   router.use('/auth/register', registerAPI);
   router.use('/auth/update', updateAPI);
+  router.use('/auth/logout', logoutAPI);
   router.use('/serializables', serializablesAPI);
   router.use('/transactions', transactionsAPI);
   router.use('/users', usersAPI);
