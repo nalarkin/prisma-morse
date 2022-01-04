@@ -1,5 +1,5 @@
-import { hashPassword } from '../../auth/utils';
-import * as resetDAL from './resetDAL';
+import { hashPassword } from '../utils';
+import * as resetDAL from './updateDAL';
 
 export async function updatePassword(id: number, password: string) {
   const hashedPassword = await hashPassword(password);

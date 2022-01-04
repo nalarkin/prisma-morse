@@ -7,8 +7,7 @@
  */
 
 import { Router } from 'express';
-import { loginAPI, protectedAPI, refreshAPI, registerAPI } from '../auth';
-import { resetAPI } from '../auth/reset';
+import { loginAPI, protectedAPI, refreshAPI, registerAPI, updateAPI } from '../auth';
 import cookieAPI from '../auth/token/cookie';
 import { consumablesAPI } from '../consumables';
 import { devAPI } from '../dev';
@@ -29,7 +28,7 @@ export function loadRoutes() {
   router.use('/auth/token', refreshAPI);
   router.use('/consumables', consumablesAPI);
   router.use('/auth/register', registerAPI);
-  router.use('/auth/reset', resetAPI);
+  router.use('/auth/update', updateAPI);
   router.use('/serializables', serializablesAPI);
   router.use('/transactions', transactionsAPI);
   router.use('/users', usersAPI);

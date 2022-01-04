@@ -36,3 +36,18 @@ export const userId: JSONSchemaType<number> = {
   type: 'integer',
   minimum: 0,
 };
+
+export type UserPasswordConfirm = {
+  password: string;
+};
+
+export const confirmPassword: JSONSchemaType<UserPasswordConfirm> = {
+  type: 'object',
+  properties: {
+    password: {
+      type: 'string',
+    },
+  },
+  required: ['password'],
+  additionalProperties: false,
+};

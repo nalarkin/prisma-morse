@@ -16,16 +16,16 @@ import addFormats from 'ajv-formats';
 import createError from 'http-errors';
 import {
   consumable,
+  consumableTake,
   consumableUpdate,
   itemId,
   jwt,
   login,
-  password_reset,
-  tokenRefresh,
+  passwordUpdate,
   register,
   serializable,
   serializableNew,
-  consumableTake,
+  tokenRefresh,
   user,
   userId,
 } from './schema';
@@ -71,7 +71,7 @@ addFormats(ajv, ['email', 'date-time', 'date']);
 // same string to retrieve the schema as was used for storage.
 const LOGIN = 'login';
 const REGISTER = 'register';
-const PASSWORD_RESET = 'passwordReset';
+const PASSWORD_UPDATE = 'passwordReset';
 const CONSUMABLE_NEW = 'consumableNew';
 const CONSUMABLE_TAKE = 'consumableTake';
 const CONSUMABLE_UPDATE = 'consumableUpdate';
@@ -80,6 +80,7 @@ const SERIALIZABLE_NEW = 'serializableNew';
 const TOKEN_REFRESH = 'refreshToken';
 const USER_EDIT = 'userEdit';
 const USER_ID = 'userId';
+const USER_PASSWORD_CONFIRM = 'userPasswordConfirm';
 const CUID = 'itemId';
 const JWT_REQUEST = 'jwtRequest';
 
@@ -96,9 +97,10 @@ ajv.addSchema(userId, USER_ID);
 ajv.addSchema(itemId, CUID);
 ajv.addSchema(serializable, SERIALIZABLE_UPDATE);
 ajv.addSchema(consumableUpdate, CONSUMABLE_UPDATE);
-ajv.addSchema(password_reset, PASSWORD_RESET);
+ajv.addSchema(passwordUpdate, PASSWORD_UPDATE);
 ajv.addSchema(jwt, JWT_REQUEST);
 ajv.addSchema(serializableNew, SERIALIZABLE_NEW);
+// ajv.addSchema(confirmPassword, USER_PASSWORD_CONFIRM);
 
 /** Exported constants improve schema retrieval reliability and provide autocomplete feature */
 export const SCHEMA = {
@@ -112,9 +114,10 @@ export const SCHEMA = {
   CUID,
   SERIALIZABLE_UPDATE,
   CONSUMABLE_UPDATE,
-  PASSWORD_RESET,
+  PASSWORD_UPDATE: PASSWORD_UPDATE,
   JWT_REQUEST,
   SERIALIZABLE_NEW,
+  USER_PASSWORD_CONFIRM,
 };
 
 /**

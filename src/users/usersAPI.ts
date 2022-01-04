@@ -11,6 +11,9 @@ router.get('/', usersController.getAllUsers);
 /** Get the current user info using the validated JWT to perform a lookup*/
 router.get('/profile/', passport.authenticate('jwt', { session: false }), usersController.getCurrentUser);
 
+/** Get the current user info using the validated JWT to perform a lookup*/
+router.get('/profile/', passport.authenticate('jwt', { session: false }), usersController.getCurrentUser);
+
 /** Delete specified user */
 router.delete(
   '/:id/',
