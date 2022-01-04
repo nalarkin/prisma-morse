@@ -15,19 +15,20 @@ import Ajv from 'ajv';
 import addFormats from 'ajv-formats';
 import createError from 'http-errors';
 import {
-  schema_consumable,
-  schema_consumable_update,
-  schema_item_id,
-  schema_jwt,
-  schema_login,
-  schema_password_reset,
-  schema_refresh_token,
-  schema_register,
-  schema_serializable,
-  schema_take_consumable,
-  schema_user,
-  schema_user_id,
-  schema_serializable_new,
+  consumable,
+  consumableTake,
+  consumableUpdate,
+  itemId,
+  jwt,
+  login,
+  passwordUpdate,
+  register,
+  searchBasic,
+  serializable,
+  serializableNew,
+  tokenRefresh,
+  user,
+  userId,
 } from './schema';
 import type { JWTPayloadRequest } from './schema/';
 /**
@@ -71,7 +72,7 @@ addFormats(ajv, ['email', 'date-time', 'date']);
 // same string to retrieve the schema as was used for storage.
 const LOGIN = 'login';
 const REGISTER = 'register';
-const PASSWORD_RESET = 'passwordReset';
+const PASSWORD_UPDATE = 'passwordReset';
 const CONSUMABLE_NEW = 'consumableNew';
 const CONSUMABLE_TAKE = 'consumableTake';
 const CONSUMABLE_UPDATE = 'consumableUpdate';
@@ -80,25 +81,29 @@ const SERIALIZABLE_NEW = 'serializableNew';
 const TOKEN_REFRESH = 'refreshToken';
 const USER_EDIT = 'userEdit';
 const USER_ID = 'userId';
+const USER_PASSWORD_CONFIRM = 'userPasswordConfirm';
 const CUID = 'itemId';
 const JWT_REQUEST = 'jwtRequest';
+const SEARCH_BASIC = 'searchBasic';
 
 // Add all the schema to this single instance. It will get cached so repeated schema validations are very quick.
 // If you want to use access schema in application, then you must add it here, then use the `ajv.getSchema()`
 // to access it within the app.
-ajv.addSchema(schema_login, LOGIN);
-ajv.addSchema(schema_register, REGISTER);
-ajv.addSchema(schema_consumable, CONSUMABLE_NEW);
-ajv.addSchema(schema_take_consumable, CONSUMABLE_TAKE);
-ajv.addSchema(schema_refresh_token, TOKEN_REFRESH);
-ajv.addSchema(schema_user, USER_EDIT);
-ajv.addSchema(schema_user_id, USER_ID);
-ajv.addSchema(schema_item_id, CUID);
-ajv.addSchema(schema_serializable, SERIALIZABLE_UPDATE);
-ajv.addSchema(schema_consumable_update, CONSUMABLE_UPDATE);
-ajv.addSchema(schema_password_reset, PASSWORD_RESET);
-ajv.addSchema(schema_jwt, JWT_REQUEST);
-ajv.addSchema(schema_serializable_new, SERIALIZABLE_NEW);
+ajv.addSchema(login, LOGIN);
+ajv.addSchema(register, REGISTER);
+ajv.addSchema(consumable, CONSUMABLE_NEW);
+ajv.addSchema(consumableTake, CONSUMABLE_TAKE);
+ajv.addSchema(tokenRefresh, TOKEN_REFRESH);
+ajv.addSchema(user, USER_EDIT);
+ajv.addSchema(userId, USER_ID);
+ajv.addSchema(itemId, CUID);
+ajv.addSchema(serializable, SERIALIZABLE_UPDATE);
+ajv.addSchema(consumableUpdate, CONSUMABLE_UPDATE);
+ajv.addSchema(passwordUpdate, PASSWORD_UPDATE);
+ajv.addSchema(jwt, JWT_REQUEST);
+ajv.addSchema(serializableNew, SERIALIZABLE_NEW);
+ajv.addSchema(searchBasic, SEARCH_BASIC);
+// ajv.addSchema(confirmPassword, USER_PASSWORD_CONFIRM);
 
 /** Exported constants improve schema retrieval reliability and provide autocomplete feature */
 export const SCHEMA = {
@@ -112,9 +117,11 @@ export const SCHEMA = {
   CUID,
   SERIALIZABLE_UPDATE,
   CONSUMABLE_UPDATE,
-  PASSWORD_RESET,
+  PASSWORD_UPDATE,
   JWT_REQUEST,
   SERIALIZABLE_NEW,
+  USER_PASSWORD_CONFIRM,
+  SEARCH_BASIC,
 };
 
 /**
@@ -131,12 +138,31 @@ export function getValidator<T>(schemaName: string) {
   return validator;
 }
 
-export function getValidJWTPayload(payload: unknown) {
-  const validator = getValidator<JWTPayloadRequest>(JWT_REQUEST);
-  if (!validator(payload)) {
-    throw createError(400, 'JWT Payload has invalid format, please login in again');
+/**
+ * Generic utility function that retrieves the provided schema validator and then uses
+ * the validator to ensure the data matches the expected pattern.
+ *
+ * Throws {HttpError} if unable to find matching validator or the provided data does not
+ * pass validation.
+ *
+ * @param schemaName The name of the schema name that was used to store the desired ajv schema, found in /src/common/validation.ts
+ * @param data The data that will be validated to match the schema
+ * @param errorMessage Optional: String that will be displayed if a {HttpError} 400 status is thrown.
+ * @returns The data with matching the schema shape, and possibly with the additinoal properties removed depending on the schema declaration if additionalProperties is set to false.
+ *
+ * @throws {HttpError} 500: No corresponding schema is associated with the provided schemaName
+ * @throws {HttpError} 400: Data provided failed validation
+ */
+export function getValidated<T>(schemaName: string, data: unknown, errorMessage?: string) {
+  const validator = getValidator<T>(schemaName);
+  if (validator(data)) {
+    return data;
   }
-  return payload;
+  throw createError(400, errorMessage ?? ajv.errorsText(validator.errors));
+}
+
+export function getValidJWTPayload(payload: unknown) {
+  return getValidated<JWTPayloadRequest>(JWT_REQUEST, payload, 'JWT Payload has invalid format, please login in again');
 }
 
 // export const ajv = new Ajv({ strictTypes: false, $data: true });

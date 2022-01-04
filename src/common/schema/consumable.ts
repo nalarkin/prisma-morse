@@ -8,7 +8,7 @@ export type ConsumableJson = Omit<Consumable, 'createdAt' | 'updatedAt'> & { cre
 export type NewConsumable = Omit<Consumable, 'createdAt' | 'userId' | 'updatedAt' | 'id' | 'type'>;
 export type TakeConsumable = Pick<Consumable, 'count'>;
 
-export const schema_consumable: JSONSchemaType<NewConsumable> = {
+export const consumable: JSONSchemaType<NewConsumable> = {
   type: 'object',
   properties: {
     name: { type: 'string' },
@@ -21,7 +21,7 @@ export const schema_consumable: JSONSchemaType<NewConsumable> = {
   additionalProperties: false,
 };
 
-export const schema_consumable_update: JSONSchemaType<ConsumableJson> = {
+export const consumableUpdate: JSONSchemaType<ConsumableJson> = {
   type: 'object',
   properties: {
     name: { type: 'string' },
@@ -42,7 +42,7 @@ export const schema_consumable_update: JSONSchemaType<ConsumableJson> = {
 };
 
 /** Validates number provided is integer and positive number.  */
-export const schema_take_consumable: JSONSchemaType<TakeConsumable> = {
+export const consumableTake: JSONSchemaType<TakeConsumable> = {
   type: 'object',
   properties: {
     count: { type: 'integer', minimum: 1 },

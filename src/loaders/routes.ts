@@ -7,16 +7,17 @@
  */
 
 import { Router } from 'express';
-import { serializablesAPI } from '../serializables';
-import { usersAPI } from '../users';
-import { refreshAPI, loginAPI, protectedAPI, registerAPI } from '../auth';
-import { consumablesAPI } from '../consumables';
-import { transactionsAPI } from '../transactions';
-import { testingAPI } from '../testing';
-import error from '../error/index';
+import { loginAPI, logoutAPI, protectedAPI, refreshAPI, registerAPI, updateAPI } from '../auth';
 import cookieAPI from '../auth/token/cookie';
+import { consumablesAPI } from '../consumables';
 import { devAPI } from '../dev';
-import { resetAPI } from '../auth/reset';
+import { docsAPI } from '../docs';
+import error from '../error/index';
+import { searchAPI } from '../search';
+import { serializablesAPI } from '../serializables';
+import { testingAPI } from '../testing';
+import { transactionsAPI } from '../transactions';
+import { usersAPI } from '../users';
 
 /** Loads all the routes that will be used in the app. */
 export function loadRoutes() {
@@ -28,17 +29,21 @@ export function loadRoutes() {
   router.use('/auth/token', refreshAPI);
   router.use('/consumables', consumablesAPI);
   router.use('/auth/register', registerAPI);
-  router.use('/auth/reset', resetAPI);
+  router.use('/auth/update', updateAPI);
+  router.use('/auth/logout', logoutAPI);
   router.use('/serializables', serializablesAPI);
   router.use('/transactions', transactionsAPI);
   router.use('/users', usersAPI);
   router.use('/cookies', cookieAPI);
+  router.use('/docs', docsAPI);
+  router.use('/search', searchAPI);
 
   // request handlers that are used during development phase
   if (process.env.NODE_ENV !== 'production') {
     router.use(devAPI);
     router.use('/error', error);
     router.use('/testing', testingAPI);
+    router.use('/docs', docsAPI);
   }
   return router;
 }

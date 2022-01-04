@@ -13,7 +13,6 @@ Table User {
   role Role [not null, default: 'USER']
   serializables Serializable [not null]
   transactions Transaction [not null]
-  refreshTokens RefreshToken [not null]
 }
 
 Table Consumable {
@@ -46,13 +45,6 @@ Table Serializable {
   userId Int
   transactions Transaction [not null]
   version Int [not null, default: 0]
-}
-
-Table RefreshToken {
-  id String [pk]
-  token String [unique, not null]
-  userId Int
-  user User
 }
 
 Table Transaction {
@@ -95,8 +87,6 @@ Enum ItemStatus {
 }
 
 Ref: Serializable.userId > User.id
-
-Ref: RefreshToken.userId > User.id
 
 Ref: Transaction.consumableId > Consumable.id
 

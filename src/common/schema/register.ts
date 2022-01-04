@@ -13,7 +13,7 @@ export interface RegisterForm {
  * https://ajv.js.org/guide/combining-schemas.html#data-reference *
  */
 // @ts-expect-error $data directive doesn't agree with type inference of TS
-export const schema_register: JSONSchemaType<RegisterForm> = {
+export const register: JSONSchemaType<RegisterForm> = {
   $id: '/schemas/register',
   type: 'object',
   properties: {
@@ -27,20 +27,20 @@ export const schema_register: JSONSchemaType<RegisterForm> = {
   additionalProperties: false,
 };
 
-export type PasswordResetForm = {
+export type PasswordUpdateForm = {
   password: string;
   newPassword: string;
-  confirmNewPassword: string;
+  newPasswordConfirm: string;
 };
 
 /** Must provide current password, and matching pair of new passwords */
 // @ts-expect-error $data directive doesn't agree with type inference of TS
-export const schema_password_reset: JSONSchemaType<PasswordResetForm> = {
+export const passwordUpdate: JSONSchemaType<PasswordUpdateForm> = {
   type: 'object',
   properties: {
     password: { type: 'string' },
     newPassword: { type: 'string' },
-    confirmNewPassword: { type: 'string', pattern: { $data: '1/newPassword' } },
+    newPasswordConfirm: { type: 'string', pattern: { $data: '1/newPassword' } },
   },
-  required: ['password', 'newPassword', 'confirmNewPassword'],
+  required: ['password', 'newPassword', 'newPasswordConfirm'],
 };

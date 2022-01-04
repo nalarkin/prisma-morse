@@ -3,12 +3,13 @@
  */
 import { Router } from 'express';
 import passport from 'passport';
-import * as resetController from './resetController';
+import * as updateController from './updateController';
 
 const router = Router();
 
+/** Require that users who reset the password be authenticated */
 router.use(passport.authenticate('jwt', { session: false }));
 
-router.post('/password', resetController.passwordReset);
+router.post('/password', updateController.updatePassword);
 
 export default router;

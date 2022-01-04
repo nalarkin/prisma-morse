@@ -3,7 +3,7 @@ import { User } from '@prisma/client';
 
 export type UserEdit = Omit<User, 'createdAt' | 'id'>;
 
-export const schema_user: JSONSchemaType<UserEdit> = {
+export const user: JSONSchemaType<UserEdit> = {
   $id: '/schemas/user',
   type: 'object',
   properties: {
@@ -32,7 +32,22 @@ export const schema_user: JSONSchemaType<UserEdit> = {
   additionalProperties: false,
 };
 
-export const schema_user_id: JSONSchemaType<number> = {
+export const userId: JSONSchemaType<number> = {
   type: 'integer',
   minimum: 0,
+};
+
+export type UserPasswordConfirm = {
+  password: string;
+};
+
+export const confirmPassword: JSONSchemaType<UserPasswordConfirm> = {
+  type: 'object',
+  properties: {
+    password: {
+      type: 'string',
+    },
+  },
+  required: ['password'],
+  additionalProperties: false,
 };

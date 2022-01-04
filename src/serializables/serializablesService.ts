@@ -1,7 +1,7 @@
 import { Serializable } from '@prisma/client';
-import createError from 'http-errors';
-import type { SerializableJson } from '../common/schema/schema_serializable';
-import { SerializableNew } from '../common/schema/schema_serializable';
+import createError, { isHttpError } from 'http-errors';
+import type { SerializableJson } from '../common/schema/serializable';
+import { SerializableNew } from '../common/schema/serializable';
 import * as serializablesDAL from './serializablesDAL';
 
 export async function getAll() {
@@ -58,11 +58,18 @@ async function getSerializable(id: string) {
 }
 
 export async function deleteItem(id: string) {
-  const item = await serializablesDAL.getSingle(id);
-  if (item === null) {
-    throw createError(404, 'Item does not exist');
+  try {
+    const item = await serializablesDAL.getSingle(id);
+    if (item === null) {
+      throw createError(404, 'Item does not exist');
+    }
+    return serializablesDAL.deleteItem(id);
+  } catch (e) {
+    if (isHttpError(e)) {
+      throw e;
+    }
+    throw createError(500, 'Error occurred during deletion but after initial search validation');
   }
-  return serializablesDAL.deleteItem(id);
 }
 
 export async function updateItem(serializable: SerializableJson) {

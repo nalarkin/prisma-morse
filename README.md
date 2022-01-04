@@ -76,6 +76,9 @@ yarn keypair
 
 # add random data to database. Tells the prisma client to run the seed file at ./prisma/seed.ts
 yarn seed
+
+# compile project into javascript (output dir ./dist), which is what is used in production
+yarn build
 ```
 
 ---
@@ -87,6 +90,8 @@ yarn seed
    2. [JSON web token security guide for Java](https://cheatsheetseries.owasp.org/cheatsheets/JSON_Web_Token_for_Java_Cheat_Sheet.html)
    3. Other option: https://datatracker.ietf.org/doc/rfc8725/
    4. Best option might be to only use local storage, because supposedly this will only be an issue if using CDN, and that is not a requirement of this project
+2. Add improved script to run production (yarn install && tsc --build)
+3. Configure PM2
 
 ---
 

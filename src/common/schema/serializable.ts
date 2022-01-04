@@ -12,7 +12,7 @@ export type SerializableJson = Omit<Serializable, 'createdAt' | 'updatedAt'> & {
 
 export type RenterJson = Pick<User, 'firstName' | 'lastName' | 'id'> | null;
 
-export const schemaRenter: JSONSchemaType<RenterJson> = {
+export const renter: JSONSchemaType<RenterJson> = {
   type: 'object',
   nullable: true,
   properties: {
@@ -23,7 +23,7 @@ export const schemaRenter: JSONSchemaType<RenterJson> = {
   required: ['id', 'firstName', 'lastName'],
 };
 
-export const schema_serializable: JSONSchemaType<SerializableJson> = {
+export const serializable: JSONSchemaType<SerializableJson> = {
   type: 'object',
   properties: {
     id: {
@@ -108,7 +108,7 @@ export const schema_serializable: JSONSchemaType<SerializableJson> = {
 export type SerializableNew = Pick<Serializable, 'name' | 'serial_number' | 'type' | 'status'> &
   Partial<Pick<Serializable, 'brand' | 'photo' | 'project' | 'guide' | 'description'>>;
 
-export const schema_serializable_new: JSONSchemaType<SerializableNew> = {
+export const serializableNew: JSONSchemaType<SerializableNew> = {
   type: 'object',
   properties: {
     name: {

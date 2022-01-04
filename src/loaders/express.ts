@@ -9,6 +9,7 @@ import type { Application } from 'express';
 import { json } from 'express';
 import passport from 'passport';
 import pinohttp from 'pino-http';
+import { errorHandler } from './errorHandler';
 import configPassport from './passport';
 import { loadRoutes } from './routes';
 
@@ -33,4 +34,5 @@ export function loadExpress({ app }: { app: Application }) {
   }
 
   app.use('/api', loadRoutes()); // apply all route handlers to the express app
+  app.use(errorHandler);
 }

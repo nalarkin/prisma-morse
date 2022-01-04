@@ -8,7 +8,7 @@ export interface RefreshTokenRequest {
  * Includes confirmed_password matching using the $data directive
  * https://ajv.js.org/guide/combining-schemas.html#data-reference *
  */
-export const schema_refresh_token: JSONSchemaType<RefreshTokenRequest> = {
+export const tokenRefresh: JSONSchemaType<RefreshTokenRequest> = {
   $id: '/schemas/token/refresh',
   type: 'object',
   properties: {

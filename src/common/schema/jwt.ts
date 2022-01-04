@@ -8,7 +8,7 @@ export type JWTPayloadRequest = {
   exp: number;
 };
 
-export const schema_jwt: JSONSchemaType<JWTPayloadRequest> = {
+export const jwt: JSONSchemaType<JWTPayloadRequest> = {
   type: 'object',
   properties: {
     sub: { type: 'integer', minimum: 0 },

@@ -14,7 +14,7 @@ import createError from 'http-errors';
 import type { SignOptions } from 'jsonwebtoken';
 import { sign, verify as verifyJWT } from 'jsonwebtoken';
 import path from 'path';
-import { JWTPayloadRequest } from '../common/schema/schema_jwt';
+import { JWTPayloadRequest } from '../common/schema/jwt';
 import { getValidator, SCHEMA } from '../common/validation';
 
 // numeric value = seconds
@@ -91,7 +91,3 @@ export function validateJWT(token: string) {
   }
   throw createError(400, 'Invalid JWT Format was provided');
 }
-
-// export function tokenIsExpired(expireDate: number) {
-//   return dayjs().isAfter(dayjs(expireDate * 1000));
-// }

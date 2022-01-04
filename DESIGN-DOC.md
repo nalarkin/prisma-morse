@@ -17,6 +17,7 @@ The goal of this application is to create back end server which exposes an API t
 - assign user roles to represent different user permissions, which allow some APIs to only be accessible if user has a certain role
 - provide means for registering users, logging in users, and persisting user login and user information
 - privacy of user login information
+- create application which is able to transition to serverless (possibly after initial deployment)
 
 ### Non-goals
 
@@ -65,11 +66,31 @@ A large tradeoff of using Express.js is working with JavaScript during debugging
 
 ![image-20211221163734397](https://i.imgur.com/AUgHh97.png)
 
+This application is what connects the MySQL database with the front-end website. The front-end will make HTTP requests to API endpoints, this application will validate, process, possibly interact with the MySQL database, and perform the corresponding actions.
+
+In the future, this graph may need to be updated when we incorporate a reverse proxy (nginx/apache) to be the middleman between the client's requests and the front-end and back-end of the application.
+
 ---
 
 ## APIs
 
-add later
+### add later
+
+/api/serializables
+
+/api/consumables
+
+/api/users
+
+/api/auth/login
+
+/api/auth/register
+
+/api/auth/token/refresh
+
+/api/transactions
+
+/api/auth/reset
 
 ---
 

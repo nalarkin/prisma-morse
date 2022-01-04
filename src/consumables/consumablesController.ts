@@ -1,7 +1,7 @@
 import type { RequestHandler } from 'express';
 import createError from 'http-errors';
-import { ConsumableJson, getValidator, NewConsumable, TakeConsumable } from '../common';
-import { ajv, getValidJWTPayload, SCHEMA } from '../common';
+import type { ConsumableJson, NewConsumable, TakeConsumable } from '../common';
+import { getValidated, getValidJWTPayload, SCHEMA } from '../common';
 import { getValidCUID } from '../common/customMiddlewares';
 import * as consumableService from './consumableService';
 export const getConsumable: RequestHandler = async (req, res, next) => {
@@ -25,11 +25,7 @@ export const takeConsumable: RequestHandler = async ({ params, user, body }, res
 };
 
 function getValidConsumableCount(body: unknown): TakeConsumable {
-  const validator = getValidator<TakeConsumable>(SCHEMA.CONSUMABLE_TAKE);
-  if (!validator(body)) {
-    throw createError(400, ajv.errorsText(validator.errors));
-  }
-  return body;
+  return getValidated<TakeConsumable>(SCHEMA.CONSUMABLE_TAKE, body);
 }
 
 export const createConsumable: RequestHandler = async ({ user, body }, res, next) => {
@@ -42,23 +38,17 @@ export const createConsumable: RequestHandler = async ({ user, body }, res, next
 };
 
 function getValidCreateForm(body: unknown) {
-  const validator = getValidator<NewConsumable>(SCHEMA.CONSUMABLE_NEW);
-  if (!validator(body)) {
-    throw createError(400, ajv.errorsText(validator.errors));
-  }
-  return body;
+  return getValidated<NewConsumable>(SCHEMA.CONSUMABLE_NEW, body);
 }
 
 /** Ensure that a complete item is provided for the update */
 function getValidUpdateForm(id: string, body: unknown): ConsumableJson {
-  const validator = getValidator<ConsumableJson>(SCHEMA.CONSUMABLE_UPDATE);
-  if (!validator(body)) {
-    throw createError(400, ajv.errorsText(validator.errors));
-  }
-  if (id !== body.id) {
+  const data = getValidated<ConsumableJson>(SCHEMA.CONSUMABLE_UPDATE, body);
+
+  if (id !== data.id) {
     throw createError(400, 'ID in URI must match the ID in HTTP request');
   }
-  return body;
+  return data;
 }
 
 /** Update serializable if user is admin */
