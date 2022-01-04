@@ -23,6 +23,7 @@ import {
   login,
   passwordUpdate,
   register,
+  searchBasic,
   serializable,
   serializableNew,
   tokenRefresh,
@@ -83,6 +84,7 @@ const USER_ID = 'userId';
 const USER_PASSWORD_CONFIRM = 'userPasswordConfirm';
 const CUID = 'itemId';
 const JWT_REQUEST = 'jwtRequest';
+const SEARCH_BASIC = 'searchBasic';
 
 // Add all the schema to this single instance. It will get cached so repeated schema validations are very quick.
 // If you want to use access schema in application, then you must add it here, then use the `ajv.getSchema()`
@@ -100,6 +102,7 @@ ajv.addSchema(consumableUpdate, CONSUMABLE_UPDATE);
 ajv.addSchema(passwordUpdate, PASSWORD_UPDATE);
 ajv.addSchema(jwt, JWT_REQUEST);
 ajv.addSchema(serializableNew, SERIALIZABLE_NEW);
+ajv.addSchema(searchBasic, SEARCH_BASIC);
 // ajv.addSchema(confirmPassword, USER_PASSWORD_CONFIRM);
 
 /** Exported constants improve schema retrieval reliability and provide autocomplete feature */
@@ -114,10 +117,11 @@ export const SCHEMA = {
   CUID,
   SERIALIZABLE_UPDATE,
   CONSUMABLE_UPDATE,
-  PASSWORD_UPDATE: PASSWORD_UPDATE,
+  PASSWORD_UPDATE,
   JWT_REQUEST,
   SERIALIZABLE_NEW,
   USER_PASSWORD_CONFIRM,
+  SEARCH_BASIC,
 };
 
 /**

@@ -13,6 +13,7 @@ import { consumablesAPI } from '../consumables';
 import { devAPI } from '../dev';
 import { docsAPI } from '../docs';
 import error from '../error/index';
+import { searchAPI } from '../search';
 import { serializablesAPI } from '../serializables';
 import { testingAPI } from '../testing';
 import { transactionsAPI } from '../transactions';
@@ -35,6 +36,7 @@ export function loadRoutes() {
   router.use('/users', usersAPI);
   router.use('/cookies', cookieAPI);
   router.use('/docs', docsAPI);
+  router.use('/search', searchAPI);
 
   // request handlers that are used during development phase
   if (process.env.NODE_ENV !== 'production') {

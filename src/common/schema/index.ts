@@ -6,3 +6,4 @@ export * from './register';
 export * from './serializable';
 export * from './tokenRefresh';
 export * from './user';
+export * from './search';
